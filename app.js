@@ -45,7 +45,7 @@
   }
 
   // --------------------------------------------------------------------------
-  // 0. MOTOR DE SONIDOS, ALARMAS, AMBIENTE SUAVE Y NOTIFICACIONES (WEB AUDIO API)
+  // 0. MOTOR DE SONIDOS, ALARMAS Y NOTIFICACIONES (WEB AUDIO API)
   // --------------------------------------------------------------------------
   let sharedAudioCtx = null;
   function getAudioCtx() {
@@ -58,71 +58,16 @@
     return sharedAudioCtx;
   }
 
-  let ambientNode = null;
-  let ambientGain = null;
-  let isAmbientPlaying = false;
-
-  window.toggleAmbientNoise = function () {
-    try {
-      const ctx = getAudioCtx();
-      if (isAmbientPlaying) {
-        if (ambientNode) {
-          ambientNode.stop();
-          ambientNode.disconnect();
-          ambientNode = null;
-        }
-        isAmbientPlaying = false;
-        updateHeaderToggles();
-        window.showToast("🔇 Sonido ambiente detenido.");
-        return;
-      }
-
-      // Generador de Ruido Marrón Suave (Brown Noise) filtrado para concentración profunda
-      const bufferSize = ctx.sampleRate * 4;
-      const buffer = ctx.createBuffer(1, bufferSize, ctx.sampleRate);
-      const data = buffer.getChannelData(0);
-      let lastOut = 0.0;
-      for (let i = 0; i < bufferSize; i++) {
-        const white = Math.random() * 2 - 1;
-        data[i] = (lastOut + 0.02 * white) / 1.02;
-        lastOut = data[i];
-        data[i] *= 0.25;
-      }
-
-      ambientNode = ctx.createBufferSource();
-      ambientNode.buffer = buffer;
-      ambientNode.loop = true;
-
-      const filter = ctx.createBiquadFilter();
-      filter.type = "lowpass";
-      filter.frequency.value = 420;
-
-      ambientGain = ctx.createGain();
-      const sliderVal = parseFloat(document.getElementById("ambient-volume")?.value || "12");
-      ambientGain.gain.setValueAtTime(sliderVal / 100, ctx.currentTime);
-
-      ambientNode.connect(filter);
-      filter.connect(ambientGain);
-      ambientGain.connect(ctx.destination);
-      ambientNode.start();
-
-      isAmbientPlaying = true;
-      updateHeaderToggles();
-      window.showToast("🌊 Ambiente de concentración activado (Ruido Marrón suave sin distracciones).");
-    } catch (_) {}
-  };
-
-  window.setAmbientVolume = function (val) {
-    if (ambientGain && sharedAudioCtx) {
-      ambientGain.gain.setValueAtTime(parseFloat(val) / 100, sharedAudioCtx.currentTime);
-    }
-  };
-
   window.toggleMusicDrawer = function () {
     const drawer = document.getElementById("music-compact-drawer");
+    const btn = document.getElementById("btn-music-drawer");
     if (!drawer) return;
     const isHidden = drawer.style.display === "none";
     drawer.style.display = isHidden ? "block" : "none";
+    if (btn) {
+      btn.style.borderColor = isHidden ? "var(--accent)" : "";
+      btn.style.color = isHidden ? "var(--accent)" : "";
+    }
   };
 
   window.playSoundEffect = function (type, forcePlay) {
@@ -208,12 +153,6 @@
     const gpuBtn = document.getElementById("btn-toggle-gpu");
     if (gpuBtn) {
       gpuBtn.textContent = lowGpuMode ? "⚡ Modo Fluido 27\": ON" : "🖥️ Modo Fluido 27\": OFF";
-    }
-    const ambBtn = document.getElementById("btn-ambient-noise");
-    if (ambBtn) {
-      ambBtn.textContent = isAmbientPlaying ? "🌊 Ambiente: ON" : "🌊 Ambiente: OFF";
-      ambBtn.style.borderColor = isAmbientPlaying ? "var(--success)" : "";
-      ambBtn.style.color = isAmbientPlaying ? "var(--success)" : "";
     }
   }
 

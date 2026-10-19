@@ -43,27 +43,27 @@ window.DIAN_PROFILE = {
   estacionMusica: [
     {
       id: "lofi",
-      fase: "🌙 Ideal para Noche / Madrugada y Escritura en Libreta",
-      nombre: "1. Lo-Fi Hip Hop Beats (Sin voz — Concentración relajada)",
-      razon: "Ritmo constante de 70-85 BPM sin letra en español para que tu cerebro no cruce palabras mientras lees leyes o escribes en tu cuaderno.",
-      ytUrl: "https://www.youtube.com/watch?v=jfKfPfyJRdk",
-      spUrl: "https://open.spotify.com/search/lofi%20beats%20study"
+      fase: "📚 Ideal para Lectura y Escritura Relajada",
+      nombre: "1. lofi hip hop radio 📚 beats to relax/study to",
+      razon: "Tu emisora favorita de Lo-Fi (enlace directo verificado) para concentrarte sin cruzar palabras mientras lees o escribes.",
+      ytUrl: "https://www.youtube.com/watch?v=rFZHOHl-L8A",
+      spUrl: "https://open.spotify.com/search/lofi%20hip%20hop%20study%20beats"
+    },
+    {
+      id: "clasica",
+      fase: "🎻 Ideal para Lectura Normativa Profunda (Decreto 1742 y Ley 1755)",
+      nombre: "2. Música Clásica de Enfoque (Mozart, Bach, Vivaldi & Piano)",
+      razon: "Armonía clásica instrumental que estimula la memoria de largo plazo sin fatigar el oído.",
+      ytUrl: "https://www.youtube.com/results?search_query=classical+music+for+studying+and+concentration+mozart+bach",
+      spUrl: "https://open.spotify.com/search/classical%20study%20focus"
     },
     {
       id: "synth",
       fase: "⚡ Ideal para Desatraso Activo y Diagramas / Excel",
-      nombre: "2. Synthwave / Chillstep Focus (Energía tecnológica constante)",
+      nombre: "3. Synthwave / Chillstep Focus (Energía tecnológica constante)",
       razon: "Mantiene la dopamina alta y evita el sueño en sesiones nocturnas o de madrugada sin distraer la lectura.",
       ytUrl: "https://www.youtube.com/watch?v=4xDzrJKXOOY",
       spUrl: "https://open.spotify.com/search/synthwave%20focus%20study"
-    },
-    {
-      id: "alpha",
-      fase: "🧠 Ideal para Memorizar Plazos Legales (Ley 1755 y TRD)",
-      nombre: "3. Ondas Alfa / Piano & Violonchelo Instrumental",
-      razon: "Reduce el cortisol y facilita la retención de números exactos (10, 15, 30, 5 días hábiles).",
-      ytUrl: "https://www.youtube.com/results?search_query=alpha+waves+study+music+instrumental",
-      spUrl: "https://open.spotify.com/search/deep%20focus%20instrumental"
     },
     {
       id: "epic",
@@ -74,12 +74,28 @@ window.DIAN_PROFILE = {
       spUrl: "https://open.spotify.com/search/hans%20zimmer%20study"
     },
     {
-      id: "brown",
-      fase: "🛡️ Ideal si hay ruido externo o cansancio mental",
-      nombre: "5. Ruido Marrón Suave (Brown Noise) / Lluvia Nocturna",
-      razon: "Aísla por completo el oído para lectura jurídica pesada.",
-      ytUrl: "https://www.youtube.com/results?search_query=brown+noise+for+studying+adhd+focus",
-      spUrl: "https://open.spotify.com/search/brown%20noise%20study"
+      id: "marcelino_rock",
+      fase: "🎸 Tu Estilo Personal — Recarga de Energía yPausas Activas",
+      nombre: "5. Rock Argentino Clásico (Soda Stereo, Cerati, Charly, Enanitos)",
+      razon: "Tu selección de rock en español para levantar el ánimo, hacer talleres prácticos o recargar baterías entre bloques.",
+      ytUrl: "https://www.youtube.com/results?search_query=mix+rock+argentino+80+y+90+clasicos",
+      spUrl: "https://open.spotify.com/search/rock%20argentino%20clasicos"
+    },
+    {
+      id: "marcelino_cumbia",
+      fase: "🪗 Tu Estilo Personal — Ritmo y Sabor para Levantar el Ánimo",
+      nombre: "6. Cumbia Santafesina (Los Palmeras, Leo Mattioli, Trinidad)",
+      razon: "Cumbia santafesina clásica para quitarte el cansancio encima y mantener buena vibra.",
+      ytUrl: "https://www.youtube.com/results?search_query=mix+cumbia+santafesina+clasicos+los+palmeras+leo+mattioli",
+      spUrl: "https://open.spotify.com/search/cumbia%20santafesina"
+    },
+    {
+      id: "marcelino_salsa",
+      fase: "🎺 Tu Estilo Personal — Pura Energía y Sabor Clásico",
+      nombre: "7. Salsa Brava Clásica (Héctor Lavoe, Willie Colón, Fania, Niche)",
+      razon: "Salsa de golpe y brava para activar el cuerpo en pausas activas o cierres de jornada.",
+      ytUrl: "https://www.youtube.com/results?search_query=mix+salsa+brava+clasica+hector+lavoe+willie+colon+fania",
+      spUrl: "https://open.spotify.com/search/salsa%20brava%20clasica"
     }
   ],
   sprintsDesatraso: [

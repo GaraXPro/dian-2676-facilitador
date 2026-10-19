@@ -27,11 +27,7 @@
       </div>
 
       <div class="header-right">
-        <div class="music-Quick-bar">
-          <button class="btn-mini" id="btn-ambient-noise" onclick="window.toggleAmbientNoise()" title="Generador integrado de sonido ambiente suave (Ruido Marrón de concentración sin internet)">🌊 Ambiente: OFF</button>
-          <input type="range" id="ambient-volume" min="1" max="40" value="12" oninput="window.setAmbientVolume(this.value)" title="Volumen suave de ambiente" class="ambient-slider" />
-          <button class="btn-mini" onclick="window.toggleMusicDrawer()" title="Mostrar u ocultar accesos rápidos a playlists de YouTube/Spotify">🎵 Playlists</button>
-        </div>
+        <button class="btn-mini" id="btn-music-drawer" onclick="window.toggleMusicDrawer()" title="Abrir o cerrar tu barra discreta de música (Lo-Fi, Clásica, Synthwave, Épica y tu Mix Personal)">🎵 Música</button>
         <button class="btn-mini" id="btn-toggle-sound" onclick="window.toggleSoundEnabled()" title="Activar o silenciar sonidos de bloques, aciertos y logros">🔊 Sonidos: ON</button>
         <button class="btn-mini" id="btn-toggle-gpu" onclick="window.toggleLowGpuMode()" title="Actívalo si pasas una ventana al monitor derecho de 27 pulgadas con adaptador">🖥️ Modo Fluido 27": OFF</button>
 
