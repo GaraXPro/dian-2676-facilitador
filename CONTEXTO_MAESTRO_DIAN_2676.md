@@ -28,3 +28,33 @@
 2. **Prohibición de Usurpar Funciones:** Descartar opciones donde el Facilitador I emita un concepto jurídico vinculante, modifique de oficio una liquidación oficial, resuelva de fondo un recurso o autorice el levante de mercancía aprehendida.
 3. **Actuación ante Falta de Competencia de la DIAN:** Nunca rechazar de plano un documento escrito ni resolver asuntos de otras entidades. Si es verbal, se orienta en el acto; si es escrito, se recibe, se radica y se traslada dentro de los 5 días hábiles siguientes (Art. 21, Ley 1755 de 2015), enviando copia del oficio remisorio al peticionario.
 4. **Criterio Legal sobre Buena Fe:** Elegir siempre la opción que respete el procedimiento reglado, la cadena de mando, los términos legales y la trazabilidad escrita.
+
+
+---
+
+## 2. ESTADO TÉCNICO DEL REPOSITORIO Y HISTORIAL DE MEJORAS (ACTUALIZADO 19 OCT 2026)
+
+### 2.1. Rutas y Despliegue Activo
+* **Ruta Local del Proyecto:** `C:\Proyectos\dian-2676-facilitador`
+* **Repositorio GitHub:** `https://github.com/GaraXPro/dian-2676-facilitador.git` (Rama principal: `main`)
+* **Sitio Web en Vivo (GitHub Pages):** `https://garaxpro.github.io/dian-2676-facilitador/`
+* **Usuario Git Configurado:** `GaraXPro` (`marcelino2210@gmail.com`) — Credenciales ya autenticadas en Windows Credential Manager.
+
+### 2.2. Mejoras Recientes Aplicadas
+1. **Barra de Música Discreta (`🎵 Música` en el Header):**
+   - Se eliminó la tarjeta grande del Dashboard para dar protagonismo a los indicadores y al reloj Pomodoro.
+   - Incluye cintilla colapsable con las 7 estaciones de Marcelino:
+     1. *lofi hip hop radio 📚 beats to relax/study to* (`https://www.youtube.com/watch?v=rFZHOHl-L8A`)
+     2. *Música Clásica de Enfoque (Mozart, Bach, Vivaldi & Piano)*
+     3. *Synthwave / Chillstep Focus*
+     4. *Bandas Sonoras Épicas (Hans Zimmer / Interstellar)*
+     5. *Rock Argentino Clásico (Soda Stereo, Cerati, Charly, Enanitos)*
+     6. *Cumbia Santafesina (Los Palmeras, Leo Mattioli, Trinidad)*
+     7. *Salsa Brava Clásica (Héctor Lavoe, Willie Colón, Fania, Niche)*
+   - Permite guardar y abrir link personalizado de YouTube/Spotify.
+2. **Simulador PJS Mejorado:**
+   - Botón `🎯 Repasar Fallados` para filtrar exclusivamente los reactivos contestados de forma incorrecta.
+   - Botón `🔄 Reintentar este caso` individual en el panel de retroalimentación de cada reactivo.
+   - Contador de fallos visible en el banner de puntaje.
+3. **Motor de Audio Estable:**
+   - Instancia única reutilizable de `AudioContext` para evitar bloqueos de sonido del navegador.
