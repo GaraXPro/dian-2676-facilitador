@@ -1,0 +1,487 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Centro de Mando Todo-en-Uno DIAN 2676 — Facilitador I (OPEC 236908)</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+
+  <!-- CONTENEDOR DE NOTIFICACIONES EMERGENTES (TOASTS) -->
+  <div id="toast-container" class="toast-container no-print"></div>
+
+  <!-- BARRA SUPERIOR DE COMANDO Y NAVEGACIÓN -->
+  <div class="top-shell no-print">
+    <div class="header-main">
+      <div class="brand-block">
+        <h1>🎯 Centro de Mando DIAN 2676 — Marcelino Garavito (Facilitador I)</h1>
+        <div class="brand-meta">
+          <span class="pill accent">👤 Aspirante: Marcelino Garavito</span>
+          <span class="pill accent">OPEC: 236908</span>
+          <span class="pill">Inscripción: 1273550754</span>
+          <span class="pill">Nivel Asistencial</span>
+          <span class="pill success">Meta: +85.00 Puntos</span>
+          <span class="pill warning">Corte Normativo: 19 Jun 2026</span>
+        </div>
+      </div>
+
+      <div class="header-right">
+        <button class="btn-mini" id="btn-toggle-sound" onclick="window.toggleSoundEnabled()" title="Activar o silenciar sonidos de bloques, aciertos y logros">🔊 Sonidos: ON</button>
+        <button class="btn-mini" id="btn-toggle-gpu" onclick="window.toggleLowGpuMode()" title="Actívalo si pasas una ventana al monitor derecho de 27 pulgadas con adaptador">🖥️ Modo Fluido 27": OFF</button>
+
+        <div class="search-box">
+          <span class="search-icon">🔍</span>
+          <input type="text" id="global-search-input" placeholder="Buscar ley, plazo, artículo, TRD o caso..." autocomplete="off" />
+          <div id="global-search-results" class="search-results-box"></div>
+        </div>
+
+        <div class="countdown-chip">
+          <div class="label">⏳ Examen 8 Nov 2026 (8:00 a. m. | Cierre 8:30)</div>
+          <div class="time" id="countdown-timer">Calculando...</div>
+        </div>
+      </div>
+    </div>
+
+    <nav class="nav-tabs">
+      <button class="nav-tab active" data-tab="dashboard" onclick="window.switchTab('dashboard')">🏠 1. Centro de Mando</button>
+      <button class="nav-tab" data-tab="study" onclick="window.switchTab('study')">📚 2. Los 22 Indicadores</button>
+      <button class="nav-tab" data-tab="pjs" onclick="window.switchTab('pjs')">⚖️ 3. Simulador PJS (70%)</button>
+      <button class="nav-tab" data-tab="autoinforme" onclick="window.switchTab('autoinforme')">🧭 4. Autoinforme (30%)</button>
+      <button class="nav-tab" data-tab="workshops" onclick="window.switchTab('workshops')">🛠️ 5. Talleres (TRD/Excel)</button>
+      <button class="nav-tab" data-tab="apa" onclick="window.switchTab('apa')">📄 6. Modo Lectura APA y Libreta</button>
+      <button class="nav-tab" data-tab="library" onclick="window.switchTab('library')">🔗 7. Biblioteca y Pantallas</button>
+    </nav>
+  </div>
+
+  <!-- CONTENEDOR PRINCIPAL -->
+  <main class="container">
+
+    <!-- ================================================================== -->
+    <!-- MÓDULO 1: DASHBOARD / CENTRO DE MANDO                              -->
+    <!-- ================================================================== -->
+    <section id="tab-dashboard" class="tab-panel active">
+
+      <!-- BRÚJULA DE CONTINUIDAD: ¿POR DÓNDE QUEDÉ Y QUÉ SIGUE? -->
+      <div id="continuity-compass-container" class="continuity-banner"></div>
+
+      <div class="kpi-strip">
+        <div class="kpi-card">
+          <div class="kpi-title">Progreso de Indicadores</div>
+          <div class="kpi-value" id="kpi-indicators-val">0 / 22</div>
+          <div class="kpi-sub" id="kpi-indicators-sub">En curso: #1 (Decreto 1742/2020)</div>
+        </div>
+        <div class="kpi-card">
+          <div class="kpi-title">Rendimiento Simulador PJS (70%)</div>
+          <div class="kpi-value" id="kpi-pjs-val">0 / 26 resueltos</div>
+          <div class="kpi-sub">Mínimo eliminatorio: 70.00 | Meta: 85.00+</div>
+        </div>
+        <div class="kpi-card">
+          <div class="kpi-title">Bloque Horario Actual</div>
+          <div class="kpi-value" id="kpi-slot-val" style="font-size:1.05rem;">Verificando reloj...</div>
+          <div class="kpi-sub">Centro: 32" QHD | Izq: HP All-in-One | Der: 27" Fijo</div>
+        </div>
+      </div>
+
+      <div class="grid-dashboard">
+        <!-- Columna Izquierda: Sprints de Desatraso + Los 22 Indicadores -->
+        <div>
+          <div class="card">
+            <div class="card-header">
+              <h2>⚡ Ruta de Arranque desde Cero para Hoy Sábado Noche y Mañana Domingo</h2>
+            </div>
+            <div id="catchup-sprints-container"></div>
+          </div>
+
+          <div class="card">
+            <div class="card-header">
+              <h2>📊 Checklist Maestro de tus 22 Indicadores Evaluables</h2>
+              <span style="font-size:0.8rem; color:var(--muted);">Usa <strong>📍 Aquí voy</strong> para guardar tu hilo exacto</span>
+            </div>
+            <div class="progress-bar-bg">
+              <div class="progress-bar-fill" id="progress-bar">0%</div>
+            </div>
+            <div id="indicators-container"></div>
+          </div>
+        </div>
+
+        <!-- Columna Derecha: Reloj Pomodoro, Logros con Sonido, Reglas de Oro y Notas -->
+        <div>
+          <div class="card">
+            <div class="card-header">
+              <h2>⏱️ Temporizador de Bloque y Alarmas Sonoras</h2>
+              <div style="display:flex; gap:4px;">
+                <button class="btn-mini" onclick="window.playSoundEffect('alarm', true)" title="Probar sonido de alarma">🔔 Probar Alarma</button>
+                <button class="btn-mini" onclick="window.playSoundEffect('achievement', true)" title="Probar sonido de logro">🎺 Probar Logro</button>
+              </div>
+            </div>
+            <div class="timer-box">
+              <div id="timer-mode-label" style="font-size:0.85rem; color:var(--muted);">Bloque de Enfoque Intenso (45 min)</div>
+              <div class="timer-display" id="timer-display">45:00</div>
+              <div class="timer-controls">
+                <button class="btn" onclick="window.startTimer(45, 'Bloque 1: Inmersión Visual (45m)')">Bloque 45m</button>
+                <button class="btn" onclick="window.startTimer(60, 'Bloque 2: Dominio Normativo (60m)')">Normativa 60m</button>
+                <button class="btn warning" onclick="window.startTimer(75, 'Bloque 3: Fuego Real PJS (75m)')">Fuego Real 75m</button>
+                <button class="btn secondary" onclick="window.startTimer(15, 'Pausa Activa (15m)')">Pausa 15m</button>
+                <button class="btn secondary" onclick="window.startTimer(20, 'Power Nap / Descanso Ocular (20m)')">Power Nap 20m</button>
+                <button class="btn secondary" id="btn-pause-timer" onclick="window.togglePauseTimer()">⏸️ Pausar</button>
+                <button class="btn secondary" onclick="window.resetTimer()">🔄 Reiniciar</button>
+              </div>
+            </div>
+            <ul class="routine-list" id="routine-list-container"></ul>
+          </div>
+
+          <div class="card">
+            <div class="card-header">
+              <h2>🎧 Estación de Música de Estudio (YouTube & Spotify)</h2>
+              <span class="pill accent">Sin voz para no cruzar lectura</span>
+            </div>
+            <p style="font-size:0.82rem; color:var(--muted); margin-bottom:10px;">
+              Ábrela en tu <strong>pantalla izquierda (HP All-in-One)</strong> a volumen moderado (25-35%) mientras estudias en el monitor central de 32":
+            </p>
+            <div id="music-station-container" class="music-station-grid"></div>
+            <div style="margin-top:10px; padding-top:10px; border-top:1px dashed var(--border);">
+              <label style="font-size:0.8rem; color:var(--muted); display:block; margin-bottom:4px;">⭐ Guarda aquí tu propio link favorito de YouTube o Spotify:</label>
+              <div style="display:flex; gap:6px; flex-wrap:wrap;">
+                <input id="custom-music-url" type="url" placeholder="Pega aquí tu link de YouTube o Spotify..." style="flex:1; min-width:180px; background:#090d16; color:var(--text); border:1px solid var(--border); padding:6px 10px; border-radius:6px; font-size:0.82rem;" />
+                <button class="btn-mini" onclick="window.saveCustomMusicUrl()">💾 Guardar</button>
+                <button class="btn-mini" id="btn-open-custom-music" onclick="window.openCustomMusicUrl()" style="display:none; border-color:var(--success); color:var(--success);">▶️ Abrir Mi Playlist</button>
+              </div>
+            </div>
+          </div>
+
+          <div class="card">
+            <div class="card-header">
+              <h2>🏅 Mis Medallas y Logros de Progreso (Con Alerta Sonora)</h2>
+            </div>
+            <div id="achievements-container" class="ach-grid"></div>
+          </div>
+
+          <div class="card">
+            <div class="card-header">
+              <h2>🛡️ Las 4 Reglas de Oro del Facilitador I (Nivel Asistencial)</h2>
+            </div>
+            <div id="golden-rules-container"></div>
+          </div>
+
+          <div class="card">
+            <div class="card-header">
+              <h2>📝 Mis Apuntes Clave y Trampas del Examen (Guardado Automático)</h2>
+            </div>
+            <textarea id="notes-area" class="notes-area" placeholder="Escribe aquí plazos legales, artículos clave o errores que no debes repetir en los simulacros..."></textarea>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ================================================================== -->
+    <!-- MÓDULO 2: VISOR TEÓRICO DE LOS 22 INDICADORES (MÉTODO DE 3 PASOS)  -->
+    <!-- ================================================================== -->
+    <section id="tab-study" class="tab-panel">
+      <div class="grid-study">
+        <aside class="card study-sidebar">
+          <div class="card-header">
+            <h2>📑 Los 22 Indicadores</h2>
+          </div>
+          <div style="display:flex; gap:4px; flex-wrap:wrap; margin-bottom:12px;">
+            <button class="btn-mini" onclick="window.setStudyFilter('all')">Todos (22)</button>
+            <button class="btn-mini" onclick="window.setStudyFilter('pending')">Pendientes</button>
+            <button class="btn-mini" onclick="window.setStudyFilter('bloque1')">B1 (1-9)</button>
+            <button class="btn-mini" onclick="window.setStudyFilter('bloque2')">B2 (10-12)</button>
+            <button class="btn-mini" onclick="window.setStudyFilter('bloque3')">B3 (13-20)</button>
+            <button class="btn-mini" onclick="window.setStudyFilter('bloque4')">B4 (21-22)</button>
+          </div>
+          <div id="study-sidebar-list"></div>
+        </aside>
+
+        <div id="study-detail-view"></div>
+      </div>
+    </section>
+
+    <!-- ================================================================== -->
+    <!-- MÓDULO 3: SIMULADOR PJS (JUICIO SITUACIONAL FUNCIONAL - 70%)       -->
+    <!-- ================================================================== -->
+    <section id="tab-pjs" class="tab-panel">
+      <div class="card">
+        <div class="card-header">
+          <div>
+            <h2>⚖️ Simulador de Pruebas de Juicio Situacional (PJS) — Competencias Funcionales (Eliminatoria 70%)</h2>
+            <p style="font-size:0.86rem; color:var(--muted);">26 Casos Oficiales Comentados (Cubre los 4 Bloques) + Creador de Casos Propios.</p>
+          </div>
+          <div style="display:flex; gap:8px; flex-wrap:wrap; align-items:center;">
+            <select id="pjs-filter-select" onchange="window.filterPjsBySelect(this.value)" style="background:#090d16; color:var(--text); border:1px solid var(--border); padding:8px 12px; border-radius:8px; font-size:0.85rem;"></select>
+            <button class="btn" onclick="window.generateRandomSimulacro(10)">🎲 Simulacro Aleatorio (10 Casos)</button>
+            <button class="btn secondary" onclick="window.resetPjsSimulator()">🔄 Reiniciar Respuestas</button>
+          </div>
+        </div>
+        <div id="pjs-score-banner" style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px; background:#090d16; padding:12px 16px; border-radius:10px; border:1px solid var(--border);"></div>
+      </div>
+
+      <div id="pjs-cases-container"></div>
+
+      <div class="card">
+        <div class="card-header">
+          <h2>➕ Agregar Nuevo Caso de Juicio Situacional a tu Banco Personal</h2>
+        </div>
+        <form onsubmit="window.addCustomPjsCase(event)" class="grid-2">
+          <div>
+            <label style="font-size:0.84rem; color:var(--muted);">Título del Caso:</label>
+            <input id="new-case-title" required placeholder="Ej: Caso 27 — Traslado por Competencia" style="width:100%; margin:4px 0 10px; padding:8px; background:#090d16; border:1px solid var(--border); color:var(--text); border-radius:6px;" />
+
+            <label style="font-size:0.84rem; color:var(--muted);">Indicador Asociado:</label>
+            <select id="new-case-ind" style="width:100%; margin:4px 0 10px; padding:8px; background:#090d16; border:1px solid var(--border); color:var(--text); border-radius:6px;"></select>
+
+            <label style="font-size:0.84rem; color:var(--muted);">Contexto (Caso Laboral):</label>
+            <textarea id="new-case-context" required class="notes-area" style="min-height:80px; margin:4px 0 10px;" placeholder="Describe la situación en la Dirección Seccional..."></textarea>
+
+            <label style="font-size:0.84rem; color:var(--muted);">Enunciado de la pregunta:</label>
+            <input id="new-case-stem" required placeholder="De acuerdo con la norma X, la actuación procedente es:" style="width:100%; margin:4px 0 10px; padding:8px; background:#090d16; border:1px solid var(--border); color:var(--text); border-radius:6px;" />
+          </div>
+          <div>
+            <label style="font-size:0.84rem; color:var(--muted);">Opción A:</label>
+            <input id="new-case-a" required style="width:100%; margin:4px 0 8px; padding:8px; background:#090d16; border:1px solid var(--border); color:var(--text); border-radius:6px;" />
+
+            <label style="font-size:0.84rem; color:var(--muted);">Opción B:</label>
+            <input id="new-case-b" required style="width:100%; margin:4px 0 8px; padding:8px; background:#090d16; border:1px solid var(--border); color:var(--text); border-radius:6px;" />
+
+            <label style="font-size:0.84rem; color:var(--muted);">Opción C:</label>
+            <input id="new-case-c" required style="width:100%; margin:4px 0 8px; padding:8px; background:#090d16; border:1px solid var(--border); color:var(--text); border-radius:6px;" />
+
+            <label style="font-size:0.84rem; color:var(--muted);">Clave Correcta:</label>
+            <select id="new-case-correct" style="width:100%; margin:4px 0 8px; padding:8px; background:#090d16; border:1px solid var(--border); color:var(--text); border-radius:6px;">
+              <option value="A">Opción A</option>
+              <option value="B">Opción B</option>
+              <option value="C">Opción C</option>
+            </select>
+
+            <label style="font-size:0.84rem; color:var(--muted);">Justificación Jurídica / Técnica:</label>
+            <textarea id="new-case-why" required class="notes-area" style="min-height:65px; margin:4px 0 10px;" placeholder="Explica por qué esa es la respuesta correcta..."></textarea>
+
+            <button type="submit" class="btn success">💾 Guardar Caso en el Simulador</button>
+          </div>
+        </form>
+      </div>
+    </section>
+
+    <!-- ================================================================== -->
+    <!-- MÓDULO 4: AUTOINFORME COMPORTAMENTAL E INTEGRIDAD (30%)            -->
+    <!-- ================================================================== -->
+    <section id="tab-autoinforme" class="tab-panel">
+      <div class="card">
+        <div class="card-header">
+          <div>
+            <h2>🧭 Simulador de Autoinforme: Competencias Comportamentales (20%) + Prueba de Integridad (10%)</h2>
+            <p style="font-size:0.86rem; color:var(--muted);">Escala oficial de 4 niveles + Detector de Subescalas de Control (Deseabilidad Social e Inconsistencia).</p>
+          </div>
+          <button class="btn secondary" onclick="window.resetAutoinforme()">🔄 Reiniciar Autoinforme</button>
+        </div>
+        <div id="autoinforme-summary-banner" style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px; background:#090d16; padding:12px 16px; border-radius:10px; border:1px solid var(--border);"></div>
+      </div>
+
+      <div id="autoinforme-container"></div>
+    </section>
+
+    <!-- ================================================================== -->
+    <!-- MÓDULO 5: TALLERES PRÁCTICOS (FLASHCARDS, TRD, EXCEL Y LÓGICA)     -->
+    <!-- ================================================================== -->
+    <section id="tab-workshops" class="tab-panel">
+      <div class="card">
+        <div class="card-header">
+          <h2>🃏 Taller 1: Flashcards Interactivas de Plazos Legales y Reglas de Oro (Haz clic en cada tarjeta)</h2>
+        </div>
+        <div id="flashcards-grid" class="flashcard-Grid"></div>
+      </div>
+
+      <div class="card">
+        <div class="card-header">
+          <h2>🗂️ Taller 2: Lector y Calculadora Interactiva de Matrices TRD / TVD (Acuerdo AGN 004 de 2019)</h2>
+        </div>
+        <p style="font-size:0.9rem; color:var(--muted); margin-bottom:12px;">
+          Recuerda: <strong>TRD</strong> = Producción documental activa de estructura vigente | <strong>TVD</strong> = Fondos acumulados de dependencias suprimidas/pasadas.
+          Siglas de Disposición Final: <code>CT</code> (Conservación Total), <code>E</code> (Eliminación — requiere publicación web por <strong>30 días hábiles</strong>), <code>S</code> (Selección), <code>M/D</code> (Microfilmación/Digitalización).
+        </p>
+
+        <div style="overflow-x:auto;">
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>Código y Dependencia</th>
+                <th>Serie / Subserie / Tipos Documentales</th>
+                <th>Retención AG</th>
+                <th>Retención AC</th>
+                <th>Disposición Final</th>
+                <th>Procedimiento Técnico</th>
+              </tr>
+            </thead>
+            <tbody id="trd-table-body"></tbody>
+          </table>
+        </div>
+
+        <div class="step-box" style="margin-top:16px;">
+          <h3>🧮 Simulador de Cálculo de Transferencia Primaria y Disposición Final</h3>
+          <div style="display:flex; gap:12px; flex-wrap:wrap; align-items:center; margin:10px 0;">
+            <label style="font-size:0.88rem;">Serie/Subserie:
+              <select id="trd-calc-series" onchange="window.calculateTrdDates()" style="background:#090d16; color:var(--text); border:1px solid var(--border); padding:7px 10px; border-radius:6px; margin-left:6px;"></select>
+            </label>
+            <label style="font-size:0.88rem;">Año de Cierre del Expediente:
+              <input type="number" id="trd-calc-year" value="2026" onchange="window.calculateTrdDates()" oninput="window.calculateTrdDates()" style="background:#090d16; color:var(--text); border:1px solid var(--border); padding:7px 10px; border-radius:6px; width:100px; margin-left:6px;" />
+            </label>
+          </div>
+          <div id="trd-calc-output" style="background:#090d16; padding:12px 14px; border-radius:8px; border:1px solid var(--border); font-size:0.9rem;"></div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-header">
+          <h2>💻 Taller 3: Entrenador de Fórmulas de Excel y Razonamiento Categorial (Silogismos)</h2>
+        </div>
+        <div id="excel-logic-container" class="grid-2"></div>
+      </div>
+    </section>
+
+    <!-- ================================================================== -->
+    <!-- MÓDULO 6: MODO LECTURA E IMPRESIÓN EN NORMAS APA 7.ª EDICIÓN       -->
+    <!-- ================================================================== -->
+    <section id="tab-apa" class="tab-panel">
+      <div class="card no-print">
+        <div class="card-header">
+          <div>
+            <h2>📄 Modo Lectura / Impresión en Normas APA 7.ª Edición (Times New Roman 12 pt)</h2>
+            <p style="font-size:0.85rem; color:var(--muted);">Ideal para dejar fijo en tu monitor derecho de 27" sin consumir recursos o para imprimir / guardar en PDF como respaldo físico.</p>
+          </div>
+          <div style="display:flex; gap:8px; flex-wrap:wrap;">
+            <button class="btn" onclick="window.setApaMode('progress')">📊 1. Informe de Avance</button>
+            <button class="btn warning" onclick="window.setApaMode('notebook')">📓 2. Guía de Libreta Física (Cornell)</button>
+            <button class="btn secondary" onclick="window.setApaMode('compendium')">📚 3. Compendio (22 Indicadores)</button>
+            <button class="btn secondary" onclick="window.setApaMode('cases')">⚖️ 4. Cuadernillo (26 Casos PJS)</button>
+            <button class="btn success" onclick="window.print()">🖨️ Imprimir / Guardar en PDF</button>
+          </div>
+        </div>
+      </div>
+
+      <article id="apa-paper-content" class="apa-paper"></article>
+    </section>
+
+    <!-- ================================================================== -->
+    <!-- MÓDULO 7: BIBLIOTECA OFICIAL, SETUP DE 3 PANTALLAS Y RESPALDO      -->
+    <!-- ================================================================== -->
+    <section id="tab-library" class="tab-panel">
+      <div class="grid-2">
+        <div class="card">
+          <div class="card-header">
+            <h2>🔗 Biblioteca Oficial Activa y Recursos Directos</h2>
+          </div>
+          <h3 style="font-size:0.92rem; color:var(--warning); margin:8px 0;">1. Guías Oficiales y Simuladores DIAN 2676</h3>
+          <ul class="links-list">
+            <li>📘 <a href="https://grupogeard.com/co/guias/guia-orientacion-aspirante-presentacion-pruebas-escritas-dian-2676/" target="_blank" rel="noopener">Guía de Orientación al Aspirante – Pruebas Escritas DIAN 2676</a></li>
+            <li>📊 <a href="https://www.simotest.com/mi-convocatoria/dian-2676" target="_blank" rel="noopener">Panel y Plan de Estudio por Pesos – Convocatoria DIAN 2676 (SimoTest)</a></li>
+            <li>🧠 <a href="https://zabia.app/blog/concurso-dian-2676-guia-preparacion" target="_blank" rel="noopener">Guía de Preparación y Repetición Espaciada – Concurso DIAN 2676 (Zabia)</a></li>
+          </ul>
+
+          <h3 style="font-size:0.92rem; color:var(--warning); margin:14px 0 8px;">2. Normativa Oficial Directa (Leyes, Decretos y Acuerdos)</h3>
+          <ul class="links-list">
+            <li>🏛️ <a href="https://www.dian.gov.co/dian/entidad/Paginas/Presentacion.aspx" target="_blank" rel="noopener">Portal Oficial DIAN – Presentación, Misión, Visión y Mapa de Procesos</a></li>
+            <li>⚖️ <a href="https://www.funcionpublica.gov.co/eva/gestornormativo/norma.php?i=153986" target="_blank" rel="noopener">Decreto 1742 de 2020 (Estructura Orgánica de la DIAN) – Función Pública</a></li>
+            <li>⚖️ <a href="https://www.funcionpublica.gov.co/eva/gestornormativo/norma.php?i=65334" target="_blank" rel="noopener">Ley 1755 de 2015 (Derecho Fundamental de Petición) – Función Pública</a></li>
+            <li>🗂️ <a href="https://normativa.archivogeneral.gov.co/ley-594-de-2000/" target="_blank" rel="noopener">Ley 594 de 2000 (Ley General de Archivos) – Archivo General de la Nación</a></li>
+            <li>🗂️ <a href="https://normativa.archivogeneral.gov.co/acuerdo-004-de-2019/" target="_blank" rel="noopener">Acuerdo AGN 004 de 2019 (TRD y TVD) – Archivo General de la Nación</a></li>
+            <li>🗂️ <a href="https://normativa.archivogeneral.gov.co/acuerdo-060-de-2001/" target="_blank" rel="noopener">Acuerdo AGN 060 de 2001 (Comunicaciones Oficiales y Radicación)</a></li>
+            <li>🗂️ <a href="https://normativa.archivogeneral.gov.co/acuerdo-042-de-2002/" target="_blank" rel="noopener">Acuerdo AGN 042 de 2002 (Organización de Archivos de Gestión)</a></li>
+            <li>📘 <a href="https://www.funcionpublica.gov.co/web/eva/codigo-integridad" target="_blank" rel="noopener">Código de Integridad del Servicio Público Colombiano</a></li>
+          </ul>
+
+          <h3 style="font-size:0.92rem; color:var(--warning); margin:14px 0 8px;">3. Videos Explicativos de Apoyo</h3>
+          <ul class="links-list">
+            <li>🎥 <a href="https://www.youtube.com/watch?v=RD1vh9t-IUo" target="_blank" rel="noopener">Pruebas Escritas DIAN 2676 el 8 de Noviembre: Guía Oficial CNSC y Horarios</a></li>
+            <li>🎥 <a href="https://www.youtube.com/watch?v=arcuiOmE_P4" target="_blank" rel="noopener">Aprende la Misionalidad y Estructura Organizacional de la DIAN</a></li>
+            <li>🎥 <a href="https://www.youtube.com/live/Dr3QmtN24FE" target="_blank" rel="noopener">DIAN 2026: Errores de lectura que pueden arruinar tu prueba escrita</a></li>
+            <li>🎥 <a href="https://www.youtube.com/watch?v=VOfR1ko2AxA" target="_blank" rel="noopener">Gestión Documental para Concursos CNSC 2026: Guía Definitiva y TRD</a></li>
+            <li>🎥 <a href="https://www.youtube.com/watch?v=6IG8XwdwvxE" target="_blank" rel="noopener">Ley 1755 de 2015 – Derecho de Petición para Concursos de Mérito CNSC</a></li>
+          </ul>
+        </div>
+
+        <div>
+          <div class="card">
+            <div class="card-header">
+              <h2>🖥️ Tu Nuevo Setup Ergonómico de 3 Pantallas (Optimizado)</h2>
+            </div>
+            <div id="setup-screens-container"></div>
+          </div>
+
+          <div class="card">
+            <div class="card-header">
+              <h2>📅 Cronograma Maestro de 24 Días y Estructura de Pruebas</h2>
+            </div>
+            <table class="data-table">
+              <thead>
+                <tr>
+                  <th>Prueba</th>
+                  <th>Carácter</th>
+                  <th>Peso (Sin Exp / Con Exp)</th>
+                  <th>Mínimo Aprobatorio</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td><strong>1. Competencias Funcionales (PJS)</strong></td>
+                  <td>Eliminatoria</td>
+                  <td>70 % / 65 %</td>
+                  <td><strong>70.00 puntos</strong></td>
+                </tr>
+                <tr>
+                  <td><strong>2. Competencias Comportamentales</strong></td>
+                  <td>Clasificatoria</td>
+                  <td>20 % / 15 %</td>
+                  <td>Suma al ponderado</td>
+                </tr>
+                <tr>
+                  <td><strong>3. Prueba de Integridad (Valores)</strong></td>
+                  <td>Clasificatoria</td>
+                  <td>10 % / 10 %</td>
+                  <td>Suma al ponderado</td>
+                </tr>
+              </tbody>
+            </table>
+
+            <div style="margin-top:14px;">
+              <div class="step-box" style="margin-bottom:8px; padding:10px 14px;">
+                <strong>Fase 1 (15 al 19 oct — Días 1 a 5):</strong> Entidad y Ciudadano (Ind. 1 al 9).
+              </div>
+              <div class="step-box step-2" style="margin-bottom:8px; padding:10px 14px;">
+                <strong>Fase 2 (20 al 25 oct — Días 6 a 11):</strong> Archivo, TRD/TVD y Oficina (Ind. 10 al 12).
+              </div>
+              <div class="step-box step-3" style="margin-bottom:8px; padding:10px 14px;">
+                <strong>Fase 3 (26 al 31 oct — Días 12 a 17):</strong> Comportamental, Ofimática y Lógica (Ind. 13 al 22).
+              </div>
+              <div class="step-box" style="border-left-color:var(--purple); padding:10px 14px;">
+                <strong>Fase 4 (1 al 7 nov — Días 18 a 24):</strong> Simulacros Integrados, Flashcards y Simulacro General Definitivo (6 nov).
+              </div>
+            </div>
+          </div>
+
+          <div class="card">
+            <div class="card-header">
+              <h2>💾 Respaldo y Sincronización de tu Progreso (JSON)</h2>
+            </div>
+            <p style="font-size:0.88rem; color:var(--muted); margin-bottom:12px;">
+              Tu progreso se guarda automáticamente en el navegador. También puedes exportar un archivo <code>.json</code> o imprimir tu informe en la pestaña <strong>📄 Modo Lectura / Impresión APA</strong>.
+            </p>
+            <div style="display:flex; gap:10px; flex-wrap:wrap;">
+              <button class="btn success" onclick="window.exportBackupJson()">⬇️ Exportar mi Progreso (.json)</button>
+              <label class="btn secondary" style="cursor:pointer;">
+                ⬆️ Importar Respaldo (.json)
+                <input type="file" accept=".json" onchange="window.importBackupJson(event)" style="display:none;" />
+              </label>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <script src="data-indicators.js"></script>
+  <script src="data-simulators.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>

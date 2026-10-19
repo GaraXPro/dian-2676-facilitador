@@ -1,0 +1,16 @@
+# Archivos del sistema operativo
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Archivos temporales o de respaldos locales
+*.log
+*.tmp
+*.bak
+*~
+
+# Carpetas de editores (opcional, excepto configuraciones compartidas)
+.vscode/*
+!.vscode/settings.json
+!.vscode/launch.json
+!.vscode/extensions.json
