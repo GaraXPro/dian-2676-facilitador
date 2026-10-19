@@ -15,7 +15,7 @@
   <div class="top-shell no-print">
     <div class="header-main">
       <div class="brand-block">
-        <h1>🎯 Centro de Mando DIAN 2676 — Marcelino Garavito (Facilitador I)</h1>
+        <h1>🎯 Centro de Mando DIAN 2676 — Marcelino Garavito Castillo (Facilitador I)</h1>
         <div class="brand-meta">
           <span class="pill accent">👤 Aspirante: Marcelino Garavito</span>
           <span class="pill accent">OPEC: 236908</span>
@@ -27,6 +27,11 @@
       </div>
 
       <div class="header-right">
+        <div class="music-Quick-bar">
+          <button class="btn-mini" id="btn-ambient-noise" onclick="window.toggleAmbientNoise()" title="Generador integrado de sonido ambiente suave (Ruido Marrón de concentración sin internet)">🌊 Ambiente: OFF</button>
+          <input type="range" id="ambient-volume" min="1" max="40" value="12" oninput="window.setAmbientVolume(this.value)" title="Volumen suave de ambiente" class="ambient-slider" />
+          <button class="btn-mini" onclick="window.toggleMusicDrawer()" title="Mostrar u ocultar accesos rápidos a playlists de YouTube/Spotify">🎵 Playlists</button>
+        </div>
         <button class="btn-mini" id="btn-toggle-sound" onclick="window.toggleSoundEnabled()" title="Activar o silenciar sonidos de bloques, aciertos y logros">🔊 Sonidos: ON</button>
         <button class="btn-mini" id="btn-toggle-gpu" onclick="window.toggleLowGpuMode()" title="Actívalo si pasas una ventana al monitor derecho de 27 pulgadas con adaptador">🖥️ Modo Fluido 27": OFF</button>
 
@@ -39,6 +44,19 @@
         <div class="countdown-chip">
           <div class="label">⏳ Examen 8 Nov 2026 (8:00 a. m. | Cierre 8:30)</div>
           <div class="time" id="countdown-timer">Calculando...</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- MINI BARRA DESPLEGABLE DISCRETA DE MÚSICA (OCULTA POR DEFECTO) -->
+    <div id="music-compact-drawer" class="music-compact-drawer" style="display:none;">
+      <div class="music-drawer-inner">
+        <span style="font-size:0.78rem; color:var(--muted); font-weight:600;">🎧 Música de fondo discreta (abre en pestaña secundaria a 25% vol):</span>
+        <div id="music-station-container" class="music-pills-strip"></div>
+        <div class="music-custom-inline">
+          <input id="custom-music-url" type="url" placeholder="Link propio YouTube/Spotify..." />
+          <button class="btn-mini" onclick="window.saveCustomMusicUrl()" title="Guardar mi playlist">💾</button>
+          <button class="btn-mini" id="btn-open-custom-music" onclick="window.openCustomMusicUrl()" style="display:none; border-color:var(--success); color:var(--success);">▶️ Mi Mix</button>
         </div>
       </div>
     </div>
@@ -133,25 +151,6 @@
 
           <div class="card">
             <div class="card-header">
-              <h2>🎧 Estación de Música de Estudio (YouTube & Spotify)</h2>
-              <span class="pill accent">Sin voz para no cruzar lectura</span>
-            </div>
-            <p style="font-size:0.82rem; color:var(--muted); margin-bottom:10px;">
-              Ábrela en tu <strong>pantalla izquierda (HP All-in-One)</strong> a volumen moderado (25-35%) mientras estudias en el monitor central de 32":
-            </p>
-            <div id="music-station-container" class="music-station-grid"></div>
-            <div style="margin-top:10px; padding-top:10px; border-top:1px dashed var(--border);">
-              <label style="font-size:0.8rem; color:var(--muted); display:block; margin-bottom:4px;">⭐ Guarda aquí tu propio link favorito de YouTube o Spotify:</label>
-              <div style="display:flex; gap:6px; flex-wrap:wrap;">
-                <input id="custom-music-url" type="url" placeholder="Pega aquí tu link de YouTube o Spotify..." style="flex:1; min-width:180px; background:#090d16; color:var(--text); border:1px solid var(--border); padding:6px 10px; border-radius:6px; font-size:0.82rem;" />
-                <button class="btn-mini" onclick="window.saveCustomMusicUrl()">💾 Guardar</button>
-                <button class="btn-mini" id="btn-open-custom-music" onclick="window.openCustomMusicUrl()" style="display:none; border-color:var(--success); color:var(--success);">▶️ Abrir Mi Playlist</button>
-              </div>
-            </div>
-          </div>
-
-          <div class="card">
-            <div class="card-header">
               <h2>🏅 Mis Medallas y Logros de Progreso (Con Alerta Sonora)</h2>
             </div>
             <div id="achievements-container" class="ach-grid"></div>
@@ -210,6 +209,7 @@
           </div>
           <div style="display:flex; gap:8px; flex-wrap:wrap; align-items:center;">
             <select id="pjs-filter-select" onchange="window.filterPjsBySelect(this.value)" style="background:#090d16; color:var(--text); border:1px solid var(--border); padding:8px 12px; border-radius:8px; font-size:0.85rem;"></select>
+            <button class="btn warning" onclick="window.filterFailedPjsCases()" title="Filtra únicamente los casos donde marcaste una opción incorrecta para reforzarlos">🎯 Repasar Fallados</button>
             <button class="btn" onclick="window.generateRandomSimulacro(10)">🎲 Simulacro Aleatorio (10 Casos)</button>
             <button class="btn secondary" onclick="window.resetPjsSimulator()">🔄 Reiniciar Respuestas</button>
           </div>

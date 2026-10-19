@@ -45,12 +45,90 @@
   }
 
   // --------------------------------------------------------------------------
-  // 0. MOTOR DE SONIDOS, ALARMAS Y NOTIFICACIONES (WEB AUDIO API)
+  // 0. MOTOR DE SONIDOS, ALARMAS, AMBIENTE SUAVE Y NOTIFICACIONES (WEB AUDIO API)
   // --------------------------------------------------------------------------
+  let sharedAudioCtx = null;
+  function getAudioCtx() {
+    if (!sharedAudioCtx) {
+      sharedAudioCtx = new (window.AudioContext || window.webkitAudioContext)();
+    }
+    if (sharedAudioCtx.state === "suspended") {
+      sharedAudioCtx.resume();
+    }
+    return sharedAudioCtx;
+  }
+
+  let ambientNode = null;
+  let ambientGain = null;
+  let isAmbientPlaying = false;
+
+  window.toggleAmbientNoise = function () {
+    try {
+      const ctx = getAudioCtx();
+      if (isAmbientPlaying) {
+        if (ambientNode) {
+          ambientNode.stop();
+          ambientNode.disconnect();
+          ambientNode = null;
+        }
+        isAmbientPlaying = false;
+        updateHeaderToggles();
+        window.showToast("🔇 Sonido ambiente detenido.");
+        return;
+      }
+
+      // Generador de Ruido Marrón Suave (Brown Noise) filtrado para concentración profunda
+      const bufferSize = ctx.sampleRate * 4;
+      const buffer = ctx.createBuffer(1, bufferSize, ctx.sampleRate);
+      const data = buffer.getChannelData(0);
+      let lastOut = 0.0;
+      for (let i = 0; i < bufferSize; i++) {
+        const white = Math.random() * 2 - 1;
+        data[i] = (lastOut + 0.02 * white) / 1.02;
+        lastOut = data[i];
+        data[i] *= 0.25;
+      }
+
+      ambientNode = ctx.createBufferSource();
+      ambientNode.buffer = buffer;
+      ambientNode.loop = true;
+
+      const filter = ctx.createBiquadFilter();
+      filter.type = "lowpass";
+      filter.frequency.value = 420;
+
+      ambientGain = ctx.createGain();
+      const sliderVal = parseFloat(document.getElementById("ambient-volume")?.value || "12");
+      ambientGain.gain.setValueAtTime(sliderVal / 100, ctx.currentTime);
+
+      ambientNode.connect(filter);
+      filter.connect(ambientGain);
+      ambientGain.connect(ctx.destination);
+      ambientNode.start();
+
+      isAmbientPlaying = true;
+      updateHeaderToggles();
+      window.showToast("🌊 Ambiente de concentración activado (Ruido Marrón suave sin distracciones).");
+    } catch (_) {}
+  };
+
+  window.setAmbientVolume = function (val) {
+    if (ambientGain && sharedAudioCtx) {
+      ambientGain.gain.setValueAtTime(parseFloat(val) / 100, sharedAudioCtx.currentTime);
+    }
+  };
+
+  window.toggleMusicDrawer = function () {
+    const drawer = document.getElementById("music-compact-drawer");
+    if (!drawer) return;
+    const isHidden = drawer.style.display === "none";
+    drawer.style.display = isHidden ? "block" : "none";
+  };
+
   window.playSoundEffect = function (type, forcePlay) {
     if (!soundEnabled && !forcePlay) return;
     try {
-      const ctx = new (window.AudioContext || window.webkitAudioContext)();
+      const ctx = getAudioCtx();
       const now = ctx.currentTime;
 
       const playTone = (freq, startOffset, duration, wave = "sine", vol = 0.16) => {
@@ -67,26 +145,21 @@
       };
 
       if (type === "start") {
-        // Tonos ascendentes de enfoque
         playTone(440, 0, 0.15, "sine", 0.14);
         playTone(554.37, 0.14, 0.15, "sine", 0.14);
         playTone(659.25, 0.28, 0.28, "sine", 0.16);
       } else if (type === "correct") {
-        // Acierto en simulador
         playTone(587.33, 0, 0.12, "triangle", 0.16);
         playTone(880, 0.11, 0.25, "triangle", 0.18);
       } else if (type === "wrong") {
-        // Alerta suave de error
         playTone(260, 0, 0.18, "sawtooth", 0.1);
         playTone(195, 0.16, 0.25, "sawtooth", 0.1);
       } else if (type === "achievement") {
-        // Fanfarria de logro / indicador dominado
         playTone(523.25, 0, 0.13, "triangle", 0.18);
         playTone(659.25, 0.12, 0.13, "triangle", 0.18);
         playTone(783.99, 0.24, 0.13, "triangle", 0.18);
         playTone(1046.5, 0.36, 0.42, "triangle", 0.22);
       } else if (type === "alarm") {
-        // Alarma de fin de bloque Pomodoro
         playTone(880, 0, 0.2, "square", 0.14);
         playTone(659.25, 0.22, 0.2, "square", 0.14);
         playTone(880, 0.44, 0.2, "square", 0.14);
@@ -135,6 +208,12 @@
     const gpuBtn = document.getElementById("btn-toggle-gpu");
     if (gpuBtn) {
       gpuBtn.textContent = lowGpuMode ? "⚡ Modo Fluido 27\": ON" : "🖥️ Modo Fluido 27\": OFF";
+    }
+    const ambBtn = document.getElementById("btn-ambient-noise");
+    if (ambBtn) {
+      ambBtn.textContent = isAmbientPlaying ? "🌊 Ambiente: ON" : "🌊 Ambiente: OFF";
+      ambBtn.style.borderColor = isAmbientPlaying ? "var(--success)" : "";
+      ambBtn.style.color = isAmbientPlaying ? "var(--success)" : "";
     }
   }
 
@@ -603,19 +682,16 @@
     const musicContainer = document.getElementById("music-station-container");
     if (!musicContainer || !window.DIAN_PROFILE.estacionMusica) return;
 
-    musicContainer.innerHTML = window.DIAN_PROFILE.estacionMusica.map(m => `
-      <div class="music-track-row">
-        <div style="flex:1; min-width:210px;">
-          <div style="font-size:0.74rem; color:var(--warning); font-weight:700;">${m.fase}</div>
-          <div style="font-size:0.86rem; font-weight:700; color:var(--text);">${m.nombre}</div>
-          <div style="font-size:0.75rem; color:var(--muted);">${m.razon}</div>
+    musicContainer.innerHTML = window.DIAN_PROFILE.estacionMusica.map(m => {
+      const shortName = m.nombre.replace(/^\d+\.\s*/, "").split("(")[0].trim();
+      return `
+        <div class="music-pill-group" title="${m.fase} — ${m.razon}">
+          <span class="music-pill-label">${shortName}</span>
+          <a href="${m.ytUrl}" target="_blank" rel="noopener" class="music-pill-link yt" title="Abrir en YouTube: ${m.nombre}">YT</a>
+          <a href="${m.spUrl}" target="_blank" rel="noopener" class="music-pill-link sp" title="Abrir en Spotify: ${m.nombre}">SP</a>
         </div>
-        <div style="display:flex; gap:6px;">
-          <a href="${m.ytUrl}" target="_blank" rel="noopener" class="btn-mini" style="text-decoration:none; border-color:#ef4444; color:#fca5a5;">▶️ YouTube</a>
-          <a href="${m.spUrl}" target="_blank" rel="noopener" class="btn-mini" style="text-decoration:none; border-color:#22c55e; color:#86efac;">🎧 Spotify</a>
-        </div>
-      </div>
-    `).join("");
+      `;
+    }).join("");
 
     const savedUrl = localStorage.getItem("dian2676_custom_music_url") || "";
     const inputEl = document.getElementById("custom-music-url");
@@ -631,7 +707,7 @@
     localStorage.setItem("dian2676_custom_music_url", url);
     renderMusicStation();
     if (url) {
-      window.showToast("🎧 ¡Tu playlist personal quedó guardada en el Centro de Mando!");
+      window.showToast("🎧 ¡Tu playlist personal quedó guardada en la barra rápida!");
     }
   };
 
@@ -923,7 +999,7 @@
         }
       }
       pjsScoreBanner.innerHTML = `
-        <div><strong>Casos Resueltos:</strong> ${totalAnswered} de ${allCases.length} | <strong>Aciertos:</strong> ${hits} | <strong>Puntaje Simulado:</strong> ${score} / 100</div>
+        <div><strong>Casos Resueltos:</strong> ${totalAnswered} de ${allCases.length} | <strong>Aciertos:</strong> ${hits} | <strong>Fallos:</strong> ${totalAnswered - hits} | <strong>Puntaje Simulado:</strong> ${score} / 100</div>
         <div>${statusBadge}</div>
       `;
     }
@@ -943,6 +1019,25 @@
     }
     renderPjsSimulator();
     renderDashboard();
+  };
+
+  window.retrySinglePjsCase = function (caseId) {
+    delete pjsAnswers[caseId];
+    localStorage.setItem(STORAGE_KEYS.PJS_ANSWERS, JSON.stringify(pjsAnswers));
+    renderPjsSimulator();
+    renderDashboard();
+  };
+
+  window.filterFailedPjsCases = function () {
+    const failed = getAllCases().filter(c => pjsAnswers[c.id] && pjsAnswers[c.id] !== c.correct);
+    if (failed.length === 0) {
+      window.showToast("🎉 ¡No tienes casos fallados pendientes! Todos tus casos respondidos están en verde.");
+      return;
+    }
+    activeCasesList = failed;
+    currentPjsFilter = "failed";
+    renderPjsSimulator();
+    window.showToast(`🎯 Mostrando ${failed.length} caso(s) fallado(s) para reforzar.`);
   };
 
   window.resetPjsSimulator = function () {
@@ -976,9 +1071,9 @@
     if (!container) return;
 
     let casesToRender = getAllCases();
-    if (currentPjsFilter === "random" && activeCasesList.length > 0) {
+    if ((currentPjsFilter === "random" || currentPjsFilter === "failed") && activeCasesList.length > 0) {
       casesToRender = activeCasesList;
-    } else if (currentPjsFilter !== "all" && currentPjsFilter !== "random") {
+    } else if (currentPjsFilter !== "all" && currentPjsFilter !== "random" && currentPjsFilter !== "failed") {
       if (currentPjsFilter.startsWith("bloque")) {
         casesToRender = casesToRender.filter(c => c.blockId === currentPjsFilter);
       } else {
@@ -1011,7 +1106,10 @@
 
       const feedbackHtml = isAnswered
         ? `<div class="feedback-panel">
-             <h4>${userChoice === c.correct ? "✅ ¡Respuesta Correcta!" : `❌ Respuesta Incorrecta (Elegiste ${userChoice} — La clave correcta es ${c.correct})`}</h4>
+             <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px; margin-bottom:6px;">
+               <h4 style="margin:0;">${userChoice === c.correct ? "✅ ¡Respuesta Correcta!" : `❌ Respuesta Incorrecta (Elegiste ${userChoice} — La clave correcta es ${c.correct})`}</h4>
+               <button class="btn-mini" onclick="window.retrySinglePjsCase('${c.id}')">🔄 Reintentar este caso</button>
+             </div>
              <p style="margin-bottom:8px;"><strong>Fundamento Técnico y Jurídico (Clave ${c.correct}):</strong> ${c.explanation.correctWhy}</p>
              ${c.explanation.distractorA ? `<p style="font-size:0.84rem; color:var(--muted);">• <strong>Análisis Distractor A:</strong> ${c.explanation.distractorA}</p>` : ""}
              ${c.explanation.distractorB ? `<p style="font-size:0.84rem; color:var(--muted);">• <strong>Análisis Distractor B:</strong> ${c.explanation.distractorB}</p>` : ""}
