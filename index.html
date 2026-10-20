@@ -361,14 +361,22 @@
     <!-- ================================================================== -->
     <section id="tab-autoinforme" class="tab-panel">
       <div class="card">
-        <div class="card-header">
+        <div class="card-header" style="flex-wrap:wrap; gap:10px;">
           <div>
             <h2>🧭 Simulador de Autoinforme: Competencias Comportamentales (20%) + Prueba de Integridad (10%)</h2>
-            <p style="font-size:0.86rem; color:var(--muted);">Escala oficial de 4 niveles + Detector de Subescalas de Control (Deseabilidad Social e Inconsistencia).</p>
+            <p style="font-size:0.86rem; color:var(--muted);">Escala oficial de 4 niveles + Detector de Subescalas de Control (Deseabilidad Social e Inconsistencia) — Resolución 065 de 2024.</p>
           </div>
-          <button class="btn secondary" onclick="window.resetAutoinforme()">🔄 Reiniciar Autoinforme</button>
+          <div style="display:flex; gap:8px; flex-wrap:wrap; align-items:center;">
+            <button class="btn secondary" onclick="window.saveAutoinformeAttempt()" title="Guardar tu resultado actual como intento histórico para repasar">💾 Guardar Intento</button>
+            <button class="btn" onclick="window.shuffleAutoinforme()" title="Barajar las afirmaciones aleatoriamente para no responder por memoria visual">🔀 Mezclar / Nuevo Orden</button>
+            <button class="btn secondary" onclick="window.resetAutoinforme()" title="Limpiar respuestas de la pantalla actual">🔄 Reiniciar</button>
+          </div>
         </div>
-        <div id="autoinforme-summary-banner" style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px; background:#090d16; padding:12px 16px; border-radius:10px; border:1px solid var(--border);"></div>
+
+        <!-- Panel de Historial de Intentos Previos Guardados -->
+        <div id="autoinforme-history-panel" style="margin-top:10px;"></div>
+
+        <div id="autoinforme-summary-banner" style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px; background:#090d16; padding:12px 16px; border-radius:10px; border:1px solid var(--border); margin-top:10px;"></div>
       </div>
 
       <div id="autoinforme-container"></div>

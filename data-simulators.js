@@ -743,6 +743,60 @@ window.AUTOINFORME_ITEMS = [
     idealLevel: 1,
     isControlTrap: false,
     explanation: "Viola el valor de Respeto y la competencia de Orientación al Ciudadano. Ante usuarios alterados se exige autocontrol, escucha activa y trato digno. Marca «Totalmente en desacuerdo»."
+  },
+  {
+    id: "auto13",
+    indicatorIds: ["ind4", "ind20"],
+    category: "Competencia: Trabajo en Equipo (Resolución 065/2024)",
+    statement: "Cuando termino mis tareas de archivo y ventanilla antes de finalizar la jornada, ofrezco mi apoyo a los compañeros de mi sección que presentan represamiento para cumplir la meta colectiva.",
+    idealLevel: 4,
+    isControlTrap: false,
+    explanation: "Conducta esencial de Trabajo en Equipo del Nivel Asistencial en la DIAN: solidaridad operativa y orientación al logro grupal sin esperar que el jefe lo ordene."
+  },
+  {
+    id: "auto14",
+    indicatorIds: ["ind7", "ind14"],
+    category: "Prueba de Integridad: Confidencialidad y Reserva Tributaria",
+    statement: "Si un familiar o amigo cercano me pide verificar extraoficialmente en el sistema si un vecino suyo tiene deudas o embargos en la DIAN, accedo discretamente siempre que no le cobre nada.",
+    idealLevel: 1,
+    isControlTrap: false,
+    explanation: "¡Trampa crítica de Integridad! Consultar información protegida por reserva tributaria para fines personales o de terceros sin orden judicial ni competencia funcional constituye falta gravísima disciplinaria y delito (violación de secreto). Se debe marcar «Totalmente en desacuerdo»."
+  },
+  {
+    id: "auto15",
+    indicatorIds: ["ind13", "ind15"],
+    category: "Subescala de Control — Deseabilidad Social (Alerta de Distorsión)",
+    statement: "En todos mis trabajos anteriores y en mi vida diaria jamás he tenido un solo malentendido o desacuerdo con ninguna persona.",
+    idealLevel: 1,
+    isControlTrap: true,
+    explanation: "⚠️ REACTIVO DE CONTROL DE SINCERIDAD: Es humanamente imposible no haber tenido jamás un malentendido en toda la vida laboral o personal. Responder de acuerdo activa la penalización de deseabilidad social."
+  },
+  {
+    id: "auto16",
+    indicatorIds: ["ind3", "ind17"],
+    category: "Competencia: Lenguaje Claro y Trato Inclusivo",
+    statement: "Cuando un contribuyente de zona rural o de una comunidad étnica no comprende los términos tributarios, utilizo analogías sencillas y lenguaje claro en lugar de recitarle artículos técnicos de memoria.",
+    idealLevel: 4,
+    isControlTrap: false,
+    explanation: "Descriptor explícito de Orientación al Ciudadano con Enfoque Diferencial y Lenguaje Claro: garantizar la comprensión real del usuario adaptando la comunicación sin tecnicismos innecesarios."
+  },
+  {
+    id: "auto17",
+    indicatorIds: ["ind10", "ind11"],
+    category: "Competencia: Rigor Metódico y Organización Documental",
+    statement: "Si recibo un volumen alto de comunicaciones oficiales físicas, prefiero radicar de inmediato y dejar la foliación y verificación de anexos para después cuando tenga tiempo libre.",
+    idealLevel: 1,
+    isControlTrap: false,
+    explanation: "Falta de rigor metodológico documental: el Acuerdo AGN y el procedimiento DIAN exigen que la verificación de requisitos y foliación se ejecute con rigor para evitar pérdida de documentos. Marca «Totalmente en desacuerdo»."
+  },
+  {
+    id: "auto18",
+    indicatorIds: ["ind15", "ind19"],
+    category: "Competencia: Aprendizaje Continuo y Resiliencia",
+    statement: "Cuando mi supervisor me señala un error en la elaboración de un reporte de control, analizo sus observaciones con apertura para corregir mi método de trabajo y no volver a cometerlo.",
+    idealLevel: 4,
+    isControlTrap: false,
+    explanation: "Conducta de Aprendizaje Continuo y Madurez Emocional: aceptar la retroalimentación constructiva y transformarla en mejora de procesos inmediata."
   }
 ];
 

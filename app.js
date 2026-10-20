@@ -20,6 +20,8 @@
     PJS_ANSWERS: "dian2676_pjs_answers",
     CUSTOM_CASES: "dian2676_custom_cases",
     AUTO_ANSWERS: "dian2676_auto_answers",
+    AUTO_ATTEMPTS: "dian2676_auto_attempts",
+    AUTO_SHUFFLED_ORDER: "dian2676_auto_shuffled_order",
     SOUND_ENABLED: "dian2676_sound_enabled",
     LOW_GPU_MODE: "dian2676_low_gpu",
     UNLOCKED_ACH: "dian2676_unlocked_ach",
@@ -46,6 +48,8 @@
   let pjsAnswers = JSON.parse(localStorage.getItem(STORAGE_KEYS.PJS_ANSWERS) || "{}");
   let customCases = JSON.parse(localStorage.getItem(STORAGE_KEYS.CUSTOM_CASES) || "[]");
   let autoAnswers = JSON.parse(localStorage.getItem(STORAGE_KEYS.AUTO_ANSWERS) || "{}");
+  let autoAttempts = JSON.parse(localStorage.getItem(STORAGE_KEYS.AUTO_ATTEMPTS) || "[]");
+  let autoShuffledOrder = JSON.parse(localStorage.getItem(STORAGE_KEYS.AUTO_SHUFFLED_ORDER) || "null");
   let soundEnabled = localStorage.getItem(STORAGE_KEYS.SOUND_ENABLED) !== "false";
   let lowGpuMode = localStorage.getItem(STORAGE_KEYS.LOW_GPU_MODE) === "true";
   let unlockedAch = JSON.parse(localStorage.getItem(STORAGE_KEYS.UNLOCKED_ACH) || "[]");
@@ -2270,10 +2274,20 @@
     { val: 4, text: "4. Totalmente de acuerdo" }
   ];
 
+  function getActiveAutoinformeItems() {
+    const raw = window.AUTOINFORME_ITEMS || [];
+    if (!autoShuffledOrder || !Array.isArray(autoShuffledOrder) || autoShuffledOrder.length !== raw.length) {
+      return raw;
+    }
+    const map = new Map(raw.map(item => [item.id, item]));
+    const reordered = autoShuffledOrder.map(id => map.get(id)).filter(Boolean);
+    return reordered.length === raw.length ? reordered : raw;
+  }
+
   window.answerAutoinforme = function (itemId, level) {
     autoAnswers[itemId] = level;
     localStorage.setItem(STORAGE_KEYS.AUTO_ANSWERS, JSON.stringify(autoAnswers));
-    const item = window.AUTOINFORME_ITEMS.find(x => x.id === itemId);
+    const item = (window.AUTOINFORME_ITEMS || []).find(x => x.id === itemId);
     if (item) {
       if (level === item.idealLevel) window.playSoundEffect("correct");
       else window.playSoundEffect("wrong");
@@ -2290,18 +2304,103 @@
     localStorage.setItem(STORAGE_KEYS.AUTO_ANSWERS, JSON.stringify(autoAnswers));
     renderAutoinforme();
     renderStudyDetail();
+    window.showToast("🔄 Respuestas del simulador actual en blanco para practicar.");
+  };
+
+  window.shuffleAutoinforme = function () {
+    const raw = [...(window.AUTOINFORME_ITEMS || [])];
+    for (let i = raw.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [raw[i], raw[j]] = [raw[j], raw[i]];
+    }
+    autoShuffledOrder = raw.map(it => it.id);
+    localStorage.setItem(STORAGE_KEYS.AUTO_SHUFFLED_ORDER, JSON.stringify(autoShuffledOrder));
+    renderAutoinforme();
+    window.playSoundEffect("start");
+    window.showToast("🔀 ¡Afirmaciones barajadas en nuevo orden aleatorio!");
+  };
+
+  window.saveAutoinformeAttempt = function () {
+    const totalItems = (window.AUTOINFORME_ITEMS || []).length;
+    const answeredKeys = Object.keys(autoAnswers);
+    if (answeredKeys.length === 0) {
+      window.showToast("⚠️ Primero responde algunas afirmaciones para poder guardar el intento.");
+      return;
+    }
+
+    let alignedCount = 0;
+    let trapsCount = 0;
+    let details = {};
+
+    (window.AUTOINFORME_ITEMS || []).forEach(item => {
+      const chosen = autoAnswers[item.id];
+      if (chosen !== undefined) {
+        const isAligned = chosen === item.idealLevel;
+        if (isAligned) alignedCount++;
+        if (item.isControlTrap && chosen >= 3) trapsCount++;
+        details[item.id] = {
+          chosen,
+          ideal: item.idealLevel,
+          isAligned,
+          statement: item.statement,
+          category: item.category
+        };
+      }
+    });
+
+    const scorePct = Math.round((alignedCount / totalItems) * 100);
+    const newAttempt = {
+      id: "attempt_" + Date.now(),
+      dateISO: new Date().toISOString(),
+      dateFormatted: new Date().toLocaleString("es-CO", { dateStyle: "short", timeStyle: "short" }),
+      answeredCount: answeredKeys.length,
+      totalItems,
+      alignedCount,
+      scorePct,
+      trapsCount,
+      answersSnapshot: { ...autoAnswers },
+      details
+    };
+
+    autoAttempts.unshift(newAttempt);
+    if (autoAttempts.length > 10) autoAttempts = autoAttempts.slice(0, 10);
+    localStorage.setItem(STORAGE_KEYS.AUTO_ATTEMPTS, JSON.stringify(autoAttempts));
+
+    window.playSoundEffect("achievement");
+    window.showToast(`💾 Intento guardado con éxito (${scorePct}% de alineación — ${alignedCount}/${totalItems}).`);
+    renderAutoinforme();
+  };
+
+  window.restoreAutoinformeAttempt = function (attemptId) {
+    const attempt = autoAttempts.find(a => a.id === attemptId);
+    if (!attempt) return;
+    autoAnswers = { ...(attempt.answersSnapshot || {}) };
+    localStorage.setItem(STORAGE_KEYS.AUTO_ANSWERS, JSON.stringify(autoAnswers));
+    renderAutoinforme();
+    renderStudyDetail();
+    renderStudySidebar();
+    renderDashboard();
+    window.showToast(`📂 Intento del ${attempt.dateFormatted} restaurado para repasar.`);
+  };
+
+  window.deleteAutoinformeAttempt = function (attemptId) {
+    autoAttempts = autoAttempts.filter(a => a.id !== attemptId);
+    localStorage.setItem(STORAGE_KEYS.AUTO_ATTEMPTS, JSON.stringify(autoAttempts));
+    renderAutoinforme();
+    window.showToast("🗑️ Intento eliminado del historial.");
   };
 
   function renderAutoinforme() {
     const container = document.getElementById("autoinforme-container");
     if (!container) return;
 
+    const items = getActiveAutoinformeItems();
     let controlTrapsTriggered = 0;
     let alignedCount = 0;
     const answeredCount = Object.keys(autoAnswers).length;
 
     container.innerHTML = "";
-    window.AUTOINFORME_ITEMS.forEach((item, idx) => {
+    items.forEach((item, idx) => {
       const chosen = autoAnswers[item.id];
       const isAligned = chosen === item.idealLevel;
       if (chosen) {
@@ -2314,6 +2413,7 @@
       card.innerHTML = `
         <div style="display:flex; justify-content:space-between; margin-bottom:8px; flex-wrap:wrap; gap:6px;">
           <span class="pill ${item.isControlTrap ? "warning" : "accent"}">Afirmación #${idx + 1} — ${item.category}</span>
+          ${chosen ? `<span class="pill ${isAligned ? "success" : "warning"}">${isAligned ? "✅ Alineado" : "⚠️ Por Ajustar"}</span>` : ""}
         </div>
         <p style="font-size:0.98rem; font-weight:600; margin-bottom:10px;">«${item.statement}»</p>
         <div class="likert-row">
@@ -2335,16 +2435,54 @@
       container.appendChild(card);
     });
 
+    // Banner resumen
     const summaryEl = document.getElementById("autoinforme-summary-banner");
     if (summaryEl) {
+      const pct = Math.round((alignedCount / items.length) * 100);
       summaryEl.innerHTML = `
-        <div><strong>Reactivos Evaluados:</strong> ${answeredCount} / ${window.AUTOINFORME_ITEMS.length} | <strong>Alineación con Diccionario DIAN:</strong> ${alignedCount}</div>
+        <div>
+          <strong>Reactivos Evaluados:</strong> ${answeredCount} / ${items.length} | 
+          <strong>Alineación con Diccionario DIAN:</strong> ${alignedCount} (${pct}%)
+        </div>
         <div>
           ${controlTrapsTriggered > 0
-            ? `<span class="pill warning">🚨 ALERTA DE SUBESCALA DE CONTROL: Caíste en ${controlTrapsTriggered} trampa(s) de deseabilidad social</span>`
-            : `<span class="pill success">🛡️ Subescala de Sinceridad / Control: Limpia (0 alertas de distorsión)</span>`}
+            ? `<span class="pill warning">🚨 ALERTA SUBESCALA DE CONTROL: Caíste en ${controlTrapsTriggered} trampa(s) de deseabilidad social</span>`
+            : `<span class="pill success">🛡️ Subescala de Sinceridad / Control: Limpia (0 distorsiones)</span>`}
         </div>
       `;
+    }
+
+    // Historial de intentos
+    const historyPanel = document.getElementById("autoinforme-history-panel");
+    if (historyPanel) {
+      if (autoAttempts.length === 0) {
+        historyPanel.innerHTML = `
+          <div style="font-size:0.83rem; color:var(--muted); background:rgba(0,0,0,0.15); padding:8px 12px; border-radius:6px; border:1px dashed var(--border);">
+            💡 <em>Aún no has guardado ningún intento. Cuando respondas varias afirmaciones, haz clic en «💾 Guardar Intento» para crear un registro y poder comparar tus mejoras.</em>
+          </div>
+        `;
+      } else {
+        historyPanel.innerHTML = `
+          <div style="background:rgba(0,0,0,0.2); padding:10px 14px; border-radius:8px; border:1px solid var(--border);">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
+              <span style="font-size:0.86rem; font-weight:700; color:var(--text);">📋 Historial de Intentos Guardados (${autoAttempts.length}):</span>
+              <span style="font-size:0.75rem; color:var(--muted);">Haz clic en «Repasar» para cargar las respuestas marcadas</span>
+            </div>
+            <div style="display:flex; gap:8px; flex-wrap:wrap;">
+              ${autoAttempts.map(att => `
+                <div style="background:var(--bg-card, #0f172a); border:1px solid var(--border); padding:8px 10px; border-radius:6px; font-size:0.8rem; display:flex; align-items:center; gap:8px;">
+                  <div>
+                    <strong>${att.dateFormatted}</strong>: <span style="color:var(--success); font-weight:700;">${att.scorePct}%</span> (${att.alignedCount}/${att.totalItems})
+                    ${att.trapsCount > 0 ? `<span style="color:var(--warning); font-size:0.72rem;"> · ⚠️ ${att.trapsCount} trampa</span>` : ""}
+                  </div>
+                  <button class="btn-mini" onclick="window.restoreAutoinformeAttempt('${att.id}')" title="Cargar este intento en pantalla para repasar">👁️ Repasar</button>
+                  <button class="btn-mini" style="color:var(--danger, #f43f5e);" onclick="window.deleteAutoinformeAttempt('${att.id}')" title="Borrar del historial">✕</button>
+                </div>
+              `).join("")}
+            </div>
+          </div>
+        `;
+      }
     }
   }
 
