@@ -11,11 +11,30 @@
   <!-- CONTENEDOR DE NOTIFICACIONES EMERGENTES (TOASTS) -->
   <div id="toast-container" class="toast-container no-print"></div>
 
+  <!-- BARRA FLOTANTE DE MODO CONCENTRACIÓN INMERSIVO (ESTILO CISCO NETACAD / LECTURA) -->
+  <div id="immersive-floating-bar" class="immersive-floating-bar no-print" style="display:none;">
+    <div class="immersive-bar-inner">
+      <span class="immersive-badge">🧘 Modo Concentración Inmersivo</span>
+      <div class="reader-theme-group">
+        <button class="btn-mini reader-theme-btn" data-rtheme="dark" onclick="window.setReaderTheme('dark')" title="Papel Oscuro (Descanso Nocturno)">🌙 Oscuro</button>
+        <button class="btn-mini reader-theme-btn" data-rtheme="sepia" onclick="window.setReaderTheme('sepia')" title="Sepia Cálido (Antifatiga Visual / Kindle)">📜 Sepia Cálido</button>
+        <button class="btn-mini reader-theme-btn" data-rtheme="word" onclick="window.setReaderTheme('word')" title="Hoja Word Suave">📄 Hoja Word</button>
+      </div>
+      <div class="reader-font-group">
+        <button class="btn-mini" onclick="window.changeReaderFontSize(-1)" title="Reducir tamaño de letra">A-</button>
+        <button class="btn-mini" onclick="window.changeReaderFontSize(0)" title="Tamaño de letra normal">A</button>
+        <button class="btn-mini" onclick="window.changeReaderFontSize(1)" title="Aumentar tamaño de letra">A+</button>
+      </div>
+      <button class="btn-mini" onclick="window.toggleCourseSidebar()" title="Mostrar u ocultar el temario lateral">📑 Temario</button>
+      <button class="btn-mini danger-btn" onclick="window.toggleImmersiveMode()" title="Salir del Modo Concentración (Tecla ESC)">✕ Salir Inmersivo</button>
+    </div>
+  </div>
+
   <!-- BARRA SUPERIOR DE COMANDO Y NAVEGACIÓN -->
   <div class="top-shell no-print">
     <div class="header-main">
       <div class="brand-block">
-        <h1>🎯 Centro de Mando DIAN 2676 — Marcelino Garavito Castillo (Facilitador I)</h1>
+        <h1>🎯 Academia & Centro de Mando DIAN 2676 — Marcelino Garavito (Facilitador I)</h1>
         <div class="brand-meta">
           <span class="pill accent">👤 Aspirante: Marcelino Garavito</span>
           <span class="pill accent">OPEC: 236908</span>
@@ -27,6 +46,7 @@
       </div>
 
       <div class="header-right">
+        <button class="btn-mini" id="btn-immersive-toggle" onclick="window.toggleImmersiveMode()" title="Activar Modo Concentración Inmersivo y Tonalidades de Descanso Visual (Oscuro, Sepia, Hoja Word)">🧘 Modo Concentración</button>
         <button class="btn-mini" id="btn-music-drawer" onclick="window.toggleMusicDrawer()" title="Abrir o cerrar tu barra discreta de música (Lo-Fi, Clásica, Synthwave, Épica y tu Mix Personal)">🎵 Música</button>
         <button class="btn-mini" id="btn-toggle-sound" onclick="window.toggleSoundEnabled()" title="Activar o silenciar sonidos de bloques, aciertos y logros">🔊 Sonidos: ON</button>
         <button class="btn-mini" id="btn-toggle-gpu" onclick="window.toggleLowGpuMode()" title="Actívalo si pasas una ventana al monitor derecho de 27 pulgadas con adaptador">🖥️ Modo Fluido 27": OFF</button>
@@ -58,12 +78,12 @@
     </div>
 
     <nav class="nav-tabs">
-      <button class="nav-tab active" data-tab="dashboard" onclick="window.switchTab('dashboard')">🏠 1. Centro de Mando</button>
-      <button class="nav-tab" data-tab="study" onclick="window.switchTab('study')">📚 2. Los 22 Indicadores</button>
+      <button class="nav-tab active" data-tab="dashboard" onclick="window.switchTab('dashboard')">🏠 1. Mi Aprendizaje</button>
+      <button class="nav-tab" data-tab="study" onclick="window.switchTab('study')">🎓 2. Aula del Curso (22 Temas)</button>
       <button class="nav-tab" data-tab="pjs" onclick="window.switchTab('pjs')">⚖️ 3. Simulador PJS (70%)</button>
       <button class="nav-tab" data-tab="autoinforme" onclick="window.switchTab('autoinforme')">🧭 4. Autoinforme (30%)</button>
       <button class="nav-tab" data-tab="workshops" onclick="window.switchTab('workshops')">🛠️ 5. Talleres (TRD/Excel)</button>
-      <button class="nav-tab" data-tab="apa" onclick="window.switchTab('apa')">📄 6. Modo Lectura APA y Libreta</button>
+      <button class="nav-tab" data-tab="apa" onclick="window.switchTab('apa')">📄 6. Lectura Inmersiva / APA</button>
       <button class="nav-tab" data-tab="library" onclick="window.switchTab('library')">🔗 7. Biblioteca y Pantallas</button>
     </nav>
   </div>
@@ -72,16 +92,16 @@
   <main class="container">
 
     <!-- ================================================================== -->
-    <!-- MÓDULO 1: DASHBOARD / CENTRO DE MANDO                              -->
+    <!-- MÓDULO 1: DASHBOARD / MI APRENDIZAJE A MI RITMO (COURSERA/UDEMY)   -->
     <!-- ================================================================== -->
     <section id="tab-dashboard" class="tab-panel active">
 
-      <!-- BRÚJULA DE CONTINUIDAD: ¿POR DÓNDE QUEDÉ Y QUÉ SIGUE? -->
+      <!-- BRÚJULA DE CONTINUIDAD: ¿POR DÓNDE QUEDÉ Y QUÉ MICRO-PASO SIGUE? -->
       <div id="continuity-compass-container" class="continuity-banner"></div>
 
       <div class="kpi-strip">
         <div class="kpi-card">
-          <div class="kpi-title">Progreso de Indicadores</div>
+          <div class="kpi-title">Progreso del Curso (Micro-Pasos y Temas)</div>
           <div class="kpi-value" id="kpi-indicators-val">0 / 22</div>
           <div class="kpi-sub" id="kpi-indicators-sub">En curso: #1 (Decreto 1742/2020)</div>
         </div>
@@ -91,26 +111,33 @@
           <div class="kpi-sub">Mínimo eliminatorio: 70.00 | Meta: 85.00+</div>
         </div>
         <div class="kpi-card">
-          <div class="kpi-title">Bloque Horario Actual</div>
-          <div class="kpi-value" id="kpi-slot-val" style="font-size:1.05rem;">Verificando reloj...</div>
-          <div class="kpi-sub">Centro: 32" QHD | Izq: HP All-in-One | Der: 27" Fijo</div>
+          <div class="kpi-title">Mi Meta Flexible de Hoy (Sin Presión)</div>
+          <div class="kpi-value" id="kpi-slot-val" style="font-size:1.05rem;">A tu propio ritmo</div>
+          <div class="kpi-sub" id="kpi-slot-sub">Tú eliges cuánto avanzar hoy según tu energía</div>
         </div>
       </div>
 
       <div class="grid-dashboard">
-        <!-- Columna Izquierda: Sprints de Desatraso + Los 22 Indicadores -->
+        <!-- Columna Izquierda: Meta Flexible Coursera + Contenido del Curso estilo Udemy/NetAcad -->
         <div>
           <div class="card">
             <div class="card-header">
-              <h2>⚡ Ruta de Arranque desde Cero para Hoy Sábado Noche y Mañana Domingo</h2>
+              <h2 id="dynamic-pace-header">🎯 Mi Ritmo de Hoy — Estudio Flexible sin Saturación</h2>
+              <span class="pill accent" id="dynamic-date-pill">Cargando fecha...</span>
             </div>
             <div id="catchup-sprints-container"></div>
           </div>
 
           <div class="card">
             <div class="card-header">
-              <h2>📊 Checklist Maestro de tus 22 Indicadores Evaluables</h2>
-              <span style="font-size:0.8rem; color:var(--muted);">Usa <strong>📍 Aquí voy</strong> para guardar tu hilo exacto</span>
+              <div>
+                <h2>📚 Contenido del Curso: 4 Módulos y 22 Lecciones (Estilo Udemy / Coursera)</h2>
+                <p style="font-size:0.8rem; color:var(--muted);">Cada indicador se divide en 3 micro-pasos cortos: <strong>1. 📖 Lectura</strong> → <strong>2. 📓 Libreta</strong> → <strong>3. ⚖️ Casos PJS</strong></p>
+              </div>
+              <div style="display:flex; gap:6px; flex-wrap:wrap;">
+                <button class="btn-mini" onclick="window.expandAllCourseModules(true)">➕ Expandir Módulos</button>
+                <button class="btn-mini" onclick="window.expandAllCourseModules(false)">➖ Contraer Módulos</button>
+              </div>
             </div>
             <div class="progress-bar-bg">
               <div class="progress-bar-fill" id="progress-bar">0%</div>
@@ -119,25 +146,25 @@
           </div>
         </div>
 
-        <!-- Columna Derecha: Reloj Pomodoro, Logros con Sonido, Reglas de Oro y Notas -->
+        <!-- Columna Derecha: Reloj Pomodoro Flexible, Logros, Reglas de Oro y Notas -->
         <div>
           <div class="card">
             <div class="card-header">
-              <h2>⏱️ Temporizador de Bloque y Alarmas Sonoras</h2>
+              <h2>⏱️ Temporizador Libre de Sesiones Cortas (A tu Ritmo)</h2>
               <div style="display:flex; gap:4px;">
                 <button class="btn-mini" onclick="window.playSoundEffect('alarm', true)" title="Probar sonido de alarma">🔔 Probar Alarma</button>
                 <button class="btn-mini" onclick="window.playSoundEffect('achievement', true)" title="Probar sonido de logro">🎺 Probar Logro</button>
               </div>
             </div>
             <div class="timer-box">
-              <div id="timer-mode-label" style="font-size:0.85rem; color:var(--muted);">Bloque de Enfoque Intenso (45 min)</div>
-              <div class="timer-display" id="timer-display">45:00</div>
+              <div id="timer-mode-label" style="font-size:0.85rem; color:var(--muted);">Elige una micro-sesión cuando quieras concentrarte</div>
+              <div class="timer-display" id="timer-display">25:00</div>
               <div class="timer-controls">
-                <button class="btn" onclick="window.startTimer(45, 'Bloque 1: Inmersión Visual (45m)')">Bloque 45m</button>
-                <button class="btn" onclick="window.startTimer(60, 'Bloque 2: Dominio Normativo (60m)')">Normativa 60m</button>
-                <button class="btn warning" onclick="window.startTimer(75, 'Bloque 3: Fuego Real PJS (75m)')">Fuego Real 75m</button>
-                <button class="btn secondary" onclick="window.startTimer(15, 'Pausa Activa (15m)')">Pausa 15m</button>
-                <button class="btn secondary" onclick="window.startTimer(20, 'Power Nap / Descanso Ocular (20m)')">Power Nap 20m</button>
+                <button class="btn success" onclick="window.startTimer(20, 'Micro-Sesión Ligera: Lectura o Libreta (20m)')">🌱 Ligero 20m</button>
+                <button class="btn" onclick="window.startTimer(30, 'Sesión Fluida: 1 Micro-Paso Completo (30m)')">⚡ Fluido 30m</button>
+                <button class="btn" onclick="window.startTimer(45, 'Bloque Profundo: Normativa + Libreta (45m)')">📘 Bloque 45m</button>
+                <button class="btn warning" onclick="window.startTimer(60, 'Fuego Real: Simulador de Casos PJS (60m)')">🔥 Casos 60m</button>
+                <button class="btn secondary" onclick="window.startTimer(15, 'Pausa Activa / Estirar (15m)')">☕ Pausa 15m</button>
                 <button class="btn secondary" id="btn-pause-timer" onclick="window.togglePauseTimer()">⏸️ Pausar</button>
                 <button class="btn secondary" onclick="window.resetTimer()">🔄 Reiniciar</button>
               </div>
@@ -170,26 +197,50 @@
     </section>
 
     <!-- ================================================================== -->
-    <!-- MÓDULO 2: VISOR TEÓRICO DE LOS 22 INDICADORES (MÉTODO DE 3 PASOS)  -->
+    <!-- MÓDULO 2: AULA DEL CURSO — REPRODUCTOR ESTILO UDEMY / COURSERA     -->
     <!-- ================================================================== -->
     <section id="tab-study" class="tab-panel">
-      <div class="grid-study">
-        <aside class="card study-sidebar">
-          <div class="card-header">
-            <h2>📑 Los 22 Indicadores</h2>
+      <!-- Barra de Controles de Lectura Descanso Visual y Modo Inmersivo -->
+      <div class="reader-control-bar no-print">
+        <div class="reader-control-left">
+          <button class="btn-mini" id="btn-toggle-sidebar" onclick="window.toggleCourseSidebar()" title="Mostrar u ocultar el esquema lateral del curso (Modo Teatro Udemy)">📑 Ocultar/Ver Temario</button>
+          <span style="font-size:0.8rem; color:var(--muted);">🎨 Descanso Visual:</span>
+          <div class="reader-theme-group">
+            <button class="btn-mini reader-theme-btn active" data-rtheme="dark" onclick="window.setReaderTheme('dark')">🌙 Papel Oscuro</button>
+            <button class="btn-mini reader-theme-btn" data-rtheme="sepia" onclick="window.setReaderTheme('sepia')">📜 Sepia Cálido</button>
+            <button class="btn-mini reader-theme-btn" data-rtheme="word" onclick="window.setReaderTheme('word')">📄 Hoja Word</button>
           </div>
-          <div style="display:flex; gap:4px; flex-wrap:wrap; margin-bottom:12px;">
+        </div>
+        <div class="reader-control-right">
+          <span style="font-size:0.78rem; color:var(--muted);">Letra:</span>
+          <button class="btn-mini" onclick="window.changeReaderFontSize(-1)" title="Reducir letra">A-</button>
+          <button class="btn-mini" onclick="window.changeReaderFontSize(0)" title="Letra estándar">A</button>
+          <button class="btn-mini" onclick="window.changeReaderFontSize(1)" title="Aumentar letra">A+</button>
+          <button class="btn-mini accent-outline" onclick="window.toggleImmersiveMode()" title="Pantalla limpia de concentración sin menús superiores">🧘 Modo Concentración Inmersivo</button>
+        </div>
+      </div>
+
+      <div id="course-player-grid" class="grid-study">
+        <aside id="course-sidebar-panel" class="card study-sidebar">
+          <div class="card-header" style="margin-bottom:10px; padding-bottom:8px;">
+            <h2>📑 Esquema del Curso</h2>
+            <span id="sidebar-course-pct" class="pill success" style="font-size:0.74rem;">0%</span>
+          </div>
+          <div style="margin-bottom:8px;">
+            <input type="text" id="course-sidebar-search" oninput="window.filterSidebarSearch(this.value)" placeholder="🔍 Buscar en el esquema del curso..." style="width:100%; background:#090d16; border:1px solid var(--border); color:var(--text); padding:6px 10px; border-radius:6px; font-size:0.8rem;" />
+          </div>
+          <div style="display:flex; gap:4px; flex-wrap:wrap; margin-bottom:10px;">
             <button class="btn-mini" onclick="window.setStudyFilter('all')">Todos (22)</button>
             <button class="btn-mini" onclick="window.setStudyFilter('pending')">Pendientes</button>
-            <button class="btn-mini" onclick="window.setStudyFilter('bloque1')">B1 (1-9)</button>
-            <button class="btn-mini" onclick="window.setStudyFilter('bloque2')">B2 (10-12)</button>
-            <button class="btn-mini" onclick="window.setStudyFilter('bloque3')">B3 (13-20)</button>
-            <button class="btn-mini" onclick="window.setStudyFilter('bloque4')">B4 (21-22)</button>
+            <button class="btn-mini" onclick="window.setStudyFilter('bloque1')">M1 (1-9)</button>
+            <button class="btn-mini" onclick="window.setStudyFilter('bloque2')">M2 (10-12)</button>
+            <button class="btn-mini" onclick="window.setStudyFilter('bloque3')">M3 (13-20)</button>
+            <button class="btn-mini" onclick="window.setStudyFilter('bloque4')">M4 (21-22)</button>
           </div>
           <div id="study-sidebar-list"></div>
         </aside>
 
-        <div id="study-detail-view"></div>
+        <div id="study-detail-view" class="reader-surface-host"></div>
       </div>
     </section>
 
@@ -336,14 +387,14 @@
     </section>
 
     <!-- ================================================================== -->
-    <!-- MÓDULO 6: MODO LECTURA E IMPRESIÓN EN NORMAS APA 7.ª EDICIÓN       -->
+    <!-- MÓDULO 6: MODO LECTURA INMERSIVA Y NORMAS APA 7.ª EDICIÓN          -->
     <!-- ================================================================== -->
     <section id="tab-apa" class="tab-panel">
       <div class="card no-print">
         <div class="card-header">
           <div>
-            <h2>📄 Modo Lectura / Impresión en Normas APA 7.ª Edición (Times New Roman 12 pt)</h2>
-            <p style="font-size:0.85rem; color:var(--muted);">Ideal para dejar fijo en tu monitor derecho de 27" sin consumir recursos o para imprimir / guardar en PDF como respaldo físico.</p>
+            <h2>📄 Modo Lectura Descanso Visual e Impresión APA 7.ª Edición</h2>
+            <p style="font-size:0.85rem; color:var(--muted);">Elige la tonalidad que descanse tu vista (<strong>Papel Oscuro, Sepia Cálido o Hoja Word</strong>). Al imprimir en PDF siempre saldrá en blanco clásico APA.</p>
           </div>
           <div style="display:flex; gap:8px; flex-wrap:wrap;">
             <button class="btn" onclick="window.setApaMode('progress')">📊 1. Informe de Avance</button>
@@ -353,9 +404,24 @@
             <button class="btn success" onclick="window.print()">🖨️ Imprimir / Guardar en PDF</button>
           </div>
         </div>
+        <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px; padding-top:4px;">
+          <div style="display:flex; align-items:center; gap:6px; flex-wrap:wrap;">
+            <span style="font-size:0.82rem; color:var(--muted); font-weight:600;">🎨 Tonalidad del Papel en Pantalla:</span>
+            <button class="btn-mini reader-theme-btn" data-rtheme="dark" onclick="window.setReaderTheme('dark')">🌙 Papel Oscuro (Nocturno)</button>
+            <button class="btn-mini reader-theme-btn" data-rtheme="sepia" onclick="window.setReaderTheme('sepia')">📜 Sepia Cálido (Kindle)</button>
+            <button class="btn-mini reader-theme-btn" data-rtheme="word" onclick="window.setReaderTheme('word')">📄 Hoja Word (Clásico)</button>
+          </div>
+          <div style="display:flex; align-items:center; gap:6px; flex-wrap:wrap;">
+            <span style="font-size:0.8rem; color:var(--muted);">Tamaño de Letra:</span>
+            <button class="btn-mini" onclick="window.changeReaderFontSize(-1)">A-</button>
+            <button class="btn-mini" onclick="window.changeReaderFontSize(0)">A</button>
+            <button class="btn-mini" onclick="window.changeReaderFontSize(1)">A+</button>
+            <button class="btn-mini accent-outline" onclick="window.toggleImmersiveMode()">🧘 Modo Concentración Inmersivo</button>
+          </div>
+        </div>
       </div>
 
-      <article id="apa-paper-content" class="apa-paper"></article>
+      <article id="apa-paper-content" class="apa-paper reader-surface-host"></article>
     </section>
 
     <!-- ================================================================== -->

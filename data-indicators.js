@@ -98,48 +98,68 @@ window.DIAN_PROFILE = {
       spUrl: "https://open.spotify.com/search/salsa%20brava%20clasica"
     }
   ],
-  sprintsDesatraso: [
+  modulosCurso: [
     {
-      id: "sprint0",
-      titulo: "🌙 HOY SÁBADO NOCHE (60 a 75 min — Arranque desde Cero): Indicador #1",
-      meta: "Romper el hielo sin saturarte: dominar el Indicador 1 (Misionalidad y Estructura DIAN - Decreto 1742/2020) y estrenar la Página 1 de tu libreta.",
-      indicadores: ["ind1"],
-      pasoAPaso: "1) Abre el Indicador 1 (20 min) → 2) Copia a mano en la Página 1 de tu libreta la «Guía de Cuaderno» con tus marcadores (15 min) → 3) Resuelve los Casos 1 al 4 del Simulador PJS (15 min) → ¡Marca el Ind. 1 como dominado y a descansar!"
+      id: "bloque1",
+      num: 1,
+      titulo: "Módulo 1: Identidad DIAN, Atención al Ciudadano y Valores de Integridad",
+      subtitulo: "Sección 1 • 9 Lecciones (Indicadores #1 al #9) • 27 Micro-Pasos",
+      meta: "Dominar el Decreto 1742/2020 (Misionalidad), la Tabla Maestra de Plazos de la Ley 1755/2015, Orientación al Ciudadano (N1/N2) y los 5 Valores del Código de Integridad.",
+      indicadores: ["ind1", "ind2", "ind3", "ind4", "ind5", "ind6", "ind7", "ind8", "ind9"]
     },
     {
-      id: "sprint1",
-      titulo: "☀️ MAÑANA DOMINGO — BLOQUE MAÑANA (90 min): Indicador #2 (Ley 1755 de 2015)",
-      meta: "Dominar la Tabla Maestra de Plazos del Derecho de Petición, Silencio Positivo en Copias y Reserva Tributaria (Art. 583 E.T.).",
-      indicadores: ["ind2"],
-      pasoAPaso: "1) Estudia el Indicador 2 (30 min) → 2) Dibuja en la Página 2 de tu libreta la Tabla de Plazos resaltando con marcador amarillo los días (20 min) → 3) Practica las Flashcards y los Casos 5, 6 y 7 en el Simulador PJS (25 min)."
+      id: "bloque2",
+      num: 2,
+      titulo: "Módulo 2: Gestión Documental, Archivo (TRD/TVD) y Apoyo de Oficina",
+      subtitulo: "Sección 2 • 3 Lecciones (Indicadores #10 al #12) • 9 Micro-Pasos",
+      meta: "Dominar el ciclo vital del archivo (AG, AC, AH), foliación (máx. 200 folios), diferencias TRD vs. TVD (Acuerdo 004/2019), radicación (Acuerdo 060) y norma GTC 185.",
+      indicadores: ["ind10", "ind11", "ind12"]
     },
     {
-      id: "sprint2",
-      titulo: "🌤️ MAÑANA DOMINGO — MEDIODÍA (45 min): Indicadores #3 y #4 (Orientación al Ciudadano N1 y N2)",
-      meta: "Diferenciar el Nivel 1 (atención receptiva y lenguaje claro) del Nivel 2 (indagación proactiva, autogestión y seguimiento).",
-      indicadores: ["ind3", "ind4"],
-      pasoAPaso: "Estúdialos juntos en una sola página de tu libreta dividida en dos columnas (Nivel 1 vs. Nivel 2) y resuelve los Casos 8 y 19."
+      id: "bloque3",
+      num: 3,
+      titulo: "Módulo 3: Diccionario de Competencias Comportamentales DIAN",
+      subtitulo: "Sección 3 • 8 Lecciones (Indicadores #13 al #20) • 24 Micro-Pasos",
+      meta: "Calibrar tus respuestas en Comportamiento Ético, Adaptabilidad, Comunicación Efectiva y Trabajo en Equipo (Niveles 1 y 2) más detección de subescalas de control.",
+      indicadores: ["ind13", "ind14", "ind15", "ind16", "ind17", "ind18", "ind19", "ind20"]
     },
     {
-      id: "sprint3",
-      titulo: "🌇 MAÑANA DOMINGO — TARDE (60 min): Indicadores #5 al #9 (Los 5 Valores de Integridad)",
-      meta: "Cerrar el domingo con los 9 indicadores de la Fase 1 completados al 100 % (Compromiso, Diligencia, Honestidad, Justicia y Respeto).",
-      indicadores: ["ind5", "ind6", "ind7", "ind8", "ind9"],
-      pasoAPaso: "Haz un cuadro de 5 filas en tu libreta (1 palabra clave por valor) y resuelve los Casos 9, 20, 21 y el Simulador de Autoinforme."
+      id: "bloque4",
+      num: 4,
+      titulo: "Módulo 4: Herramientas Ofimáticas (Excel/Word) y Razonamiento Lógico",
+      subtitulo: "Sección 4 • 2 Lecciones (Indicadores #21 y #22) • 6 Micro-Pasos",
+      meta: "Asegurar el 100 % en sintaxis de Excel (BUSCARV con FALSO, SI, CONTAR.SI), combinación de correspondencia, CCO y silogismos categoriales.",
+      indicadores: ["ind21", "ind22"]
+    }
+  ],
+  modosRitmoDiario: [
+    {
+      id: "ligero",
+      icono: "🌱",
+      nombre: "Ritmo Ligero (15 - 20 min)",
+      metaPasos: 1,
+      descripcion: "Para días ocupados o cansados: avanza 1 solo micro-paso (solo leer, o solo pasar a la libreta, o solo hacer unos casos) sin presionarte."
     },
     {
-      id: "sprint4",
-      titulo: "📅 FASE 2 (20 al 25 de oct): Indicadores #10, #11 y #12 (Archivo, TRD/TVD y Oficina)",
-      meta: "Dominar Ley 594/2000, Foliación (Acuerdo 042), TRD vs. TVD (Acuerdo 004/2019), Radicación (Acuerdo 060) y GTC 185.",
-      indicadores: ["ind10", "ind11", "ind12"],
-      pasoAPaso: "Un indicador cada dos días + Taller práctico de Matriz TRD y Calculadora de Transferencias."
+      id: "fluido",
+      icono: "⚡",
+      nombre: "Objetivo Coursera (30 - 45 min)",
+      metaPasos: 3,
+      descripcion: "¡Completa hoy 3 micro-pasos para mantener un buen ritmo! Equivalente a cerrar 1 indicador completo (Lectura + Libreta + Casos)."
     },
     {
-      id: "sprint5",
-      titulo: "📅 FASE 3 (26 al 31 de oct): Indicadores #13 al #22 (Comportamental, Ofimática y Lógica)",
-      meta: "Calibrar Competencias Comportamentales (Ind. 13-20) y asegurar el 100 % en Excel, Word, CCO y Silogismos (Ind. 21-22).",
-      indicadores: ["ind13", "ind14", "ind15", "ind16", "ind17", "ind18", "ind19", "ind20", "ind21", "ind22"],
-      pasoAPaso: "Agrupa por pares de nivel y practica el Laboratorio de Fórmulas de Excel y Razonamiento Categorial."
+      id: "inmersion",
+      icono: "🔥",
+      nombre: "Sesión Inspirada (60 - 90 min)",
+      metaPasos: 6,
+      descripcion: "Para cuando tienes tiempo y energía extra: avanza 6 micro-pasos (2 indicadores completos) a tu propio ritmo."
+    },
+    {
+      id: "repaso",
+      icono: "☕",
+      nombre: "Día Libre / Solo Repaso Suave",
+      metaPasos: 0,
+      descripcion: "Cero saturación: hoy descansas la mente o solo miras un par de Flashcards / casos fallados cuando te nazca."
     }
   ],
   reglasOro: [
@@ -161,13 +181,9 @@ window.DIAN_PROFILE = {
     }
   ],
   rutinaHoraria: [
-    { rango: "04:40 - 06:30", startMin: 280, endMin: 390, titulo: "Despertar y activación", detalle: "Hora diaria de levantarse y preparación matutina." },
-    { rango: "06:30 - 14:00", startMin: 390, endMin: 840, titulo: "Jornada Laboral", detalle: "Lunes a viernes hasta 14:00 (Sábados hasta 12:00). Repaso ligero ocasional." },
-    { rango: "15:00 - 16:00", startMin: 900, endMin: 960, titulo: "Almuerzo y Power Nap (20m)", detalle: "Descanso ocular de 20 minutos sin pantallas para reiniciar el cerebro." },
-    { rango: "16:00 - 16:45", startMin: 960, endMin: 1005, titulo: "Bloque 1: Inmersión Visual", detalle: "Plataforma en Monitor 32\" Central + Apoyo en HP Izquierdo." },
-    { rango: "16:45 - 17:45", startMin: 1005, endMin: 1065, titulo: "Bloque 2: Dominio Normativo", detalle: "Artículos exactos, plazos legales y trampas CNSC. (17:45-18:00 Pausa activa)." },
-    { rango: "18:00 - 19:15", startMin: 1080, endMin: 1155, titulo: "Bloque 3: Fuego Real (PJS)", detalle: "Resolución comentada de casos A, B y C + Autoinforme Comportamental/Integridad." },
-    { rango: "19:15 - 19:45", startMin: 1155, endMin: 1185, titulo: "Cierre de Bitácora", detalle: "Registro de progreso, 3 notas clave en bitácora y desconexión a las 20:00 para dormir 20:45." }
+    { rango: "Paso 1 • 📖 Lectura (15-20 min)", startMin: 0, endMin: 480, titulo: "Modo Descanso Visual (Sepia u Oscuro)", detalle: "Lee la síntesis ejecutiva y las trampas CNSC del indicador sin cansar los ojos." },
+    { rango: "Paso 2 • 📓 Libreta (10-15 min)", startMin: 480, endMin: 960, titulo: "Esquema Cornell a Mano", detalle: "Pasa únicamente las cifras (marcador amarillo) y el flujo del Facilitador I a tu página cuadriculada." },
+    { rango: "Paso 3 • ⚖️ Simulador (15-20 min)", startMin: 960, endMin: 1440, titulo: "Práctica de Casos Reales", detalle: "Resuelve los casos PJS del indicador para fijar el conocimiento antes de pasar al siguiente tema." }
   ]
 };
 

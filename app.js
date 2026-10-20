@@ -5,6 +5,12 @@
 (function () {
   const STORAGE_KEYS = {
     PROGRESS: "dian2676_progress",
+    MICRO_STEPS: "dian2676_micro_steps",
+    DAILY_PACE: "dian2676_daily_pace",
+    READER_THEME: "dian2676_reader_theme",
+    READER_FONT_STEP: "dian2676_reader_font_step",
+    SIDEBAR_COLLAPSED: "dian2676_sidebar_collapsed",
+    EXPANDED_MODULES: "dian2676_expanded_modules",
     CURRENT_FOCUS: "dian2676_current_focus",
     NOTES_GLOBAL: "dian2676_notes",
     NOTES_BY_IND: "dian2676_ind_notes",
@@ -14,10 +20,10 @@
     SOUND_ENABLED: "dian2676_sound_enabled",
     LOW_GPU_MODE: "dian2676_low_gpu",
     UNLOCKED_ACH: "dian2676_unlocked_ach",
-    ZERO_INIT_DONE: "dian2676_zero_init_v3"
+    ZERO_INIT_DONE: "dian2676_zero_init_v3",
+    MICRO_INIT_V4: "dian2676_micro_init_v4"
   };
 
-  // Si es la primera vez tras configurar el arranque desde cero, limpiamos el foco en #1 y progreso en 0/22
   if (!localStorage.getItem(STORAGE_KEYS.ZERO_INIT_DONE)) {
     localStorage.setItem(STORAGE_KEYS.PROGRESS, "{}");
     localStorage.setItem(STORAGE_KEYS.CURRENT_FOCUS, "ind1");
@@ -25,6 +31,7 @@
   }
 
   let progressState = JSON.parse(localStorage.getItem(STORAGE_KEYS.PROGRESS) || "{}");
+  let microStepsState = JSON.parse(localStorage.getItem(STORAGE_KEYS.MICRO_STEPS) || "{}");
   let currentFocusId = localStorage.getItem(STORAGE_KEYS.CURRENT_FOCUS) || "ind1";
   let indNotesState = JSON.parse(localStorage.getItem(STORAGE_KEYS.NOTES_BY_IND) || "{}");
   let pjsAnswers = JSON.parse(localStorage.getItem(STORAGE_KEYS.PJS_ANSWERS) || "{}");
@@ -34,8 +41,43 @@
   let lowGpuMode = localStorage.getItem(STORAGE_KEYS.LOW_GPU_MODE) === "true";
   let unlockedAch = JSON.parse(localStorage.getItem(STORAGE_KEYS.UNLOCKED_ACH) || "[]");
 
+  let readerTheme = localStorage.getItem(STORAGE_KEYS.READER_THEME) || "sepia";
+  let readerFontStep = parseInt(localStorage.getItem(STORAGE_KEYS.READER_FONT_STEP) || "0", 10);
+  let sidebarCollapsed = localStorage.getItem(STORAGE_KEYS.SIDEBAR_COLLAPSED) === "true";
+  let immersiveMode = false;
+  let expandedModules = JSON.parse(localStorage.getItem(STORAGE_KEYS.EXPANDED_MODULES) || '{"bloque1":true,"bloque2":true,"bloque3":false,"bloque4":false}');
+
+  const todayISO = new Date().toISOString().slice(0, 10);
+  let dailyPace = JSON.parse(localStorage.getItem(STORAGE_KEYS.DAILY_PACE) || "null") || {
+    modeId: "fluido",
+    dateISO: todayISO,
+    stepsDoneToday: 2
+  };
+  if (dailyPace.dateISO !== todayISO) {
+    dailyPace.dateISO = todayISO;
+    dailyPace.stepsDoneToday = 0;
+    localStorage.setItem(STORAGE_KEYS.DAILY_PACE, JSON.stringify(dailyPace));
+  }
+
+  // Inicialización inteligente del progreso real de Marcelino en el Indicador #1:
+  // Ya leyó la teoría (read: true), ya copió la Página 1 en la libreta (notebook: true) y está en el simulador (cases: false)
+  if (!localStorage.getItem(STORAGE_KEYS.MICRO_INIT_V4)) {
+    if (!microStepsState["ind1"]) {
+      microStepsState["ind1"] = { read: true, notebook: true, cases: false };
+    }
+    window.INDICATORS_DATA?.forEach(ind => {
+      if (progressState[ind.id]) {
+        microStepsState[ind.id] = { read: true, notebook: true, cases: true };
+      }
+    });
+    localStorage.setItem(STORAGE_KEYS.MICRO_STEPS, JSON.stringify(microStepsState));
+    localStorage.setItem(STORAGE_KEYS.MICRO_INIT_V4, "true");
+  }
+
   let activeIndicatorId = currentFocusId;
+  let activeLessonSubtab = "all";
   let currentStudyFilter = "all";
+  let sidebarSearchQuery = "";
   let currentPjsFilter = "all";
   let activeCasesList = [];
   let currentApaMode = "progress";
@@ -43,6 +85,114 @@
   function getAllCases() {
     return [...window.PJS_CASES, ...customCases];
   }
+
+  function getIndSteps(indId) {
+    if (progressState[indId]) {
+      return { read: true, notebook: true, cases: true };
+    }
+    const st = microStepsState[indId] || {};
+    return {
+      read: !!st.read,
+      notebook: !!st.notebook,
+      cases: !!st.cases
+    };
+  }
+
+  function getIndDoneStepsCount(indId) {
+    const st = getIndSteps(indId);
+    return (st.read ? 1 : 0) + (st.notebook ? 1 : 0) + (st.cases ? 1 : 0);
+  }
+
+  function getTotalMicroStepsDone() {
+    return window.INDICATORS_DATA.reduce((acc, ind) => acc + getIndDoneStepsCount(ind.id), 0);
+  }
+
+  function getNextMicroStepInfo(indId) {
+    const st = getIndSteps(indId);
+    if (!st.read) return { key: "read", label: "Paso 1: Leer Teoría y Trampas CNSC", subtab: "theory", btnText: "📖 Continuar Lectura" };
+    if (!st.notebook) return { key: "notebook", label: "Paso 2: Pasar Esquema a tu Libreta Cuadriculada", subtab: "notebook", btnText: "📓 Ver Hoja de Libreta" };
+    if (!st.cases) return { key: "cases", label: "Paso 3: Resolver Casos PJS de esta Lección", subtab: "cases", btnText: "⚖️ Resolver Casos PJS" };
+    return { key: "done", label: "¡Lección 100% completada!", subtab: "all", btnText: "✅ Repasar Lección" };
+  }
+
+  // --------------------------------------------------------------------------
+  // 0.1 MODO DESCANSO VISUAL (OSCURO, SEPIA, WORD) Y CONCENTRACIÓN INMERSIVA
+  // --------------------------------------------------------------------------
+  function applyReaderVisualSettings() {
+    document.body.setAttribute("data-reader-theme", readerTheme);
+    document.body.setAttribute("data-reader-font", String(readerFontStep));
+    document.body.classList.toggle("immersive-focus", immersiveMode);
+
+    const floatBar = document.getElementById("immersive-floating-bar");
+    if (floatBar) {
+      floatBar.style.display = immersiveMode ? "block" : "none";
+    }
+
+    const immBtn = document.getElementById("btn-immersive-toggle");
+    if (immBtn) {
+      immBtn.textContent = immersiveMode ? "🧘 Salir Inmersivo" : "🧘 Modo Concentración";
+      immBtn.style.borderColor = immersiveMode ? "var(--accent)" : "";
+      immBtn.style.color = immersiveMode ? "var(--accent)" : "";
+    }
+
+    const gridEl = document.getElementById("course-player-grid");
+    if (gridEl) {
+      gridEl.classList.toggle("sidebar-collapsed", sidebarCollapsed);
+    }
+
+    document.querySelectorAll(".reader-theme-btn").forEach(btn => {
+      const t = btn.getAttribute("data-rtheme");
+      btn.classList.toggle("active", t === readerTheme);
+    });
+  }
+
+  window.setReaderTheme = function (theme) {
+    readerTheme = theme;
+    localStorage.setItem(STORAGE_KEYS.READER_THEME, readerTheme);
+    applyReaderVisualSettings();
+    const names = {
+      dark: "🌙 Papel Oscuro (Descanso Nocturno)",
+      sepia: "📜 Sepia Cálido (Antifatiga Visual / Kindle)",
+      word: "📄 Hoja Word Clásica"
+    };
+    window.showToast(`🎨 Tonalidad de lectura activa: <strong>${names[theme] || theme}</strong>`);
+  };
+
+  window.changeReaderFontSize = function (delta) {
+    if (delta === 0) {
+      readerFontStep = 0;
+    } else {
+      readerFontStep = Math.max(-1, Math.min(2, readerFontStep + delta));
+    }
+    localStorage.setItem(STORAGE_KEYS.READER_FONT_STEP, String(readerFontStep));
+    applyReaderVisualSettings();
+  };
+
+  window.toggleImmersiveMode = function () {
+    immersiveMode = !immersiveMode;
+    if (immersiveMode) {
+      const activeTab = document.querySelector(".tab-panel.active")?.id;
+      if (activeTab !== "tab-study" && activeTab !== "tab-apa") {
+        window.switchTab("study");
+      }
+      window.showToast("🧘 <strong>Modo Concentración Inmersivo activado.</strong> Cero distracciones (Presiona ESC o el botón superior para salir).");
+    } else {
+      window.showToast("✨ Vista completa restaurada.");
+    }
+    applyReaderVisualSettings();
+  };
+
+  window.toggleCourseSidebar = function () {
+    sidebarCollapsed = !sidebarCollapsed;
+    localStorage.setItem(STORAGE_KEYS.SIDEBAR_COLLAPSED, String(sidebarCollapsed));
+    applyReaderVisualSettings();
+  };
+
+  document.addEventListener("keydown", (e) => {
+    if (e.key === "Escape" && immersiveMode) {
+      window.toggleImmersiveMode();
+    }
+  });
 
   // --------------------------------------------------------------------------
   // 0. MOTOR DE SONIDOS, ALARMAS Y NOTIFICACIONES (WEB AUDIO API)
@@ -360,15 +510,30 @@
   };
 
   // --------------------------------------------------------------------------
-  // 3. DASHBOARD: BRÚJULA DE CONTINUIDAD, SPRINTS, LOGROS E INDICADORES
+  // 3. SISTEMA LMS A TU PROPIO RITMO (COURSERA / UDEMY / CISCO NETACAD)
   // --------------------------------------------------------------------------
-  window.toggleIndicatorDone = function (indId, checked) {
-    progressState[indId] = checked;
+  window.toggleMicroStep = function (indId, stepKey, checked) {
+    if (!microStepsState[indId]) {
+      microStepsState[indId] = getIndSteps(indId);
+    }
+    const prevVal = !!microStepsState[indId][stepKey];
+    microStepsState[indId][stepKey] = checked;
+
+    if (checked && !prevVal) {
+      dailyPace.stepsDoneToday = (dailyPace.stepsDoneToday || 0) + 1;
+      localStorage.setItem(STORAGE_KEYS.DAILY_PACE, JSON.stringify(dailyPace));
+      window.playSoundEffect("correct");
+    }
+
+    const st = microStepsState[indId];
+    const allThreeDone = !!(st.read && st.notebook && st.cases);
+    progressState[indId] = allThreeDone;
+
+    localStorage.setItem(STORAGE_KEYS.MICRO_STEPS, JSON.stringify(microStepsState));
     localStorage.setItem(STORAGE_KEYS.PROGRESS, JSON.stringify(progressState));
 
-    if (checked) {
+    if (allThreeDone) {
       window.playSoundEffect("achievement");
-      // Si marcó como dominado el que tenía en foco, avanzar foco automáticamente al siguiente pendiente
       const nextPending = window.INDICATORS_DATA.find(i => !progressState[i.id]);
       if (nextPending && currentFocusId === indId) {
         currentFocusId = nextPending.id;
@@ -376,7 +541,16 @@
       }
       const indObj = window.INDICATORS_DATA.find(i => i.id === indId);
       if (indObj) {
-        window.showToast(`✅ ¡Dominado! <strong>${indObj.name}</strong>`);
+        window.showToast(`🎉 ¡Lección completada al 100 % (3/3 pasos)!<br><strong>${indObj.name}</strong>`);
+      }
+    } else {
+      const stepNames = {
+        read: "📖 Paso 1: Lectura Teórica",
+        notebook: "📓 Paso 2: Hoja en Libreta Cuadriculada",
+        cases: "⚖️ Paso 3: Casos PJS del Indicador"
+      };
+      if (checked) {
+        window.showToast(`✅ Micro-paso listo: <strong>${stepNames[stepKey]}</strong>`);
       }
     }
 
@@ -385,11 +559,96 @@
     renderStudyDetail();
   };
 
+  window.toggleIndicatorDone = function (indId, checked) {
+    progressState[indId] = checked;
+    microStepsState[indId] = { read: checked, notebook: checked, cases: checked };
+    localStorage.setItem(STORAGE_KEYS.PROGRESS, JSON.stringify(progressState));
+    localStorage.setItem(STORAGE_KEYS.MICRO_STEPS, JSON.stringify(microStepsState));
+
+    if (checked) {
+      dailyPace.stepsDoneToday = (dailyPace.stepsDoneToday || 0) + 1;
+      localStorage.setItem(STORAGE_KEYS.DAILY_PACE, JSON.stringify(dailyPace));
+      window.playSoundEffect("achievement");
+      const nextPending = window.INDICATORS_DATA.find(i => !progressState[i.id]);
+      if (nextPending && currentFocusId === indId) {
+        currentFocusId = nextPending.id;
+        localStorage.setItem(STORAGE_KEYS.CURRENT_FOCUS, currentFocusId);
+      }
+      const indObj = window.INDICATORS_DATA.find(i => i.id === indId);
+      if (indObj) {
+        window.showToast(`✅ ¡Dominado al 100 %! <strong>${indObj.name}</strong>`);
+      }
+    }
+
+    renderDashboard();
+    renderStudySidebar();
+    renderStudyDetail();
+  };
+
+  window.setDailyPaceMode = function (modeId) {
+    dailyPace.modeId = modeId;
+    localStorage.setItem(STORAGE_KEYS.DAILY_PACE, JSON.stringify(dailyPace));
+    renderDashboard();
+    const modeObj = (window.DIAN_PROFILE.modosRitmoDiario || []).find(m => m.id === modeId);
+    if (modeObj) {
+      window.showToast(`${modeObj.icono} Ritmo ajustado a: <strong>${modeObj.nombre}</strong>`);
+    }
+  };
+
+  window.toggleCourseModuleAccordion = function (blockId) {
+    expandedModules[blockId] = !expandedModules[blockId];
+    localStorage.setItem(STORAGE_KEYS.EXPANDED_MODULES, JSON.stringify(expandedModules));
+    renderDashboard();
+  };
+
+  window.expandAllCourseModules = function (expand) {
+    expandedModules = { bloque1: expand, bloque2: expand, bloque3: expand, bloque4: expand };
+    localStorage.setItem(STORAGE_KEYS.EXPANDED_MODULES, JSON.stringify(expandedModules));
+    renderDashboard();
+  };
+
+  window.openLessonSubtab = function (indId, subtab) {
+    activeLessonSubtab = subtab || "all";
+    window.setCurrentFocusIndicator(indId, true);
+  };
+
+  window.goToNextCourseStep = function () {
+    const ind = window.INDICATORS_DATA.find(i => i.id === activeIndicatorId) || window.INDICATORS_DATA[0];
+    const st = getIndSteps(ind.id);
+
+    if (!st.read) {
+      window.toggleMicroStep(ind.id, "read", true);
+      activeLessonSubtab = "notebook";
+      renderStudyDetail();
+      window.scrollTo({ top: 0, behavior: lowGpuMode ? "auto" : "smooth" });
+      return;
+    }
+    if (!st.notebook) {
+      window.toggleMicroStep(ind.id, "notebook", true);
+      activeLessonSubtab = "cases";
+      renderStudyDetail();
+      window.scrollTo({ top: 0, behavior: lowGpuMode ? "auto" : "smooth" });
+      return;
+    }
+    if (!st.cases) {
+      window.toggleMicroStep(ind.id, "cases", true);
+    }
+
+    const idx = window.INDICATORS_DATA.findIndex(i => i.id === ind.id);
+    const nextInd = window.INDICATORS_DATA[idx + 1] || window.INDICATORS_DATA.find(i => !progressState[i.id]);
+    if (nextInd) {
+      activeLessonSubtab = "all";
+      window.setCurrentFocusIndicator(nextInd.id, true);
+    }
+  };
+
   window.startFromZeroInd1 = function () {
     progressState = {};
+    microStepsState = { ind1: { read: false, notebook: false, cases: false } };
     currentFocusId = "ind1";
     activeIndicatorId = "ind1";
     localStorage.setItem(STORAGE_KEYS.PROGRESS, "{}");
+    localStorage.setItem(STORAGE_KEYS.MICRO_STEPS, JSON.stringify(microStepsState));
     localStorage.setItem(STORAGE_KEYS.CURRENT_FOCUS, "ind1");
     renderDashboard();
     renderStudySidebar();
@@ -407,78 +666,169 @@
     const nextPending = window.INDICATORS_DATA.find((i, idx) => idx > focusIdx && !progressState[i.id])
       || window.INDICATORS_DATA.find(i => !progressState[i.id]);
 
-    const fase1Ids = ["ind1","ind2","ind3","ind4","ind5","ind6","ind7","ind8","ind9"];
-    const fase1Done = fase1Ids.filter(id => !!progressState[id]).length;
+    const st = getIndSteps(focusInd.id);
+    const doneSteps = getIndDoneStepsCount(focusInd.id);
+    const indPct = Math.round((doneSteps / 3) * 100);
+    const nextStepInfo = getNextMicroStepInfo(focusInd.id);
+    const relatedCasesCount = getAllCases().filter(c => c.indicatorId === focusInd.id).length;
 
     compassEl.innerHTML = `
       <div class="compass-info">
-        <div style="display:flex; gap:8px; align-items:center; flex-wrap:wrap; margin-bottom:6px;">
-          <span class="pill warning">📍 AQUÍ QUEDASTE ESTUDIANDO (${window.DIAN_PROFILE.nombreAspirante})</span>
-          <span class="pill accent">Meta Fase 1 (Ind. 1 al 9): ${fase1Done} / 9 completados</span>
+        <div style="display:flex; gap:8px; align-items:center; flex-wrap:wrap; margin-bottom:8px;">
+          <span class="pill warning">📍 TU LECCIÓN ACTUAL (${window.DIAN_PROFILE.nombreAspirante})</span>
+          <span class="pill ${doneSteps === 3 ? "success" : "accent"}">Avance en esta lección: ${doneSteps} / 3 micro-pasos (${indPct}%)</span>
         </div>
-        <h2 style="font-size:1.22rem; color:var(--text); margin-bottom:4px;">${focusInd.name}</h2>
-        <p style="font-size:0.86rem; color:var(--muted); margin-bottom:6px;">
-          <strong>Resumen rápido:</strong> ${focusInd.quickSummary || focusInd.normaBase}
-        </p>
-        <div style="font-size:0.83rem; color:var(--accent);">
-          ⏭️ <strong>Qué sigue después:</strong> ${nextPending ? nextPending.name : "¡Has completado los 22 indicadores! Pasa a Simulacros Generales."}
+        <h2 style="font-size:1.2rem; color:var(--text); margin-bottom:6px;">${focusInd.name}</h2>
+
+        <!-- Barra interactiva de los 3 Micro-Pasos del Indicador en Foco -->
+        <div class="micro-steps-strip" style="margin:8px 0 10px;">
+          <label class="micro-step-chip ${st.read ? "done" : (nextStepInfo.key === "read" ? "current" : "")}">
+            <input type="checkbox" ${st.read ? "checked" : ""} onchange="window.toggleMicroStep('${focusInd.id}', 'read', this.checked)" />
+            <span>1. 📖 Lectura Teórica ${st.read ? "✅" : ""}</span>
+          </label>
+          <label class="micro-step-chip ${st.notebook ? "done" : (nextStepInfo.key === "notebook" ? "current" : "")}">
+            <input type="checkbox" ${st.notebook ? "checked" : ""} onchange="window.toggleMicroStep('${focusInd.id}', 'notebook', this.checked)" />
+            <span>2. 📓 Página #${focusInd.num} en Libreta ${st.notebook ? "✅" : ""}</span>
+          </label>
+          <label class="micro-step-chip ${st.cases ? "done" : (nextStepInfo.key === "cases" ? "current" : "")}">
+            <input type="checkbox" ${st.cases ? "checked" : ""} onchange="window.toggleMicroStep('${focusInd.id}', 'cases', this.checked)" />
+            <span>3. ⚖️ Simulador PJS (${relatedCasesCount} casos) ${st.cases ? "✅" : ""}</span>
+          </label>
+        </div>
+
+        <div style="font-size:0.85rem; color:var(--accent);">
+          🎯 <strong>Tu siguiente micro-paso ahora:</strong> <span style="color:var(--text); font-weight:600;">${nextStepInfo.label}</span>
+          ${nextPending ? `<span style="color:var(--muted); margin-left:8px;">(Después sigue: ${nextPending.name})</span>` : ""}
         </div>
       </div>
       <div class="compass-actions">
-        <button class="btn success" onclick="window.openIndicatorStudy('${focusInd.id}')">▶️ Estudiar Teoría (#${focusInd.num})</button>
-        <button class="btn secondary" style="border:1px solid var(--accent);" onclick="window.openNotebookMapForIndicator('${focusInd.id}')">📓 Mapa Hoja Cuadriculada (#${focusInd.num})</button>
-        <button class="btn warning" onclick="window.openIndicatorCases('${focusInd.id}')">⚖️ Practicar Casos (#${focusInd.num})</button>
+        <button class="btn success" onclick="window.openLessonSubtab('${focusInd.id}', '${nextStepInfo.subtab}')">▶️ ${nextStepInfo.btnText} (#${focusInd.num})</button>
+        <button class="btn secondary" onclick="window.openLessonSubtab('${focusInd.id}', 'theory')">📖 Teoría</button>
+        <button class="btn secondary" onclick="window.openLessonSubtab('${focusInd.id}', 'notebook')">📓 Libreta</button>
+        <button class="btn warning" onclick="window.openLessonSubtab('${focusInd.id}', 'cases')">⚖️ Casos en Aula (${relatedCasesCount})</button>
         ${nextPending && nextPending.id !== focusInd.id
           ? `<button class="btn secondary" onclick="window.setCurrentFocusIndicator('${nextPending.id}', true)">⏭️ Pasar al #${nextPending.num}</button>`
-          : ""}
-        ${focusInd.id !== "ind1" || Object.keys(progressState).length > 0
-          ? `<button class="btn-mini" onclick="window.startFromZeroInd1()" title="Fijar el punto de inicio en el Indicador #1 desde cero">🔄 Ir a #1 (Desde Cero)</button>`
           : ""}
       </div>
     `;
   }
 
   window.openNotebookMapForIndicator = function (indId) {
+    activeLessonSubtab = "notebook";
     window.setCurrentFocusIndicator(indId, true);
-    setTimeout(() => {
-      const anchor = document.getElementById("notebook-visual-anchor");
-      if (anchor) {
-        anchor.scrollIntoView({ behavior: lowGpuMode ? "auto" : "smooth", block: "center" });
-      }
-    }, 120);
   };
 
   function renderCatchupSprints() {
     const sprintsEl = document.getElementById("catchup-sprints-container");
-    if (!sprintsEl || !window.DIAN_PROFILE.sprintsDesatraso) return;
+    if (!sprintsEl) return;
 
-    sprintsEl.innerHTML = window.DIAN_PROFILE.sprintsDesatraso.map(sp => {
-      const doneCount = sp.indicadores.filter(id => !!progressState[id]).length;
-      const totalCount = sp.indicadores.length;
-      const isAllDone = doneCount === totalCount;
-      const firstPendingId = sp.indicadores.find(id => !progressState[id]) || sp.indicadores[0];
+    const now = new Date();
+    const diasSemana = ["Domingo", "Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Sábado"];
+    const meses = ["enero", "febrero", "marzo", "abril", "mayo", "junio", "julio", "agosto", "septiembre", "octubre", "noviembre", "diciembre"];
+    const fechaDinamica = `${diasSemana[now.getDay()]}, ${now.getDate()} de ${meses[now.getMonth()]} de ${now.getFullYear()}`;
 
-      return `
-        <div class="sprint-card ${isAllDone ? "completed" : ""}">
-          <div style="display:flex; justify-content:space-between; align-items:center; gap:8px; flex-wrap:wrap;">
-            <strong style="color:${isAllDone ? "var(--success)" : "var(--warning)"}; font-size:0.92rem;">
-              ${isAllDone ? "✅" : "⚡"} ${sp.titulo}
-            </strong>
-            <span class="pill ${isAllDone ? "success" : "accent"}">${doneCount}/${totalCount} listos</span>
+    const examDate = new Date(window.DIAN_PROFILE.fechaExamenISO).getTime();
+    const daysLeft = Math.max(0, Math.ceil((examDate - Date.now()) / (1000 * 60 * 60 * 24)));
+
+    const datePill = document.getElementById("dynamic-date-pill");
+    if (datePill) {
+      datePill.textContent = `📅 Hoy es ${fechaDinamica} • Faltan ${daysLeft} días`;
+    }
+
+    const modes = window.DIAN_PROFILE.modosRitmoDiario || [];
+    const activeMode = modes.find(m => m.id === dailyPace.modeId) || modes[1] || {
+      id: "fluido", icono: "⚡", nombre: "Objetivo Coursera", metaPasos: 3, descripcion: "Avanza a tu ritmo sin presión."
+    };
+
+    const doneToday = dailyPace.stepsDoneToday || 0;
+    const targetToday = activeMode.metaPasos;
+    const goalPct = targetToday > 0 ? Math.min(100, Math.round((doneToday / targetToday) * 100)) : 100;
+
+    const focusInd = window.INDICATORS_DATA.find(i => i.id === currentFocusId) || window.INDICATORS_DATA[0];
+    const nextStep = getNextMicroStepInfo(focusInd.id);
+
+    const kpiSlotVal = document.getElementById("kpi-slot-val");
+    const kpiSlotSub = document.getElementById("kpi-slot-sub");
+    if (kpiSlotVal) {
+      kpiSlotVal.textContent = targetToday > 0
+        ? `${activeMode.icono} Hoy: ${doneToday} / ${targetToday} micro-pasos (${goalPct}%)`
+        : `${activeMode.icono} Modo Repaso Libre (Sin meta fija)`;
+    }
+    if (kpiSlotSub) {
+      kpiSlotSub.textContent = `${activeMode.nombre} — Cero horarios estrictos`;
+    }
+
+    sprintsEl.innerHTML = `
+      <!-- WIDGET ESTILO COURSERA: OBJETIVO DIARIO FLEXIBLE A TU RITMO -->
+      <div class="coursera-goal-box">
+        <div style="display:flex; justify-content:space-between; align-items:flex-start; flex-wrap:wrap; gap:10px; margin-bottom:10px;">
+          <div>
+            <div style="font-size:0.78rem; text-transform:uppercase; letter-spacing:0.04em; color:var(--accent); font-weight:700;">
+              🧭 El Objetivo de Hoy (A tu propio ritmo, sin horarios rígidos)
+            </div>
+            <h3 style="font-size:1.05rem; color:var(--text); margin-top:2px;">
+              ${targetToday > 0
+                ? (doneToday >= targetToday
+                    ? `🎉 ¡Meta de hoy cumplida (${doneToday}/${targetToday} micro-pasos)! Todo lo que hagas extra es ganancia.`
+                    : `${activeMode.icono} Llevas <strong>${doneToday} de ${targetToday} micro-pasos</strong> hoy — ¡Te falta(n) ${targetToday - doneToday} para tu meta del día!`)
+                : `☕ Hoy estás en Modo Repaso Libre — Estudia o repasa cuando te sientas cómodo`}
+            </h3>
+            <p style="font-size:0.83rem; color:var(--muted); margin-top:3px;">${activeMode.descripcion}</p>
           </div>
-          <p style="font-size:0.83rem; color:var(--text); margin:6px 0 4px;"><strong>Objetivo:</strong> ${sp.meta}</p>
-          <p style="font-size:0.8rem; color:var(--muted); margin-bottom:8px;"><strong>Plan de acción:</strong> ${sp.pasoAPaso}</p>
-          <div style="display:flex; gap:6px; flex-wrap:wrap;">
-            <button class="btn-mini" onclick="window.openIndicatorStudy('${firstPendingId}')">
-              📖 Ir a ${isAllDone ? "Repasar Sprint" : "Indicador Pendiente"}
-            </button>
-            <button class="btn-mini" onclick="window.startTimer(45, '${sp.titulo.replace(/'/g, "")}')">
-              ⏱️ Iniciar Reloj para este Sprint
-            </button>
-          </div>
+          <button class="btn success" onclick="window.openLessonSubtab('${focusInd.id}', '${nextStep.subtab}')">
+            ▶️ Continuar: ${nextStep.btnText}
+          </button>
         </div>
-      `;
-    }).join("");
+
+        <div class="progress-bar-bg" style="height:14px; margin:6px 0 12px;">
+          <div class="progress-bar-fill" style="width:${goalPct}%; line-height:14px; font-size:0.7rem;">${goalPct}%</div>
+        </div>
+
+        <div style="font-size:0.78rem; color:var(--muted); margin-bottom:6px; font-weight:600;">
+          🎚️ ¿Cómo te sientes de tiempo y energía hoy? Elige tu ritmo con un clic:
+        </div>
+        <div class="pace-selector-grid">
+          ${modes.map(m => `
+            <button class="pace-mode-btn ${m.id === activeMode.id ? "active" : ""}" onclick="window.setDailyPaceMode('${m.id}')">
+              <div style="font-weight:700; font-size:0.82rem;">${m.icono} ${m.nombre}</div>
+              <div style="font-size:0.72rem; color:var(--muted); margin-top:2px;">
+                ${m.metaPasos > 0 ? `Meta: ${m.metaPasos} micro-paso(s)` : "Sin meta obligatoria"}
+              </div>
+            </button>
+          `).join("")}
+        </div>
+      </div>
+
+      <!-- TARJETAS DE LOS 4 MÓDULOS DEL CURSO (ESTILO CISCO NETACAD / UDEMY) -->
+      <div style="margin-top:14px;">
+        <div style="font-size:0.82rem; color:var(--muted); font-weight:700; margin-bottom:8px; text-transform:uppercase;">
+          📊 Panorama General por Módulos del Curso (4 Secciones):
+        </div>
+        <div class="grid-2" style="gap:10px;">
+          ${(window.DIAN_PROFILE.modulosCurso || []).map(mod => {
+            const totalSteps = mod.indicadores.length * 3;
+            const doneSteps = mod.indicadores.reduce((acc, id) => acc + getIndDoneStepsCount(id), 0);
+            const modPct = Math.round((doneSteps / totalSteps) * 100);
+            const firstPending = mod.indicadores.find(id => getIndDoneStepsCount(id) < 3) || mod.indicadores[0];
+            return `
+              <div class="course-module-summary-card">
+                <div style="display:flex; justify-content:space-between; align-items:center; gap:6px;">
+                  <strong style="font-size:0.86rem; color:var(--text);">Módulo ${mod.num}: ${mod.titulo.replace(/^Módulo \d+:\s*/, "")}</strong>
+                  <span class="pill ${modPct === 100 ? "success" : "accent"}" style="font-size:0.72rem;">${modPct}%</span>
+                </div>
+                <div class="mini-progress-track">
+                  <div class="mini-progress-fill" style="width:${modPct}%;"></div>
+                </div>
+                <div style="display:flex; justify-content:space-between; align-items:center; font-size:0.75rem; color:var(--muted); margin-top:4px;">
+                  <span>${doneSteps}/${totalSteps} micro-pasos (${mod.indicadores.length} temas)</span>
+                  <button class="btn-mini" onclick="window.openIndicatorStudy('${firstPending}')">Ir al Módulo →</button>
+                </div>
+              </div>
+            `;
+          }).join("")}
+        </div>
+      </div>
+    `;
   }
 
   function renderAchievements(completedCount, pjsScore, pjsAnsweredCount) {
@@ -522,89 +872,131 @@
     const groups = {};
     window.INDICATORS_DATA.forEach(ind => {
       if (!groups[ind.blockId]) {
-        groups[ind.blockId] = { title: ind.blockName, items: [] };
+        groups[ind.blockId] = { id: ind.blockId, title: ind.blockName, items: [] };
       }
       groups[ind.blockId].items.push(ind);
     });
 
     container.innerHTML = "";
-    let total = 0;
-    let completed = 0;
+    let totalInds = window.INDICATORS_DATA.length;
+    let completedInds = window.INDICATORS_DATA.filter(i => !!progressState[i.id]).length;
+    const totalMicroSteps = totalInds * 3;
+    const doneMicroSteps = getTotalMicroStepsDone();
 
     Object.values(groups).forEach(group => {
-      const groupDone = group.items.filter(i => !!progressState[i.id]).length;
-      const div = document.createElement("div");
-      div.className = "indicator-group";
-      div.innerHTML = `<h3><span>${group.title}</span><span>${groupDone}/${group.items.length}</span></h3>`;
+      const groupDoneInds = group.items.filter(i => !!progressState[i.id]).length;
+      const groupTotalSteps = group.items.length * 3;
+      const groupDoneSteps = group.items.reduce((acc, i) => acc + getIndDoneStepsCount(i.id), 0);
+      const groupPct = Math.round((groupDoneSteps / groupTotalSteps) * 100);
+      const isExpanded = expandedModules[group.id] !== false;
 
-      group.items.forEach(item => {
-        total++;
-        const isChecked = !!progressState[item.id];
-        const isCurrentFocus = item.id === currentFocusId;
-        if (isChecked) completed++;
-        const badgeClass = item.tag.toLowerCase();
-        const itemCasesCount = getAllCases().filter(c => c.indicatorId === item.id).length;
+      const sectionEl = document.createElement("div");
+      sectionEl.className = "udemy-module-section";
 
-        const row = document.createElement("div");
-        row.className = "indicator-item" + (isChecked ? " done" : "") + (isCurrentFocus ? " current-focus" : "");
-        row.innerHTML = `
-          <label>
-            <input type="checkbox" ${isChecked ? "checked" : ""} onchange="window.toggleIndicatorDone('${item.id}', this.checked)" />
-            <span>${isCurrentFocus ? "📍 " : ""}${item.name}</span>
-          </label>
-          <div class="indicator-actions">
-            <span class="badge ${badgeClass}">${item.tag}</span>
-            <button class="btn-mini" title="Marcar que vas por aquí" onclick="window.setCurrentFocusIndicator('${item.id}', false)">📍 Aquí voy</button>
-            <button class="btn-mini" onclick="window.openIndicatorStudy('${item.id}')">📖 Teoría</button>
-            <button class="btn-mini" onclick="window.openIndicatorCases('${item.id}')">⚖️ Casos (${itemCasesCount})</button>
+      const headerEl = document.createElement("div");
+      headerEl.className = "udemy-module-header";
+      headerEl.onclick = () => window.toggleCourseModuleAccordion(group.id);
+      headerEl.innerHTML = `
+        <div style="flex:1;">
+          <div style="display:flex; justify-content:space-between; align-items:center; gap:8px; flex-wrap:wrap;">
+            <strong style="font-size:0.94rem; color:var(--warning);">${isExpanded ? "▾" : "▸"} ${group.title}</strong>
+            <span style="font-size:0.78rem; color:var(--text); font-weight:700;">
+              ${groupDoneInds}/${group.items.length} temas • ${groupDoneSteps}/${groupTotalSteps} pasos (${groupPct}%)
+            </span>
           </div>
-        `;
-        div.appendChild(row);
-      });
+          <div class="mini-progress-track" style="margin-top:6px;">
+            <div class="mini-progress-fill" style="width:${groupPct}%;"></div>
+          </div>
+        </div>
+      `;
+      sectionEl.appendChild(headerEl);
 
-      container.appendChild(div);
+      if (isExpanded) {
+        const bodyEl = document.createElement("div");
+        bodyEl.className = "udemy-module-body";
+
+        group.items.forEach(item => {
+          const isChecked = !!progressState[item.id];
+          const isCurrentFocus = item.id === currentFocusId;
+          const st = getIndSteps(item.id);
+          const doneCount = getIndDoneStepsCount(item.id);
+          const badgeClass = item.tag.toLowerCase();
+          const itemCasesCount = getAllCases().filter(c => c.indicatorId === item.id).length;
+
+          const row = document.createElement("div");
+          row.className = "indicator-item" + (isChecked ? " done" : "") + (isCurrentFocus ? " current-focus" : "");
+          row.innerHTML = `
+            <div style="width:100%; display:flex; justify-content:space-between; align-items:center; gap:8px; flex-wrap:wrap;">
+              <label style="flex:1; min-width:210px;">
+                <input type="checkbox" ${isChecked ? "checked" : ""} onchange="window.toggleIndicatorDone('${item.id}', this.checked)" />
+                <span>${isCurrentFocus ? "📍 " : ""}${item.name}</span>
+              </label>
+              <div class="indicator-actions">
+                <span class="pill ${doneCount === 3 ? "success" : (doneCount > 0 ? "accent" : "")}" style="font-size:0.7rem;">${doneCount}/3 pasos</span>
+                <span class="badge ${badgeClass}">${item.tag}</span>
+                <button class="btn-mini" title="Fijar como lección actual" onclick="window.setCurrentFocusIndicator('${item.id}', false)">📍 Aquí voy</button>
+                <button class="btn-mini" onclick="window.openLessonSubtab('${item.id}', 'all')">🎓 Abrir Aula</button>
+              </div>
+            </div>
+
+            <!-- Sub-ítems checkables estilo Udemy / Coursera -->
+            <div class="micro-steps-strip" style="width:100%; padding-left:26px; margin-top:4px;">
+              <label class="micro-step-chip ${st.read ? "done" : ""}">
+                <input type="checkbox" ${st.read ? "checked" : ""} onchange="window.toggleMicroStep('${item.id}', 'read', this.checked)" />
+                <span onclick="event.preventDefault(); window.openLessonSubtab('${item.id}', 'theory')">1. 📖 Lectura</span>
+              </label>
+              <label class="micro-step-chip ${st.notebook ? "done" : ""}">
+                <input type="checkbox" ${st.notebook ? "checked" : ""} onchange="window.toggleMicroStep('${item.id}', 'notebook', this.checked)" />
+                <span onclick="event.preventDefault(); window.openLessonSubtab('${item.id}', 'notebook')">2. 📓 Libreta Pág. #${item.num}</span>
+              </label>
+              <label class="micro-step-chip ${st.cases ? "done" : ""}">
+                <input type="checkbox" ${st.cases ? "checked" : ""} onchange="window.toggleMicroStep('${item.id}', 'cases', this.checked)" />
+                <span onclick="event.preventDefault(); window.openLessonSubtab('${item.id}', 'cases')">3. ⚖️ Simulador (${itemCasesCount} casos)</span>
+              </label>
+            </div>
+          `;
+          bodyEl.appendChild(row);
+        });
+
+        sectionEl.appendChild(bodyEl);
+      }
+
+      container.appendChild(sectionEl);
     });
 
-    const pct = Math.round((completed / total) * 100);
+    const pctMicro = Math.round((doneMicroSteps / totalMicroSteps) * 100);
     const bar = document.getElementById("progress-bar");
     if (bar) {
-      bar.style.width = `${pct}%`;
-      bar.textContent = `${pct}% (${completed}/${total} Indicadores Dominados)`;
+      bar.style.width = `${Math.max(pctMicro, doneMicroSteps > 0 ? 4 : 0)}%`;
+      bar.textContent = `${pctMicro}% (${doneMicroSteps}/${totalMicroSteps} Micro-Pasos • ${completedInds}/${totalInds} Temas Completos)`;
     }
 
     const kpiInd = document.getElementById("kpi-indicators-val");
-    if (kpiInd) kpiInd.textContent = `${completed} / ${total} (${pct}%)`;
+    if (kpiInd) {
+      kpiInd.textContent = `${doneMicroSteps} / ${totalMicroSteps} pasos (${pctMicro}%)`;
+    }
 
-    const focusInd = window.INDICATORS_DATA.find(i => i.id === currentFocusId);
+    const focusInd = window.INDICATORS_DATA.find(i => i.id === currentFocusId) || window.INDICATORS_DATA[0];
+    const nextStep = getNextMicroStepInfo(focusInd.id);
     const kpiIndSub = document.getElementById("kpi-indicators-sub");
     if (kpiIndSub && focusInd) {
-      kpiIndSub.textContent = `En curso: #${focusInd.num} (${focusInd.name.slice(0, 32)}...)`;
+      kpiIndSub.textContent = `Actual: #${focusInd.num} (${getIndDoneStepsCount(focusInd.id)}/3 pasos) → ${nextStep.btnText}`;
     }
 
     const pjsStats = updatePjsKpi();
-    renderAchievements(completed, pjsStats.numScore, pjsStats.totalAnswered);
+    renderAchievements(completedInds, pjsStats.numScore, pjsStats.totalAnswered);
     renderRoutineAndRules();
   }
 
   function renderRoutineAndRules() {
     const routineContainer = document.getElementById("routine-list-container");
     if (routineContainer) {
-      const now = new Date();
-      const minsNow = now.getHours() * 60 + now.getMinutes();
       routineContainer.innerHTML = "";
-      let activeTitle = "Horario Flexible / Desatraso";
-
       window.DIAN_PROFILE.rutinaHoraria.forEach(slot => {
-        const isCurrent = minsNow >= slot.startMin && minsNow < slot.endMin;
-        if (isCurrent) activeTitle = `${slot.rango} — ${slot.titulo}`;
         const li = document.createElement("li");
-        li.className = isCurrent ? "active-slot" : "";
         li.innerHTML = `<strong>${slot.rango} (${slot.titulo}):</strong> ${slot.detalle}`;
         routineContainer.appendChild(li);
       });
-
-      const kpiSlot = document.getElementById("kpi-slot-val");
-      if (kpiSlot) kpiSlot.textContent = activeTitle;
     }
 
     const rulesContainer = document.getElementById("golden-rules-container");
@@ -787,10 +1179,15 @@
   };
 
   // --------------------------------------------------------------------------
-  // 4. MÓDULO DE ESTUDIO DE LOS 22 INDICADORES (MÉTODO DE 3 PASOS + RECURSOS)
+  // 4. AULA DEL CURSO: ESQUEMA LATERAL NETACAD/UDEMY Y REPRODUCTOR CON TONOS
   // --------------------------------------------------------------------------
   window.setStudyFilter = function (blockFilter) {
     currentStudyFilter = blockFilter;
+    renderStudySidebar();
+  };
+
+  window.filterSidebarSearch = function (query) {
+    sidebarSearchQuery = (query || "").trim().toLowerCase();
     renderStudySidebar();
   };
 
@@ -798,10 +1195,20 @@
     const listEl = document.getElementById("study-sidebar-list");
     if (!listEl) return;
 
+    const totalSteps = window.INDICATORS_DATA.length * 3;
+    const doneSteps = getTotalMicroStepsDone();
+    const coursePct = Math.round((doneSteps / totalSteps) * 100);
+    const pctEl = document.getElementById("sidebar-course-pct");
+    if (pctEl) pctEl.textContent = `${coursePct}% (${doneSteps}/${totalSteps})`;
+
     const filtered = window.INDICATORS_DATA.filter(ind => {
-      if (currentStudyFilter === "all") return true;
-      if (currentStudyFilter === "pending") return !progressState[ind.id];
-      return ind.blockId === currentStudyFilter;
+      if (currentStudyFilter === "pending" && progressState[ind.id]) return false;
+      if (currentStudyFilter.startsWith("bloque") && ind.blockId !== currentStudyFilter) return false;
+      if (sidebarSearchQuery) {
+        const hay = `${ind.name} ${ind.normaBase} ${ind.quickSummary || ""}`.toLowerCase();
+        if (!hay.includes(sidebarSearchQuery)) return false;
+      }
+      return true;
     });
 
     listEl.innerHTML = "";
@@ -809,11 +1216,12 @@
       const isDone = !!progressState[ind.id];
       const isActive = ind.id === activeIndicatorId;
       const isFocus = ind.id === currentFocusId;
+      const indStepsCount = getIndDoneStepsCount(ind.id);
       const btn = document.createElement("button");
       btn.className = "study-nav-btn" + (isActive ? " active" : "");
       btn.innerHTML = `
-        <span>${isDone ? "✅" : (isFocus ? "📍" : "⬜")} ${ind.name}</span>
-        <span class="badge ${ind.tag.toLowerCase()}">${ind.tag}</span>
+        <span style="flex:1;">${isDone ? "✅" : (isFocus ? "📍" : (indStepsCount > 0 ? "⏳" : "⬜"))} ${ind.name}</span>
+        <span class="pill ${indStepsCount === 3 ? "success" : (indStepsCount > 0 ? "accent" : "")}" style="font-size:0.68rem; padding:1px 6px;">${indStepsCount}/3</span>
       `;
       btn.addEventListener("click", () => {
         window.setCurrentFocusIndicator(ind.id, false);
@@ -828,6 +1236,83 @@
     });
   }
 
+  function buildInlineLessonCasesHtml(ind, relatedCases) {
+    if (relatedCases.length === 0) {
+      return `
+        <div class="step-box">
+          <h3>⚖️ Práctica de este Indicador</h3>
+          <p>Este indicador se evalúa de forma transversal en el Simulador de Autoinforme Comportamental / Integridad y en los Talleres Prácticos.</p>
+          <div style="display:flex; gap:8px; flex-wrap:wrap; margin-top:10px;">
+            <button class="btn" onclick="window.switchTab('autoinforme')">🧭 Ir al Simulador de Autoinforme (30%)</button>
+            <button class="btn secondary" onclick="window.switchTab('workshops')">🛠️ Ir a Talleres Prácticos</button>
+          </div>
+        </div>
+      `;
+    }
+
+    const answeredInInd = relatedCases.filter(c => !!pjsAnswers[c.id]).length;
+    const hitsInInd = relatedCases.filter(c => pjsAnswers[c.id] === c.correct).length;
+
+    return `
+      <div class="step-box" style="border-left-color:var(--warning);">
+        <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px; margin-bottom:12px;">
+          <div>
+            <h3 style="margin-bottom:2px;">⚖️ Paso 3: Simulador Integrado de esta Lección (${relatedCases.length} Casos PJS)</h3>
+            <p style="font-size:0.84rem; color:var(--muted); margin:0;">
+              Resuelve los casos de <strong>${ind.name}</strong> aquí mismo. Al contestarlos todos se marcará automáticamente tu 3.er micro-paso.
+            </p>
+          </div>
+          <span class="pill ${answeredInInd === relatedCases.length ? "success" : "warning"}">
+            Resueltos: ${answeredInInd}/${relatedCases.length} • Aciertos: ${hitsInInd}
+          </span>
+        </div>
+
+        ${relatedCases.map((c, idx) => {
+          const userChoice = pjsAnswers[c.id];
+          const isAnswered = !!userChoice;
+          const renderOpt = (letter) => {
+            let cls = "option-btn";
+            if (isAnswered) {
+              if (letter === c.correct) cls += " correct";
+              else if (letter === userChoice && userChoice !== c.correct) cls += " incorrect";
+            }
+            return `
+              <button class="${cls}" ${isAnswered ? "disabled" : ""} onclick="window.answerPjsCase('${c.id}', '${letter}')">
+                <span class="option-letter">${letter}</span>
+                <span>${c.options[letter]}</span>
+              </button>
+            `;
+          };
+
+          return `
+            <div class="case-card" style="margin-bottom:12px;">
+              <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px; flex-wrap:wrap; gap:6px;">
+                <span class="pill accent">Caso ${idx + 1} de ${relatedCases.length} — ${c.title}</span>
+                ${isAnswered ? `<button class="btn-mini" onclick="window.retrySinglePjsCase('${c.id}')">🔄 Reintentar caso</button>` : ""}
+              </div>
+              <div class="case-context"><strong>Caso Situacional:</strong> ${c.context}</div>
+              <div class="case-stem">${c.stem}</div>
+              <div>
+                ${renderOpt("A")}
+                ${renderOpt("B")}
+                ${renderOpt("C")}
+              </div>
+              ${isAnswered ? `
+                <div class="feedback-panel">
+                  <h4>${userChoice === c.correct ? "✅ ¡Respuesta Correcta!" : `❌ Respuesta Incorrecta (Elegiste ${userChoice} — La clave correcta es ${c.correct})`}</h4>
+                  <p style="margin-bottom:6px;"><strong>Fundamento Técnico y Jurídico (Clave ${c.correct}):</strong> ${c.explanation.correctWhy}</p>
+                  ${c.explanation.distractorA ? `<p style="font-size:0.82rem; color:var(--muted);">• <strong>Distractor A:</strong> ${c.explanation.distractorA}</p>` : ""}
+                  ${c.explanation.distractorB ? `<p style="font-size:0.82rem; color:var(--muted);">• <strong>Distractor B:</strong> ${c.explanation.distractorB}</p>` : ""}
+                  ${c.explanation.distractorC ? `<p style="font-size:0.82rem; color:var(--muted);">• <strong>Distractor C:</strong> ${c.explanation.distractorC}</p>` : ""}
+                </div>
+              ` : ""}
+            </div>
+          `;
+        }).join("")}
+      </div>
+    `;
+  }
+
   function renderStudyDetail() {
     const viewEl = document.getElementById("study-detail-view");
     if (!viewEl) return;
@@ -835,70 +1320,115 @@
     const idx = window.INDICATORS_DATA.findIndex(i => i.id === activeIndicatorId);
     const ind = window.INDICATORS_DATA[idx] || window.INDICATORS_DATA[0];
     const isDone = !!progressState[ind.id];
+    const st = getIndSteps(ind.id);
+    const doneStepsCount = getIndDoneStepsCount(ind.id);
+    const nextStepInfo = getNextMicroStepInfo(ind.id);
     const prevInd = idx > 0 ? window.INDICATORS_DATA[idx - 1] : null;
     const nextInd = idx < window.INDICATORS_DATA.length - 1 ? window.INDICATORS_DATA[idx + 1] : null;
     const relatedCases = getAllCases().filter(c => c.indicatorId === ind.id);
 
     const linksHtml = ind.links && ind.links.length > 0
       ? `<div class="step-box" style="border-left-color:var(--purple);">
-           <h3>🔗 Recursos Directos y Normativa de este Indicador</h3>
+           <h3>🔗 Recursos Oficiales Descargables / Enlaces de esta Lección</h3>
            <ul class="links-list">
              ${ind.links.map(l => `<li><a href="${l.url}" target="_blank" rel="noopener">${l.label}</a></li>`).join("")}
            </ul>
          </div>`
       : "";
 
+    const showTheory = activeLessonSubtab === "all" || activeLessonSubtab === "theory";
+    const showNotebook = activeLessonSubtab === "all" || activeLessonSubtab === "notebook";
+    const showCases = activeLessonSubtab === "all" || activeLessonSubtab === "cases";
+
     viewEl.innerHTML = `
-      <div class="card">
+      <div class="card reader-card-surface">
         <div class="card-header">
           <div>
             <span class="pill accent">${ind.blockName}</span>
             <span class="badge ${ind.tag.toLowerCase()}" style="margin-left:6px;">${ind.tag}</span>
+            <span class="pill ${doneStepsCount === 3 ? "success" : "warning"}" style="margin-left:6px;">${doneStepsCount}/3 Micro-Pasos</span>
             <h2 style="margin-top:8px; font-size:1.3rem;">${ind.name}</h2>
             <p style="font-size:0.85rem; color:var(--muted);">Normativa Base: <strong>${ind.normaBase}</strong></p>
           </div>
           <div style="display:flex; gap:8px; align-items:center; flex-wrap:wrap;">
-            <label style="display:flex; align-items:center; gap:8px; background:#090d16; padding:8px 12px; border-radius:8px; border:1px solid var(--border); cursor:pointer; font-size:0.86rem; font-weight:600;">
+            <label style="display:flex; align-items:center; gap:8px; background:rgba(15,23,42,0.75); color:#f8fafc; padding:8px 12px; border-radius:8px; border:1px solid var(--border); cursor:pointer; font-size:0.84rem; font-weight:600;">
               <input type="checkbox" ${isDone ? "checked" : ""} onchange="window.toggleIndicatorDone('${ind.id}', this.checked)" />
-              <span>${isDone ? "Indicador Dominado ✅" : "Marcar como Dominado"}</span>
+              <span>${isDone ? "Lección 100% Dominada ✅" : "Marcar Lección Completa"}</span>
             </label>
-            <button class="btn warning" onclick="window.openIndicatorCases('${ind.id}')">
-              ⚖️ Practicar Casos (${relatedCases.length})
-            </button>
             <button class="btn secondary" onclick="window.openApaSingleIndicator('${ind.id}')">
-              📄 Ver en Formato APA
+              📄 Vista Impresión APA
             </button>
+          </div>
+        </div>
+
+        <!-- BARRA DE PROGRESO DE LOS 3 MICRO-PASOS DE ESTA LECCIÓN (ESTILO COURSERA / UDEMY) -->
+        <div class="lesson-microsteps-box no-print">
+          <div style="font-size:0.8rem; font-weight:700; margin-bottom:6px; color:var(--accent);">
+            ✅ Marca cada micro-paso a medida que avanzas a tu ritmo en esta lección:
+          </div>
+          <div class="micro-steps-strip">
+            <label class="micro-step-chip ${st.read ? "done" : (nextStepInfo.key === "read" ? "current" : "")}">
+              <input type="checkbox" ${st.read ? "checked" : ""} onchange="window.toggleMicroStep('${ind.id}', 'read', this.checked)" />
+              <span>1. 📖 Leí la Teoría y Trampas CNSC</span>
+            </label>
+            <label class="micro-step-chip ${st.notebook ? "done" : (nextStepInfo.key === "notebook" ? "current" : "")}">
+              <input type="checkbox" ${st.notebook ? "checked" : ""} onchange="window.toggleMicroStep('${ind.id}', 'notebook', this.checked)" />
+              <span>2. 📓 Copié la Página #${ind.num} en mi Libreta</span>
+            </label>
+            <label class="micro-step-chip ${st.cases ? "done" : (nextStepInfo.key === "cases" ? "current" : "")}">
+              <input type="checkbox" ${st.cases ? "checked" : ""} onchange="window.toggleMicroStep('${ind.id}', 'cases', this.checked)" />
+              <span>3. ⚖️ Practiqué los Casos PJS (${relatedCases.length})</span>
+            </label>
+          </div>
+
+          <!-- PESTAÑAS INTERNAS DE LA LECCIÓN (ESTILO UDEMY PLAYER) -->
+          <div class="lesson-subtabs-bar">
+            <button class="lesson-subtab-btn ${activeLessonSubtab === "all" ? "active" : ""}" onclick="window.openLessonSubtab('${ind.id}', 'all')">📑 Lección Completa (Todo)</button>
+            <button class="lesson-subtab-btn ${activeLessonSubtab === "theory" ? "active" : ""}" onclick="window.openLessonSubtab('${ind.id}', 'theory')">📘 Paso 1: Solo Lectura</button>
+            <button class="lesson-subtab-btn ${activeLessonSubtab === "notebook" ? "active" : ""}" onclick="window.openLessonSubtab('${ind.id}', 'notebook')">📓 Paso 2: Hoja Libreta (#${ind.num})</button>
+            <button class="lesson-subtab-btn ${activeLessonSubtab === "cases" ? "active" : ""}" onclick="window.openLessonSubtab('${ind.id}', 'cases')">⚖️ Paso 3: Casos PJS Aquí (${relatedCases.length})</button>
           </div>
         </div>
 
         ${ind.quickSummary ? `
-          <div style="background:rgba(56, 189, 248, 0.1); border:1px solid var(--accent); border-radius:8px; padding:10px 14px; margin-bottom:14px; font-size:0.9rem;">
+          <div class="flash-summary-box" style="background:rgba(56, 189, 248, 0.12); border:1px solid var(--accent); border-radius:8px; padding:10px 14px; margin-bottom:14px; font-size:0.92rem;">
             <strong>⚡ Ficha Flash de Memoria:</strong> ${ind.quickSummary}
           </div>
         ` : ""}
 
-        <div class="step-box">
-          <h3>📘 Paso 1: Síntesis Ejecutiva sin Relleno (Artículos, Plazos y Conceptos Exactos)</h3>
-          <div class="step-content">${ind.step1}</div>
-        </div>
+        ${showTheory ? `
+          <div class="step-box">
+            <h3>📘 1.1 Síntesis Ejecutiva sin Relleno (Artículos, Plazos y Conceptos Exactos)</h3>
+            <div class="step-content">${ind.step1}</div>
+          </div>
 
-        <div class="step-box step-2">
-          <h3>🏛️ Paso 2: Traducción al Lenguaje DIAN (Cómo aplica en tu puesto de Facilitador I)</h3>
-          <div class="step-content">${ind.step2}</div>
-        </div>
+          <div class="step-box step-2">
+            <h3>🏛️ 1.2 Traducción al Lenguaje DIAN (Cómo aplica en tu puesto de Facilitador I)</h3>
+            <div class="step-content">${ind.step2}</div>
+          </div>
 
-        <div class="step-box step-3">
-          <h3>🎯 Paso 3: Trampas Típicas de la CNSC que debes detectar</h3>
-          <div class="step-content">${ind.step3}</div>
-        </div>
+          <div class="step-box step-3">
+            <h3>🎯 1.3 Trampas Típicas de la CNSC que debes detectar</h3>
+            <div class="step-content">${ind.step3}</div>
+          </div>
+        ` : ""}
 
-        <div id="notebook-visual-anchor" class="step-box" style="border-left-color:#f43f5e; background:rgba(244,63,94,0.06);">
-          <h3>📓 Mapa Visual de tu Libreta Cuadriculada — Página #${ind.num} (Cópialo así a mano)</h3>
-          <p style="font-size:0.84rem; color:var(--muted); margin-bottom:8px;">
-            Usa tu <strong>Libreta Cuadriculada</strong> como cuaderno principal. Aquí tienes el plano exacto de cómo distribuir tu hoja con <strong>Lapicero, Lápiz HB y Marcadores</strong>:
-          </p>
-          ${window.buildVisualGridNotebookHtml(ind, relatedCases.length)}
-        </div>
+        ${showNotebook ? `
+          <div id="notebook-visual-anchor" class="step-box" style="border-left-color:#f43f5e; background:rgba(244,63,94,0.06);">
+            <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px; margin-bottom:8px;">
+              <h3 style="margin:0;">📓 Paso 2: Mapa Visual de tu Libreta Cuadriculada — Página #${ind.num}</h3>
+              <button class="btn-mini" onclick="window.toggleMicroStep('${ind.id}', 'notebook', !${st.notebook})">
+                ${st.notebook ? "✅ Ya copiado en mi libreta" : "☑️ Marcar como copiado en mi libreta"}
+              </button>
+            </div>
+            <p style="font-size:0.84rem; color:var(--muted); margin-bottom:8px;">
+              Usa tu <strong>Libreta Cuadriculada</strong> como cuaderno principal. Aquí tienes el plano exacto de cómo distribuir tu hoja con <strong>Lapicero, Lápiz HB y Marcadores</strong>:
+            </p>
+            ${window.buildVisualGridNotebookHtml(ind, relatedCases.length)}
+          </div>
+        ` : ""}
+
+        ${showCases ? buildInlineLessonCasesHtml(ind, relatedCases) : ""}
 
         ${linksHtml}
 
@@ -907,9 +1437,15 @@
           <textarea id="ind-specific-note" class="notes-area" style="min-height:95px;" placeholder="Escribe aquí tus resúmenes o nemotecnias para ${ind.name}...">${indNotesState[ind.id] || ""}</textarea>
         </div>
 
-        <div style="display:flex; justify-content:space-between; margin-top:14px;">
-          ${prevInd ? `<button class="btn secondary" onclick="window.openIndicatorStudy('${prevInd.id}')">⬅️ Anterior: #${prevInd.num}</button>` : `<span></span>`}
-          ${nextInd ? `<button class="btn" onclick="window.openIndicatorStudy('${nextInd.id}')">Siguiente: #${nextInd.num} ➡️</button>` : `<span></span>`}
+        <!-- BARRA INFERIOR ESTILO COURSERA: IR AL SIGUIENTE ELEMENTO -->
+        <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px; margin-top:16px; padding-top:14px; border-top:1px solid var(--border);">
+          ${prevInd ? `<button class="btn secondary" onclick="window.openIndicatorStudy('${prevInd.id}')">⬅️ Lección Anterior (#${prevInd.num})</button>` : `<span></span>`}
+          <div style="display:flex; gap:8px; flex-wrap:wrap;">
+            <button class="btn success" onclick="window.goToNextCourseStep()">
+              ${doneStepsCount < 3 ? `✅ Completar este paso e ir al siguiente →` : (nextInd ? `Ir a la siguiente lección (#${nextInd.num}) →` : `🎉 ¡Curso Completado!`)}
+            </button>
+            ${nextInd && doneStepsCount < 3 ? `<button class="btn secondary" onclick="window.openIndicatorStudy('${nextInd.id}')">Saltar al #${nextInd.num} ➡️</button>` : ""}
+          </div>
         </div>
       </div>
     `;
@@ -967,15 +1503,26 @@
   window.answerPjsCase = function (caseId, chosenOption) {
     pjsAnswers[caseId] = chosenOption;
     localStorage.setItem(STORAGE_KEYS.PJS_ANSWERS, JSON.stringify(pjsAnswers));
-    const c = getAllCases().find(item => item.id === caseId);
+    const allC = getAllCases();
+    const c = allC.find(item => item.id === caseId);
     if (c) {
       if (chosenOption === c.correct) {
         window.playSoundEffect("correct");
       } else {
         window.playSoundEffect("wrong");
       }
+
+      // Verificar si con esta respuesta ya resolvió todos los casos de este indicador para auto-marcar el Paso 3
+      const indCases = allC.filter(item => item.indicatorId === c.indicatorId);
+      const allIndCasesAnswered = indCases.length > 0 && indCases.every(item => !!pjsAnswers[item.id]);
+      const st = getIndSteps(c.indicatorId);
+      if (allIndCasesAnswered && !st.cases) {
+        window.toggleMicroStep(c.indicatorId, "cases", true);
+      }
     }
     renderPjsSimulator();
+    renderStudyDetail();
+    renderStudySidebar();
     renderDashboard();
   };
 
@@ -983,6 +1530,7 @@
     delete pjsAnswers[caseId];
     localStorage.setItem(STORAGE_KEYS.PJS_ANSWERS, JSON.stringify(pjsAnswers));
     renderPjsSimulator();
+    renderStudyDetail();
     renderDashboard();
   };
 
@@ -1520,6 +2068,9 @@
     const payload = {
       exportedAt: new Date().toISOString(),
       progressState,
+      microStepsState,
+      dailyPace,
+      readerTheme,
       currentFocusId,
       indNotesState,
       globalNotes: localStorage.getItem(STORAGE_KEYS.NOTES_GLOBAL) || "",
@@ -1548,6 +2099,18 @@
         if (data.progressState) {
           progressState = data.progressState;
           localStorage.setItem(STORAGE_KEYS.PROGRESS, JSON.stringify(progressState));
+        }
+        if (data.microStepsState) {
+          microStepsState = data.microStepsState;
+          localStorage.setItem(STORAGE_KEYS.MICRO_STEPS, JSON.stringify(microStepsState));
+        }
+        if (data.dailyPace) {
+          dailyPace = data.dailyPace;
+          localStorage.setItem(STORAGE_KEYS.DAILY_PACE, JSON.stringify(dailyPace));
+        }
+        if (data.readerTheme) {
+          readerTheme = data.readerTheme;
+          localStorage.setItem(STORAGE_KEYS.READER_THEME, readerTheme);
         }
         if (data.currentFocusId) {
           currentFocusId = data.currentFocusId;
@@ -1604,6 +2167,7 @@
 
   function initApp() {
     document.body.classList.toggle("low-gpu", lowGpuMode);
+    applyReaderVisualSettings();
     updateHeaderToggles();
     updateCountdown();
     setInterval(updateCountdown, 1000);
