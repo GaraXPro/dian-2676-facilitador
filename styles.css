@@ -1281,3 +1281,368 @@ body.low-gpu {
   font-size: 0.75rem;
   width: 155px;
 }
+
+/* ========================================================================== */
+/* DISEÑO RESPONSIVO (TABLETS Y CELULARES / MÓVILES)                          */
+/* ========================================================================== */
+.indicator-actions {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+
+.compass-info {
+  flex: 1;
+  min-width: 260px;
+}
+
+.compass-actions {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  align-items: center;
+}
+
+.option-btn code {
+  word-break: break-word;
+  overflow-wrap: anywhere;
+  white-space: normal;
+}
+
+@media (max-width: 1100px) {
+  .study-sidebar {
+    position: static;
+    max-height: 290px;
+    margin-bottom: 8px;
+  }
+}
+
+@media (max-width: 768px) {
+  body {
+    overflow-x: hidden;
+    padding-bottom: 32px;
+  }
+
+  /* Desacoplar el header gigante en móvil para que no tape media pantalla al bajar,
+     dejando únicamente la barra de pestañas fija (sticky) arriba */
+  .top-shell {
+    display: contents;
+  }
+
+  .header-main {
+    background: rgba(11, 17, 32, 0.96);
+    padding: 12px 14px 10px;
+    border-bottom: 1px solid var(--border);
+    gap: 10px;
+  }
+
+  .brand-block h1 {
+    font-size: 1.05rem;
+    line-height: 1.3;
+  }
+
+  .brand-meta {
+    gap: 5px;
+    margin-top: 6px;
+    font-size: 0.72rem;
+  }
+
+  .pill {
+    padding: 2px 7px;
+    font-size: 0.72rem;
+  }
+
+  .header-right {
+    width: 100%;
+    gap: 6px;
+    justify-content: space-between;
+  }
+
+  .header-right > .btn-mini {
+    flex: 1 1 auto;
+    text-align: center;
+    padding: 6px 8px;
+    font-size: 0.74rem;
+  }
+
+  .search-box {
+    min-width: 0;
+    width: 100%;
+    flex: 1 1 100%;
+  }
+
+  .search-results-box {
+    min-width: 0;
+    width: 100%;
+    max-height: 60vh;
+  }
+
+  .countdown-chip {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    text-align: left;
+    padding: 7px 12px;
+    gap: 8px;
+  }
+
+  .countdown-chip .label {
+    font-size: 0.68rem;
+  }
+
+  .countdown-chip .time {
+    font-size: 0.92rem;
+    white-space: nowrap;
+  }
+
+  /* Barra de música en móvil */
+  .music-compact-drawer {
+    margin: 0;
+    border-radius: 0;
+    border-left: none;
+    border-right: none;
+    padding: 8px 12px;
+  }
+
+  .music-pills-strip {
+    width: 100%;
+    overflow-x: auto;
+    flex-wrap: nowrap;
+    padding-bottom: 4px;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .music-pill-group {
+    flex-shrink: 0;
+  }
+
+  .music-custom-inline {
+    width: 100%;
+  }
+
+  .music-custom-inline input {
+    flex: 1;
+    width: auto;
+  }
+
+  /* Barra de navegación deslizable horizontalmente y fija arriba en celular */
+  .nav-tabs {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    background: rgba(11, 17, 32, 0.96);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--border);
+    margin: 0;
+    padding: 8px 12px;
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+    gap: 6px;
+  }
+
+  .nav-tabs::-webkit-scrollbar {
+    display: none;
+  }
+
+  .nav-tab {
+    flex-shrink: 0;
+    padding: 7px 11px;
+    font-size: 0.8rem;
+  }
+
+  /* Contenedor y tarjetas en celular */
+  .container {
+    margin: 12px auto;
+    padding: 0 12px;
+  }
+
+  .card {
+    padding: 14px;
+    margin-bottom: 14px;
+  }
+
+  .card-header h2 {
+    font-size: 1rem;
+  }
+
+  /* Brújula de continuidad */
+  .continuity-banner {
+    padding: 14px;
+    gap: 12px;
+  }
+
+  .compass-info {
+    min-width: 0;
+    width: 100%;
+  }
+
+  .compass-info h2 {
+    font-size: 1.05rem !important;
+  }
+
+  .compass-actions {
+    width: 100%;
+  }
+
+  .compass-actions .btn {
+    flex: 1 1 calc(50% - 6px);
+    justify-content: center;
+    text-align: center;
+    font-size: 0.8rem;
+    padding: 8px 10px;
+  }
+
+  /* KPIs */
+  .kpi-strip {
+    grid-template-columns: 1fr;
+    gap: 10px;
+    margin-bottom: 14px;
+  }
+
+  .kpi-card {
+    padding: 12px 14px;
+  }
+
+  .kpi-card .kpi-value {
+    font-size: 1.25rem;
+  }
+
+  /* Checklist de 22 Indicadores en móvil */
+  .indicator-item {
+    flex-direction: column;
+    align-items: flex-start;
+    padding: 10px 12px;
+    gap: 8px;
+  }
+
+  .indicator-item label {
+    width: 100%;
+    font-size: 0.86rem;
+    align-items: flex-start;
+  }
+
+  .indicator-item input[type="checkbox"] {
+    margin-top: 2px;
+    flex-shrink: 0;
+  }
+
+  .indicator-actions {
+    width: 100%;
+    justify-content: flex-start;
+    padding-left: 26px;
+  }
+
+  /* Reloj Pomodoro */
+  .timer-display {
+    font-size: 2.1rem;
+  }
+
+  .timer-controls .btn {
+    flex: 1 1 calc(50% - 6px);
+    justify-content: center;
+    font-size: 0.8rem;
+    padding: 8px 10px;
+  }
+
+  /* Simulador PJS y Autoinforme */
+  #pjs-filter-select {
+    width: 100%;
+    max-width: 100%;
+  }
+
+  .case-card {
+    padding: 14px;
+  }
+
+  .case-context {
+    padding: 10px 12px;
+    font-size: 0.88rem;
+  }
+
+  .option-btn {
+    padding: 10px 12px;
+    font-size: 0.86rem;
+    gap: 10px;
+  }
+
+  /* Talleres: Flashcards y TRD */
+  .flashcard-Grid {
+    grid-template-columns: 1fr;
+  }
+
+  #trd-calc-series,
+  #trd-calc-year {
+    width: 100% !important;
+    margin-left: 0 !important;
+    margin-top: 4px;
+  }
+
+  /* Tablas dentro de contenido teórico */
+  .step-content {
+    overflow-x: auto;
+  }
+
+  .step-box {
+    padding: 12px 14px;
+  }
+
+  /* Hoja Cuadriculada Cornell en celular */
+  .notebook-sheet-grid {
+    padding: 14px 12px;
+  }
+
+  .nb-left-cue {
+    border-right: none;
+    border-bottom: 2px dashed #ef4444;
+    padding-right: 0;
+    padding-bottom: 10px;
+    margin-bottom: 10px;
+  }
+
+  .nb-right-notes {
+    padding-left: 0;
+  }
+
+  /* Modo Lectura APA en celular */
+  .apa-paper {
+    padding: 20px 14px;
+    font-size: 11pt;
+  }
+
+  .apa-paper table {
+    display: block;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  /* Notificaciones Toast en celular */
+  .toast-container {
+    left: 12px;
+    right: 12px;
+    bottom: 14px;
+  }
+
+  .toast-msg {
+    max-width: 100%;
+    width: 100%;
+    font-size: 0.84rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .likert-row {
+    grid-template-columns: 1fr;
+  }
+
+  .compass-actions .btn {
+    flex: 1 1 100%;
+  }
+
+  .indicator-actions {
+    padding-left: 0;
+  }
+}

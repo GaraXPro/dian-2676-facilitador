@@ -58,3 +58,6 @@
    - Contador de fallos visible en el banner de puntaje.
 3. **Motor de Audio Estable:**
    - Instancia única reutilizable de `AudioContext` para evitar bloqueos de sonido del navegador.
+4. **Diseño 100% Responsivo (Celulares y Tablets):**
+   - En pantallas móviles (`<= 768px`), el encabezado principal se desplaza naturalmente para no cubrir media pantalla, dejando únicamente la barra de pestañas (`nav-tabs`) fija arriba con deslizamiento táctil horizontal y autocentrado de pestaña activa.
+   - Reestructuración de las filas de los 22 indicadores (`.indicator-item` + `.indicator-actions`), el visor lateral de estudio (con scroll automático al contenido al elegir un indicador en móvil), la hoja cuadriculada Cornell, el documento APA y las fórmulas de Excel para evitar cualquier desborde horizontal.

@@ -165,7 +165,12 @@
     const targetPanel = document.getElementById("tab-" + tabId);
     const targetBtn = document.querySelector(`.nav-tab[data-tab="${tabId}"]`);
     if (targetPanel) targetPanel.classList.add("active");
-    if (targetBtn) targetBtn.classList.add("active");
+    if (targetBtn) {
+      targetBtn.classList.add("active");
+      try {
+        targetBtn.scrollIntoView({ behavior: lowGpuMode ? "auto" : "smooth", inline: "center", block: "nearest" });
+      } catch (_) {}
+    }
     if (tabId === "apa") renderApaView();
     window.scrollTo({ top: 0, behavior: lowGpuMode ? "auto" : "smooth" });
   };
@@ -183,6 +188,12 @@
     }
     if (openStudyNow) {
       window.switchTab("study");
+      if (window.innerWidth <= 1100) {
+        setTimeout(() => {
+          const detailEl = document.getElementById("study-detail-view");
+          if (detailEl) detailEl.scrollIntoView({ behavior: lowGpuMode ? "auto" : "smooth", block: "start" });
+        }, 80);
+      }
     }
   };
 
@@ -400,7 +411,7 @@
     const fase1Done = fase1Ids.filter(id => !!progressState[id]).length;
 
     compassEl.innerHTML = `
-      <div style="flex:1; min-width:280px;">
+      <div class="compass-info">
         <div style="display:flex; gap:8px; align-items:center; flex-wrap:wrap; margin-bottom:6px;">
           <span class="pill warning">📍 AQUÍ QUEDASTE ESTUDIANDO (${window.DIAN_PROFILE.nombreAspirante})</span>
           <span class="pill accent">Meta Fase 1 (Ind. 1 al 9): ${fase1Done} / 9 completados</span>
@@ -413,7 +424,7 @@
           ⏭️ <strong>Qué sigue después:</strong> ${nextPending ? nextPending.name : "¡Has completado los 22 indicadores! Pasa a Simulacros Generales."}
         </div>
       </div>
-      <div style="display:flex; gap:8px; flex-wrap:wrap; align-items:center;">
+      <div class="compass-actions">
         <button class="btn success" onclick="window.openIndicatorStudy('${focusInd.id}')">▶️ Estudiar Teoría (#${focusInd.num})</button>
         <button class="btn secondary" style="border:1px solid var(--accent);" onclick="window.openNotebookMapForIndicator('${focusInd.id}')">📓 Mapa Hoja Cuadriculada (#${focusInd.num})</button>
         <button class="btn warning" onclick="window.openIndicatorCases('${focusInd.id}')">⚖️ Practicar Casos (#${focusInd.num})</button>
@@ -541,10 +552,12 @@
             <input type="checkbox" ${isChecked ? "checked" : ""} onchange="window.toggleIndicatorDone('${item.id}', this.checked)" />
             <span>${isCurrentFocus ? "📍 " : ""}${item.name}</span>
           </label>
-          <span class="badge ${badgeClass}">${item.tag}</span>
-          <button class="btn-mini" title="Marcar que vas por aquí" onclick="window.setCurrentFocusIndicator('${item.id}', false)">📍 Aquí voy</button>
-          <button class="btn-mini" onclick="window.openIndicatorStudy('${item.id}')">📖 Teoría</button>
-          <button class="btn-mini" onclick="window.openIndicatorCases('${item.id}')">⚖️ Casos (${itemCasesCount})</button>
+          <div class="indicator-actions">
+            <span class="badge ${badgeClass}">${item.tag}</span>
+            <button class="btn-mini" title="Marcar que vas por aquí" onclick="window.setCurrentFocusIndicator('${item.id}', false)">📍 Aquí voy</button>
+            <button class="btn-mini" onclick="window.openIndicatorStudy('${item.id}')">📖 Teoría</button>
+            <button class="btn-mini" onclick="window.openIndicatorCases('${item.id}')">⚖️ Casos (${itemCasesCount})</button>
+          </div>
         `;
         div.appendChild(row);
       });
@@ -804,6 +817,12 @@
       `;
       btn.addEventListener("click", () => {
         window.setCurrentFocusIndicator(ind.id, false);
+        if (window.innerWidth <= 1100) {
+          setTimeout(() => {
+            const detailEl = document.getElementById("study-detail-view");
+            if (detailEl) detailEl.scrollIntoView({ behavior: lowGpuMode ? "auto" : "smooth", block: "start" });
+          }, 60);
+        }
       });
       listEl.appendChild(btn);
     });
