@@ -1753,187 +1753,387 @@ body.immersive-focus .container {
   display: none !important;
 }
 
-/* Escala de Tamaño de Fuente para Lectura */
-body[data-reader-font="-1"] .reader-surface-host .step-content,
-body[data-reader-font="-1"] .reader-surface-host p,
-body[data-reader-font="-1"] .reader-surface-host li {
+/* Escala Global de Tamaño de Fuente en toda la web */
+body[data-reader-font="-1"] .step-content,
+body[data-reader-font="-1"] .case-context,
+body[data-reader-font="-1"] .option-btn,
+body[data-reader-font="-1"] p,
+body[data-reader-font="-1"] li {
   font-size: 0.86rem !important;
 }
 
-body[data-reader-font="1"] .reader-surface-host .step-content,
-body[data-reader-font="1"] .reader-surface-host p,
-body[data-reader-font="1"] .reader-surface-host li {
-  font-size: 1.05rem !important;
-  line-height: 1.68 !important;
+body[data-reader-font="1"] .step-content,
+body[data-reader-font="1"] .case-context,
+body[data-reader-font="1"] .option-btn,
+body[data-reader-font="1"] p,
+body[data-reader-font="1"] li {
+  font-size: 1.04rem !important;
+  line-height: 1.66 !important;
 }
 
-body[data-reader-font="2"] .reader-surface-host .step-content,
-body[data-reader-font="2"] .reader-surface-host p,
-body[data-reader-font="2"] .reader-surface-host li {
-  font-size: 1.16rem !important;
-  line-height: 1.75 !important;
+body[data-reader-font="2"] .step-content,
+body[data-reader-font="2"] .case-context,
+body[data-reader-font="2"] .option-btn,
+body[data-reader-font="2"] p,
+body[data-reader-font="2"] li {
+  font-size: 1.15rem !important;
+  line-height: 1.74 !important;
 }
 
 /* ========================================================================== */
-/* LAS 3 TONALIDADES DE DESCANSO VISUAL: OSCURO, SEPIA CÁLIDO Y HOJA WORD     */
+/* CABECERA REORGANIZADA Y BOTÓN PRINCIPAL "REANUDAR APRENDIZAJE"             */
 /* ========================================================================== */
-
-/* 1. TONO SEPIA CÁLIDO (ESTILO KINDLE / CREMA ANTIRREFLEJO) */
-body[data-reader-theme="sepia"] .reader-card-surface,
-body[data-reader-theme="sepia"] .apa-paper {
-  background: #f5ebd6 !important;
-  color: #2c221e !important;
-  border-color: #d3c2a3 !important;
+.brand-title-row {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px;
 }
 
-body[data-reader-theme="sepia"] .reader-card-surface h2,
-body[data-reader-theme="sepia"] .reader-card-surface h3,
-body[data-reader-theme="sepia"] .reader-card-surface p,
-body[data-reader-theme="sepia"] .reader-card-surface li,
-body[data-reader-theme="sepia"] .reader-card-surface strong,
-body[data-reader-theme="sepia"] .apa-paper * {
-  color: #2c221e !important;
+.brand-title-row h1 {
+  font-size: 1.18rem;
+  margin-right: 4px;
 }
 
-body[data-reader-theme="sepia"] .reader-card-surface .step-box {
-  background: #efe2c6 !important;
-  border-color: #cfbda0 !important;
-  border-left-width: 4px !important;
+.header-progress-inline {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: 6px;
+  flex-wrap: wrap;
 }
 
-body[data-reader-theme="sepia"] .reader-card-surface .flash-summary-box {
-  background: #e6d5b8 !important;
-  border-color: #b45309 !important;
+.header-mini-track {
+  width: 170px;
+  height: 8px;
+  background: rgba(15, 23, 42, 0.75);
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  overflow: hidden;
 }
 
-body[data-reader-theme="sepia"] .reader-card-surface .trap-alert {
-  background: #fde68a !important;
-  border-color: #d97706 !important;
+.header-mini-fill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--accent), var(--success));
+  border-radius: 999px;
+  transition: width 0.3s ease;
 }
 
-body[data-reader-theme="sepia"] .reader-card-surface .links-list li {
-  background: #e8d8b9 !important;
+.header-resume-zone {
+  display: flex;
+  align-items: center;
 }
 
-body[data-reader-theme="sepia"] .reader-card-surface .links-list a {
-  color: #1e40af !important;
+.btn-resume-hero {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  background: linear-gradient(135deg, #0056d2, #0284c7);
+  color: #ffffff !important;
+  border: 1px solid rgba(56, 189, 248, 0.65);
+  border-radius: 10px;
+  padding: 7px 14px;
+  cursor: pointer;
+  box-shadow: 0 4px 14px rgba(2, 132, 199, 0.35);
+  transition: all 0.18s ease;
+  text-align: left;
+}
+
+.btn-resume-hero:hover {
+  transform: translateY(-1px);
+  filter: brightness(1.08);
+  box-shadow: 0 6px 18px rgba(2, 132, 199, 0.5);
+}
+
+.resume-play-icon {
+  font-size: 1.15rem;
+  line-height: 1;
+}
+
+.resume-text-col {
+  display: flex;
+  flex-direction: column;
+  line-height: 1.22;
+}
+
+.resume-text-col strong {
+  font-size: 0.84rem;
+  color: #ffffff !important;
+}
+
+.resume-text-col small {
+  font-size: 0.72rem;
+  color: #e0f2fe !important;
+  max-width: 230px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.btn-mini.success-outline {
+  border-color: var(--success);
+  color: var(--success);
   font-weight: 700;
 }
 
-body[data-reader-theme="sepia"] .reader-card-surface .notes-area {
+@media (max-width: 768px) {
+  .header-resume-zone {
+    width: 100%;
+  }
+  .btn-resume-hero {
+    width: 100%;
+    justify-content: center;
+  }
+  .resume-text-col small {
+    max-width: 260px;
+  }
+}
+
+/* ========================================================================== */
+/* LAS 3 TONALIDADES GLOBALES EN TODA LA WEB (SEPIA, HOJA WORD, OSCURO)       */
+/* ========================================================================== */
+
+/* 1. TONO SEPIA CÁLIDO GLOBAL (EN TODA LA WEB: DASHBOARD, AULA, SIMULADORES) */
+body[data-reader-theme="sepia"] {
+  --bg: #efe4cf;
+  --bg-elevated: #e6d7bc;
+  --card: #f6edd9;
+  --card-hover: #eadbc0;
+  --accent: #0369a1;
+  --accent-soft: rgba(3, 105, 161, 0.14);
+  --purple: #6d28d9;
+  --purple-soft: rgba(109, 40, 217, 0.12);
+  --success: #15803d;
+  --success-soft: rgba(21, 128, 61, 0.14);
+  --warning: #b45309;
+  --warning-soft: rgba(180, 83, 9, 0.14);
+  --danger: #b91c1c;
+  --danger-soft: rgba(185, 28, 28, 0.12);
+  --text: #2c221e;
+  --muted: #5c4b3c;
+  --border: #cbb898;
+  background: #efe4cf !important;
+  color: #2c221e !important;
+}
+
+body[data-reader-theme="sepia"] .top-shell,
+body[data-reader-theme="sepia"] .header-main,
+body[data-reader-theme="sepia"] .nav-tabs,
+body[data-reader-theme="sepia"] .immersive-floating-bar,
+body[data-reader-theme="sepia"] .music-compact-drawer {
+  background: rgba(238, 225, 200, 0.96) !important;
+  border-color: #cbb898 !important;
+}
+
+body[data-reader-theme="sepia"] .pill,
+body[data-reader-theme="sepia"] .btn-mini,
+body[data-reader-theme="sepia"] .nav-tab:not(.active),
+body[data-reader-theme="sepia"] .kpi-card,
+body[data-reader-theme="sepia"] .coursera-goal-box,
+body[data-reader-theme="sepia"] .pace-mode-btn,
+body[data-reader-theme="sepia"] .udemy-module-section,
+body[data-reader-theme="sepia"] .udemy-module-header,
+body[data-reader-theme="sepia"] .indicator-item:not(.done):not(.current-focus),
+body[data-reader-theme="sepia"] .micro-step-chip:not(.done):not(.current),
+body[data-reader-theme="sepia"] .lesson-microsteps-box,
+body[data-reader-theme="sepia"] .lesson-subtab-btn:not(.active),
+body[data-reader-theme="sepia"] .case-card,
+body[data-reader-theme="sepia"] .case-context,
+body[data-reader-theme="sepia"] .option-btn:not(.correct):not(.incorrect),
+body[data-reader-theme="sepia"] .option-letter,
+body[data-reader-theme="sepia"] .feedback-panel,
+body[data-reader-theme="sepia"] .likert-btn:not(.selected-best):not(.selected-warn),
+body[data-reader-theme="sepia"] .flashcard:not(.flipped),
+body[data-reader-theme="sepia"] .data-table th,
+body[data-reader-theme="sepia"] .data-table tr:nth-child(even),
+body[data-reader-theme="sepia"] .search-box input,
+body[data-reader-theme="sepia"] .countdown-chip,
+body[data-reader-theme="sepia"] #pjs-score-banner,
+body[data-reader-theme="sepia"] #autoinforme-summary-banner,
+body[data-reader-theme="sepia"] select,
+body[data-reader-theme="sepia"] input[type="text"],
+body[data-reader-theme="sepia"] input[type="number"],
+body[data-reader-theme="sepia"] input[type="url"],
+body[data-reader-theme="sepia"] textarea.notes-area {
   background: #fdf8ee !important;
   color: #2c221e !important;
-  border-color: #bfa888 !important;
+  border-color: #c4b08f !important;
 }
 
-body[data-reader-theme="sepia"] .reader-card-surface .case-card {
-  background: #fdf8ee !important;
-  border-color: #cfbda0 !important;
+body[data-reader-theme="sepia"] .nav-tab.active,
+body[data-reader-theme="sepia"] .reader-theme-btn.active,
+body[data-reader-theme="sepia"] .lesson-subtab-btn.active {
+  background: #0369a1 !important;
+  color: #ffffff !important;
+  border-color: #0369a1 !important;
 }
 
-body[data-reader-theme="sepia"] .reader-card-surface .case-context {
-  background: #efe2c6 !important;
+body[data-reader-theme="sepia"] .progress-bar-fill {
+  color: #ffffff !important;
+}
+
+body[data-reader-theme="sepia"] .lesson-microsteps-box .micro-step-chip {
   color: #2c221e !important;
 }
 
-body[data-reader-theme="sepia"] .reader-card-surface .option-btn {
-  background: #f5ebd6 !important;
-  color: #2c221e !important;
-  border-color: #bfa888 !important;
-}
-
-body[data-reader-theme="sepia"] .reader-card-surface .option-btn.correct {
+body[data-reader-theme="sepia"] .lesson-microsteps-box .micro-step-chip.done,
+body[data-reader-theme="sepia"] .micro-step-chip.done {
   background: #dcfce7 !important;
   border-color: #16a34a !important;
+  color: #14532d !important;
 }
 
-body[data-reader-theme="sepia"] .reader-card-surface .option-btn.incorrect {
-  background: #fee2e2 !important;
-  border-color: #dc2626 !important;
+body[data-reader-theme="sepia"] .lesson-microsteps-box .micro-step-chip.current,
+body[data-reader-theme="sepia"] .micro-step-chip.current {
+  background: #fef3c7 !important;
+  border-color: #d97706 !important;
+  color: #92400e !important;
 }
 
-body[data-reader-theme="sepia"] .reader-card-surface .feedback-panel {
+body[data-reader-theme="sepia"] .reader-card-surface,
+body[data-reader-theme="sepia"] .apa-paper {
+  background: #f6edd9 !important;
+  color: #2c221e !important;
+  border-color: #cbb898 !important;
+}
+
+body[data-reader-theme="sepia"] .step-box {
   background: #efe2c6 !important;
-  border-color: #bfa888 !important;
-}
-
-/* 2. TONO HOJA WORD / PAPEL SUAVE CLÁSICO */
-body[data-reader-theme="word"] .reader-card-surface,
-body[data-reader-theme="word"] .apa-paper {
-  background: #ffffff !important;
-  color: #0f172a !important;
-  border-color: #cbd5e1 !important;
-}
-
-body[data-reader-theme="word"] .reader-card-surface h2,
-body[data-reader-theme="word"] .reader-card-surface h3,
-body[data-reader-theme="word"] .reader-card-surface p,
-body[data-reader-theme="word"] .reader-card-surface li,
-body[data-reader-theme="word"] .reader-card-surface strong,
-body[data-reader-theme="word"] .apa-paper * {
-  color: #0f172a !important;
-}
-
-body[data-reader-theme="word"] .reader-card-surface .step-box {
-  background: #f8fafc !important;
-  border-color: #cbd5e1 !important;
+  border-color: #cfbda0 !important;
   border-left-width: 4px !important;
 }
 
-body[data-reader-theme="word"] .reader-card-surface .flash-summary-box {
-  background: #e0f2fe !important;
+body[data-reader-theme="sepia"] .option-btn.correct,
+body[data-reader-theme="sepia"] .likert-btn.selected-best,
+body[data-reader-theme="sepia"] .flashcard.flipped {
+  background: #dcfce7 !important;
+  border-color: #16a34a !important;
+  color: #14532d !important;
+}
+
+body[data-reader-theme="sepia"] .option-btn.incorrect,
+body[data-reader-theme="sepia"] .likert-btn.selected-warn {
+  background: #fee2e2 !important;
+  border-color: #dc2626 !important;
+  color: #7f1d1d !important;
+}
+
+/* 2. TONO HOJA WORD GLOBAL (PAPEL CLARO SUAVE EN TODA LA WEB) */
+body[data-reader-theme="word"] {
+  --bg: #f1f5f9;
+  --bg-elevated: #e2e8f0;
+  --card: #ffffff;
+  --card-hover: #f8fafc;
+  --accent: #0284c7;
+  --accent-soft: rgba(2, 132, 199, 0.12);
+  --purple: #7c3aed;
+  --purple-soft: rgba(124, 58, 237, 0.12);
+  --success: #16a34a;
+  --success-soft: rgba(22, 163, 74, 0.12);
+  --warning: #d97706;
+  --warning-soft: rgba(217, 119, 6, 0.12);
+  --danger: #dc2626;
+  --danger-soft: rgba(220, 38, 38, 0.12);
+  --text: #0f172a;
+  --muted: #475569;
+  --border: #cbd5e1;
+  background: #f1f5f9 !important;
+  color: #0f172a !important;
+}
+
+body[data-reader-theme="word"] .top-shell,
+body[data-reader-theme="word"] .header-main,
+body[data-reader-theme="word"] .nav-tabs,
+body[data-reader-theme="word"] .immersive-floating-bar,
+body[data-reader-theme="word"] .music-compact-drawer {
+  background: rgba(255, 255, 255, 0.96) !important;
+  border-color: #cbd5e1 !important;
+}
+
+body[data-reader-theme="word"] .pill,
+body[data-reader-theme="word"] .btn-mini,
+body[data-reader-theme="word"] .nav-tab:not(.active),
+body[data-reader-theme="word"] .kpi-card,
+body[data-reader-theme="word"] .coursera-goal-box,
+body[data-reader-theme="word"] .pace-mode-btn,
+body[data-reader-theme="word"] .udemy-module-section,
+body[data-reader-theme="word"] .udemy-module-header,
+body[data-reader-theme="word"] .indicator-item:not(.done):not(.current-focus),
+body[data-reader-theme="word"] .micro-step-chip:not(.done):not(.current),
+body[data-reader-theme="word"] .lesson-microsteps-box,
+body[data-reader-theme="word"] .lesson-subtab-btn:not(.active),
+body[data-reader-theme="word"] .case-card,
+body[data-reader-theme="word"] .case-context,
+body[data-reader-theme="word"] .option-btn:not(.correct):not(.incorrect),
+body[data-reader-theme="word"] .option-letter,
+body[data-reader-theme="word"] .feedback-panel,
+body[data-reader-theme="word"] .likert-btn:not(.selected-best):not(.selected-warn),
+body[data-reader-theme="word"] .flashcard:not(.flipped),
+body[data-reader-theme="word"] .data-table th,
+body[data-reader-theme="word"] .data-table tr:nth-child(even),
+body[data-reader-theme="word"] .search-box input,
+body[data-reader-theme="word"] .countdown-chip,
+body[data-reader-theme="word"] #pjs-score-banner,
+body[data-reader-theme="word"] #autoinforme-summary-banner,
+body[data-reader-theme="word"] select,
+body[data-reader-theme="word"] input[type="text"],
+body[data-reader-theme="word"] input[type="number"],
+body[data-reader-theme="word"] input[type="url"],
+body[data-reader-theme="word"] textarea.notes-area {
+  background: #f8fafc !important;
+  color: #0f172a !important;
+  border-color: #cbd5e1 !important;
+}
+
+body[data-reader-theme="word"] .nav-tab.active,
+body[data-reader-theme="word"] .reader-theme-btn.active,
+body[data-reader-theme="word"] .lesson-subtab-btn.active {
+  background: #0284c7 !important;
+  color: #ffffff !important;
   border-color: #0284c7 !important;
 }
 
-body[data-reader-theme="word"] .reader-card-surface .trap-alert {
-  background: #fef2f2 !important;
-  border-color: #ef4444 !important;
+body[data-reader-theme="word"] .progress-bar-fill {
+  color: #ffffff !important;
 }
 
-body[data-reader-theme="word"] .reader-card-surface .links-list li {
-  background: #f1f5f9 !important;
-}
-
-body[data-reader-theme="word"] .reader-card-surface .links-list a {
-  color: #0369a1 !important;
-  font-weight: 700;
-}
-
-body[data-reader-theme="word"] .reader-card-surface .notes-area {
-  background: #f8fafc !important;
-  color: #0f172a !important;
-  border-color: #94a3b8 !important;
-}
-
-body[data-reader-theme="word"] .reader-card-surface .case-card {
-  background: #ffffff !important;
-  border-color: #cbd5e1 !important;
-}
-
-body[data-reader-theme="word"] .reader-card-surface .case-context {
-  background: #f1f5f9 !important;
+body[data-reader-theme="word"] .lesson-microsteps-box .micro-step-chip {
   color: #0f172a !important;
 }
 
-body[data-reader-theme="word"] .reader-card-surface .option-btn {
-  background: #f8fafc !important;
-  color: #0f172a !important;
-  border-color: #cbd5e1 !important;
-}
-
-body[data-reader-theme="word"] .reader-card-surface .option-btn.correct {
+body[data-reader-theme="word"] .lesson-microsteps-box .micro-step-chip.done,
+body[data-reader-theme="word"] .micro-step-chip.done {
   background: #dcfce7 !important;
   border-color: #16a34a !important;
+  color: #14532d !important;
 }
 
-body[data-reader-theme="word"] .reader-card-surface .option-btn.incorrect {
+body[data-reader-theme="word"] .lesson-microsteps-box .micro-step-chip.current,
+body[data-reader-theme="word"] .micro-step-chip.current {
+  background: #fef3c7 !important;
+  border-color: #d97706 !important;
+  color: #92400e !important;
+}
+
+body[data-reader-theme="word"] .step-box {
+  background: #f8fafc !important;
+  border-color: #cbd5e1 !important;
+  border-left-width: 4px !important;
+}
+
+body[data-reader-theme="word"] .option-btn.correct,
+body[data-reader-theme="word"] .likert-btn.selected-best,
+body[data-reader-theme="word"] .flashcard.flipped {
+  background: #dcfce7 !important;
+  border-color: #16a34a !important;
+  color: #14532d !important;
+}
+
+body[data-reader-theme="word"] .option-btn.incorrect,
+body[data-reader-theme="word"] .likert-btn.selected-warn {
   background: #fee2e2 !important;
   border-color: #dc2626 !important;
-}
-
-body[data-reader-theme="word"] .reader-card-surface .feedback-panel {
-  background: #f1f5f9 !important;
-  border-color: #cbd5e1 !important;
+  color: #7f1d1d !important;
 }
 
 /* 3. TONO PAPEL OSCURO NOCTURNO (TAMBIÉN PARA EL VISOR APA EN PANTALLA) */
@@ -1962,8 +2162,274 @@ body[data-reader-theme="dark"] .apa-paper em {
 }
 
 /* ========================================================================== */
-/* COMPONENTES ESTILO COURSERA, UDEMY Y CISCO NETACAD                         */
+/* COMPONENTES ESTILO CISCO NETWORKING ACADEMY + COURSERA                     */
 /* ========================================================================== */
+
+/* Pestañas superiores del panel lateral (Esquema de Curso | Recursos) */
+.netacad-sidebar-tabs {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 6px;
+  border-bottom: 2px solid var(--border);
+  padding-bottom: 8px;
+  margin-bottom: 10px;
+}
+
+.netacad-sbar-tab {
+  background: transparent;
+  color: var(--muted);
+  border: 1px solid transparent;
+  padding: 7px 8px;
+  border-radius: 8px;
+  font-size: 0.78rem;
+  font-weight: 700;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+  transition: all 0.15s;
+}
+
+.netacad-sbar-tab:hover {
+  color: var(--text);
+  background: var(--accent-soft);
+}
+
+.netacad-sbar-tab.active {
+  color: var(--accent);
+  border-color: var(--accent);
+  background: var(--accent-soft);
+}
+
+.netacad-check-dot {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 17px;
+  height: 17px;
+  border-radius: 50%;
+  background: #16a34a;
+  color: #ffffff !important;
+  font-size: 0.68rem;
+  font-weight: 800;
+}
+
+/* Árbol vertical conectado X.1 -> X.5 estilo Cisco Networking Academy */
+.netacad-topic-wrap {
+  margin-bottom: 6px;
+}
+
+.netacad-node-circle {
+  width: 22px;
+  height: 22px;
+  min-width: 22px;
+  border-radius: 50%;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.74rem;
+  font-weight: 800;
+  border: 2px solid var(--border);
+  color: var(--muted);
+}
+
+.netacad-node-circle.done {
+  background: #16a34a;
+  border-color: #16a34a;
+  color: #ffffff !important;
+}
+
+.netacad-node-circle.progress {
+  border-color: var(--accent);
+  color: var(--accent);
+  background: var(--accent-soft);
+}
+
+.netacad-subtree {
+  margin: 4px 0 10px 18px;
+  padding-left: 14px;
+  border-left: 2px solid var(--border);
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.netacad-subitem {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 8px;
+  border-radius: 8px;
+  cursor: pointer;
+  border: 1px solid transparent;
+  transition: all 0.15s;
+}
+
+.netacad-subitem:hover {
+  background: var(--accent-soft);
+  border-color: var(--border);
+}
+
+.netacad-subitem.active {
+  background: var(--accent-soft);
+  border-color: var(--accent);
+  font-weight: 700;
+}
+
+.netacad-sub-circle {
+  width: 20px;
+  height: 20px;
+  min-width: 20px;
+  border-radius: 50%;
+  border: 1.5px solid var(--border);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.72rem;
+  font-weight: 800;
+  color: var(--muted);
+  background: var(--card);
+  transition: all 0.15s;
+}
+
+.netacad-sub-circle.done {
+  background: #16a34a !important;
+  border-color: #16a34a !important;
+  color: #ffffff !important;
+}
+
+.netacad-sub-circle.active:not(.done) {
+  border-color: var(--accent);
+  color: var(--accent);
+}
+
+.netacad-sub-text {
+  flex: 1;
+  font-size: 0.79rem;
+  color: var(--text);
+}
+
+/* Vista de Recursos en el panel lateral y dentro de X.4 */
+.netacad-res-group {
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 8px 10px;
+  margin-bottom: 8px;
+  background: var(--bg-elevated);
+}
+
+.netacad-res-group.current {
+  border-color: var(--accent);
+}
+
+.netacad-res-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.78rem;
+  cursor: pointer;
+  margin-bottom: 6px;
+}
+
+.netacad-res-row {
+  display: flex;
+  align-items: flex-start;
+  gap: 7px;
+  padding: 4px 0;
+  font-size: 0.76rem;
+  border-top: 1px dashed var(--border);
+}
+
+.netacad-res-row input[type="checkbox"] {
+  margin-top: 2px;
+  accent-color: #16a34a;
+  cursor: pointer;
+}
+
+.netacad-res-row a {
+  color: var(--accent);
+  text-decoration: none;
+  line-height: 1.3;
+}
+
+.netacad-res-row.done a {
+  text-decoration: line-through;
+  opacity: 0.78;
+}
+
+.resource-check-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.resource-check-item.done {
+  border-color: rgba(22, 163, 74, 0.5) !important;
+}
+
+.resource-check-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  cursor: pointer;
+  font-size: 0.78rem;
+  font-weight: 700;
+}
+
+.resource-check-label input[type="checkbox"] {
+  width: 16px;
+  height: 16px;
+  accent-color: #16a34a;
+  cursor: pointer;
+}
+
+/* Botón Azul Oficial Estilo Coursera: "[ ✓ Marcar como completo ]" */
+.btn-coursera-complete {
+  background: #0056d2;
+  color: #ffffff !important;
+  border: 1px solid #0056d2;
+  padding: 7px 14px;
+  border-radius: 8px;
+  font-size: 0.82rem;
+  font-weight: 700;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  transition: all 0.15s ease;
+  box-shadow: 0 2px 8px rgba(0, 86, 210, 0.25);
+}
+
+.btn-coursera-complete:hover {
+  background: #00419e;
+  transform: translateY(-1px);
+}
+
+.btn-coursera-complete.completed {
+  background: #15803d !important;
+  border-color: #15803d !important;
+  color: #ffffff !important;
+  box-shadow: 0 2px 8px rgba(21, 128, 61, 0.25);
+}
+
+.btn-coursera-complete.large {
+  padding: 9px 18px;
+  font-size: 0.88rem;
+}
+
+.coursera-bottom-action-bar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-top: 18px;
+  padding-top: 14px;
+  border-top: 2px solid var(--border);
+}
 
 .coursera-goal-box {
   background: linear-gradient(135deg, rgba(15, 23, 42, 0.95), rgba(30, 41, 59, 0.85));
@@ -2063,7 +2529,7 @@ body[data-reader-theme="dark"] .apa-paper em {
   border-top: 1px solid var(--border);
 }
 
-/* Micro-Pasos Interactivos (1. Lectura, 2. Libreta, 3. Casos) */
+/* Micro-Pasos Interactivos (X.1 a X.5) */
 .micro-steps-strip {
   display: flex;
   flex-wrap: wrap;

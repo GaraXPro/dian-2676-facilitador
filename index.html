@@ -14,7 +14,10 @@
   <!-- BARRA FLOTANTE DE MODO CONCENTRACIÓN INMERSIVO (ESTILO CISCO NETACAD / LECTURA) -->
   <div id="immersive-floating-bar" class="immersive-floating-bar no-print" style="display:none;">
     <div class="immersive-bar-inner">
-      <span class="immersive-badge">🧘 Modo Concentración Inmersivo</span>
+      <div style="display:flex; align-items:center; gap:8px; flex-wrap:wrap;">
+        <span class="immersive-badge">🧘 Modo Concentración Total</span>
+        <button class="btn-mini success-outline" onclick="window.resumeLearning()" title="Ir al paso exacto donde quedé">▶️ Reanudar donde quedé</button>
+      </div>
       <div class="reader-theme-group">
         <button class="btn-mini reader-theme-btn" data-rtheme="dark" onclick="window.setReaderTheme('dark')" title="Papel Oscuro (Descanso Nocturno)">🌙 Oscuro</button>
         <button class="btn-mini reader-theme-btn" data-rtheme="sepia" onclick="window.setReaderTheme('sepia')" title="Sepia Cálido (Antifatiga Visual / Kindle)">📜 Sepia Cálido</button>
@@ -25,40 +28,70 @@
         <button class="btn-mini" onclick="window.changeReaderFontSize(0)" title="Tamaño de letra normal">A</button>
         <button class="btn-mini" onclick="window.changeReaderFontSize(1)" title="Aumentar tamaño de letra">A+</button>
       </div>
-      <button class="btn-mini" onclick="window.toggleCourseSidebar()" title="Mostrar u ocultar el temario lateral">📑 Temario</button>
-      <button class="btn-mini danger-btn" onclick="window.toggleImmersiveMode()" title="Salir del Modo Concentración (Tecla ESC)">✕ Salir Inmersivo</button>
+      <div style="display:flex; align-items:center; gap:6px;">
+        <button class="btn-mini" onclick="window.toggleCourseSidebar()" title="Mostrar u ocultar el temario lateral">📑 Esquema</button>
+        <button class="btn-mini danger-btn" onclick="window.toggleImmersiveMode()" title="Salir del Modo Concentración (Tecla ESC)">✕ Salir Inmersivo</button>
+      </div>
     </div>
   </div>
 
-  <!-- BARRA SUPERIOR DE COMANDO Y NAVEGACIÓN -->
+  <!-- BARRA SUPERIOR DE CURSO PROFESIONAL (ESTILO CISCO NETACAD + COURSERA) -->
   <div class="top-shell no-print">
     <div class="header-main">
+      <!-- Bloque Izquierdo: Identidad del Curso + Progreso General Compacto -->
       <div class="brand-block">
-        <h1>🎯 Academia & Centro de Mando DIAN 2676 — Marcelino Garavito (Facilitador I)</h1>
-        <div class="brand-meta">
-          <span class="pill accent">👤 Aspirante: Marcelino Garavito</span>
-          <span class="pill accent">OPEC: 236908</span>
-          <span class="pill">Inscripción: 1273550754</span>
-          <span class="pill">Nivel Asistencial</span>
-          <span class="pill success">Meta: +85.00 Puntos</span>
-          <span class="pill warning">Corte Normativo: 19 Jun 2026</span>
+        <div class="brand-title-row">
+          <h1>🎯 Curso DIAN 2676 — Facilitador I</h1>
+          <span class="pill accent">👤 Marcelino Garavito</span>
+          <span class="pill">OPEC 236908</span>
+          <span class="pill success">Meta: +85.00</span>
+          <span class="pill" title="Todo tu progreso se guarda automáticamente en el navegador (F5 seguro)">💾 Autoguardado ON</span>
+        </div>
+        <div class="header-progress-inline">
+          <span id="header-course-pct-label" style="font-size:0.76rem; font-weight:700; color:var(--accent);">Progreso del Curso: 0%</span>
+          <div class="header-mini-track">
+            <div id="header-course-pct-fill" class="header-mini-fill" style="width:0%;"></div>
+          </div>
+          <span id="header-course-step-label" style="font-size:0.74rem; color:var(--muted);">Paso actual: 1.1</span>
         </div>
       </div>
 
+      <!-- Bloque Central: Botón Principal "Reanudar Aprendizaje" (Coursera / Cisco NetAcad) -->
+      <div class="header-resume-zone">
+        <button id="btn-header-resume" class="btn-resume-hero" onclick="window.resumeLearning()" title="Ir directamente al indicador y paso exacto donde quedaste">
+          <span class="resume-play-icon">▶️</span>
+          <span class="resume-text-col">
+            <strong id="header-resume-title">Reanudar Aprendizaje</strong>
+            <small id="header-resume-sub">Ir a tu paso actual en curso</small>
+          </span>
+        </button>
+      </div>
+
+      <!-- Bloque Derecho: Tonalidades Globales, Modo Concentración, Utilidades y Cuenta Regresiva -->
       <div class="header-right">
-        <button class="btn-mini" id="btn-immersive-toggle" onclick="window.toggleImmersiveMode()" title="Activar Modo Concentración Inmersivo y Tonalidades de Descanso Visual (Oscuro, Sepia, Hoja Word)">🧘 Modo Concentración</button>
-        <button class="btn-mini" id="btn-music-drawer" onclick="window.toggleMusicDrawer()" title="Abrir o cerrar tu barra discreta de música (Lo-Fi, Clásica, Synthwave, Épica y tu Mix Personal)">🎵 Música</button>
-        <button class="btn-mini" id="btn-toggle-sound" onclick="window.toggleSoundEnabled()" title="Activar o silenciar sonidos de bloques, aciertos y logros">🔊 Sonidos: ON</button>
-        <button class="btn-mini" id="btn-toggle-gpu" onclick="window.toggleLowGpuMode()" title="Actívalo si pasas una ventana al monitor derecho de 27 pulgadas con adaptador">🖥️ Modo Fluido 27": OFF</button>
+        <div class="reader-theme-group" title="Cambiar tonalidad de descanso visual en TODA la plataforma">
+          <button class="btn-mini reader-theme-btn" data-rtheme="sepia" onclick="window.setReaderTheme('sepia')">📜 Sepia</button>
+          <button class="btn-mini reader-theme-btn" data-rtheme="dark" onclick="window.setReaderTheme('dark')">🌙 Oscuro</button>
+          <button class="btn-mini reader-theme-btn" data-rtheme="word" onclick="window.setReaderTheme('word')">📄 Word</button>
+        </div>
+        <div class="reader-font-group" title="Tamaño de letra global">
+          <button class="btn-mini" onclick="window.changeReaderFontSize(-1)">A-</button>
+          <button class="btn-mini" onclick="window.changeReaderFontSize(1)">A+</button>
+        </div>
+
+        <button class="btn-mini accent-outline" id="btn-immersive-toggle" onclick="window.toggleImmersiveMode()" title="Activar Modo Concentración Total en toda la web (Tecla ESC para salir)">🧘 Concentración</button>
+        <button class="btn-mini" id="btn-music-drawer" onclick="window.toggleMusicDrawer()" title="Abrir o cerrar tu barra discreta de música">🎵 Música</button>
+        <button class="btn-mini" id="btn-toggle-sound" onclick="window.toggleSoundEnabled()" title="Activar o silenciar sonidos">🔊 ON</button>
+        <button class="btn-mini" id="btn-toggle-gpu" onclick="window.toggleLowGpuMode()" title="Modo Fluido para monitor de 27 pulgadas">🖥️ 27"</button>
 
         <div class="search-box">
           <span class="search-icon">🔍</span>
-          <input type="text" id="global-search-input" placeholder="Buscar ley, plazo, artículo, TRD o caso..." autocomplete="off" />
+          <input type="text" id="global-search-input" placeholder="Buscar ley, plazo, TRD o caso..." autocomplete="off" />
           <div id="global-search-results" class="search-results-box"></div>
         </div>
 
-        <div class="countdown-chip">
-          <div class="label">⏳ Examen 8 Nov 2026 (8:00 a. m. | Cierre 8:30)</div>
+        <div class="countdown-chip" title="Examen Escrito: 8 de Noviembre de 2026 (8:00 a. m.)">
+          <div class="label">⏳ Examen 8 Nov</div>
           <div class="time" id="countdown-timer">Calculando...</div>
         </div>
       </div>
@@ -101,13 +134,13 @@
 
       <div class="kpi-strip">
         <div class="kpi-card">
-          <div class="kpi-title">Progreso del Curso (Micro-Pasos y Temas)</div>
-          <div class="kpi-value" id="kpi-indicators-val">0 / 22</div>
+          <div class="kpi-title">Progreso Secuencial del Curso (110 Pasos)</div>
+          <div class="kpi-value" id="kpi-indicators-val">0 / 110</div>
           <div class="kpi-sub" id="kpi-indicators-sub">En curso: #1 (Decreto 1742/2020)</div>
         </div>
         <div class="kpi-card">
           <div class="kpi-title">Rendimiento Simulador PJS (70%)</div>
-          <div class="kpi-value" id="kpi-pjs-val">0 / 26 resueltos</div>
+          <div class="kpi-value" id="kpi-pjs-val">0 / 30 resueltos</div>
           <div class="kpi-sub">Mínimo eliminatorio: 70.00 | Meta: 85.00+</div>
         </div>
         <div class="kpi-card">
@@ -131,8 +164,8 @@
           <div class="card">
             <div class="card-header">
               <div>
-                <h2>📚 Contenido del Curso: 4 Módulos y 22 Lecciones (Estilo Udemy / Coursera)</h2>
-                <p style="font-size:0.8rem; color:var(--muted);">Cada indicador se divide en 3 micro-pasos cortos: <strong>1. 📖 Lectura</strong> → <strong>2. 📓 Libreta</strong> → <strong>3. ⚖️ Casos PJS</strong></p>
+                <h2>📚 Contenido Secuencial del Curso: 4 Módulos y 22 Temas (Estilo Cisco NetAcad / Coursera)</h2>
+                <p style="font-size:0.8rem; color:var(--muted);">Cada tema avanza en orden: <strong>X.1 📖 Lectura</strong> → <strong>X.2 📓 Libreta</strong> → <strong>X.3 🛠️ Práctica/Flashcards</strong> → <strong>X.4 🔗 Recursos</strong> → <strong>X.5 ⚖️ Cuestionario PJS/Autoinforme</strong></p>
               </div>
               <div style="display:flex; gap:6px; flex-wrap:wrap;">
                 <button class="btn-mini" onclick="window.expandAllCourseModules(true)">➕ Expandir Módulos</button>
@@ -197,17 +230,17 @@
     </section>
 
     <!-- ================================================================== -->
-    <!-- MÓDULO 2: AULA DEL CURSO — REPRODUCTOR ESTILO UDEMY / COURSERA     -->
+    <!-- MÓDULO 2: AULA DEL CURSO — REPRODUCTOR ESTILO CISCO NETACAD/COURSERA-->
     <!-- ================================================================== -->
     <section id="tab-study" class="tab-panel">
       <!-- Barra de Controles de Lectura Descanso Visual y Modo Inmersivo -->
       <div class="reader-control-bar no-print">
         <div class="reader-control-left">
-          <button class="btn-mini" id="btn-toggle-sidebar" onclick="window.toggleCourseSidebar()" title="Mostrar u ocultar el esquema lateral del curso (Modo Teatro Udemy)">📑 Ocultar/Ver Temario</button>
-          <span style="font-size:0.8rem; color:var(--muted);">🎨 Descanso Visual:</span>
+          <button class="btn-mini" id="btn-toggle-sidebar" onclick="window.toggleCourseSidebar()" title="Mostrar u ocultar el esquema lateral del curso (Modo Teatro Cisco NetAcad / Udemy)">📑 Ocultar/Ver Esquema</button>
+          <span style="font-size:0.8rem; color:var(--muted);">🎨 Tonalidad Global:</span>
           <div class="reader-theme-group">
-            <button class="btn-mini reader-theme-btn active" data-rtheme="dark" onclick="window.setReaderTheme('dark')">🌙 Papel Oscuro</button>
             <button class="btn-mini reader-theme-btn" data-rtheme="sepia" onclick="window.setReaderTheme('sepia')">📜 Sepia Cálido</button>
+            <button class="btn-mini reader-theme-btn" data-rtheme="dark" onclick="window.setReaderTheme('dark')">🌙 Papel Oscuro</button>
             <button class="btn-mini reader-theme-btn" data-rtheme="word" onclick="window.setReaderTheme('word')">📄 Hoja Word</button>
           </div>
         </div>
@@ -222,21 +255,34 @@
 
       <div id="course-player-grid" class="grid-study">
         <aside id="course-sidebar-panel" class="card study-sidebar">
-          <div class="card-header" style="margin-bottom:10px; padding-bottom:8px;">
-            <h2>📑 Esquema del Curso</h2>
-            <span id="sidebar-course-pct" class="pill success" style="font-size:0.74rem;">0%</span>
+          <!-- Pestañas Superiores Estilo Cisco Networking Academy: Esquema de Curso | Recursos -->
+          <div class="netacad-sidebar-tabs">
+            <button id="btn-sbar-outline" class="netacad-sbar-tab active" onclick="window.switchSidebarMode('outline')">
+              <span class="netacad-check-dot">✓</span> Esquema de Curso
+            </button>
+            <button id="btn-sbar-resources" class="netacad-sbar-tab" onclick="window.switchSidebarMode('resources')">
+              🔗 Recursos
+            </button>
           </div>
-          <div style="margin-bottom:8px;">
-            <input type="text" id="course-sidebar-search" oninput="window.filterSidebarSearch(this.value)" placeholder="🔍 Buscar en el esquema del curso..." style="width:100%; background:#090d16; border:1px solid var(--border); color:var(--text); padding:6px 10px; border-radius:6px; font-size:0.8rem;" />
+
+          <div id="sidebar-outline-controls">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
+              <span style="font-size:0.76rem; color:var(--muted); font-weight:700;">ÁRBOL SECUENCIAL (X.1 → X.5)</span>
+              <span id="sidebar-course-pct" class="pill success" style="font-size:0.72rem;">0%</span>
+            </div>
+            <div style="margin-bottom:8px;">
+              <input type="text" id="course-sidebar-search" oninput="window.filterSidebarSearch(this.value)" placeholder="🔍 Buscar tema, ley o artículo..." style="width:100%; background:#090d16; border:1px solid var(--border); color:var(--text); padding:6px 10px; border-radius:6px; font-size:0.8rem;" />
+            </div>
+            <div style="display:flex; gap:4px; flex-wrap:wrap; margin-bottom:10px;">
+              <button class="btn-mini" onclick="window.setStudyFilter('all')">Todos (22)</button>
+              <button class="btn-mini" onclick="window.setStudyFilter('pending')">Pendientes</button>
+              <button class="btn-mini" onclick="window.setStudyFilter('bloque1')">M1 (1-9)</button>
+              <button class="btn-mini" onclick="window.setStudyFilter('bloque2')">M2 (10-12)</button>
+              <button class="btn-mini" onclick="window.setStudyFilter('bloque3')">M3 (13-20)</button>
+              <button class="btn-mini" onclick="window.setStudyFilter('bloque4')">M4 (21-22)</button>
+            </div>
           </div>
-          <div style="display:flex; gap:4px; flex-wrap:wrap; margin-bottom:10px;">
-            <button class="btn-mini" onclick="window.setStudyFilter('all')">Todos (22)</button>
-            <button class="btn-mini" onclick="window.setStudyFilter('pending')">Pendientes</button>
-            <button class="btn-mini" onclick="window.setStudyFilter('bloque1')">M1 (1-9)</button>
-            <button class="btn-mini" onclick="window.setStudyFilter('bloque2')">M2 (10-12)</button>
-            <button class="btn-mini" onclick="window.setStudyFilter('bloque3')">M3 (13-20)</button>
-            <button class="btn-mini" onclick="window.setStudyFilter('bloque4')">M4 (21-22)</button>
-          </div>
+
           <div id="study-sidebar-list"></div>
         </aside>
 
@@ -252,7 +298,7 @@
         <div class="card-header">
           <div>
             <h2>⚖️ Simulador de Pruebas de Juicio Situacional (PJS) — Competencias Funcionales (Eliminatoria 70%)</h2>
-            <p style="font-size:0.86rem; color:var(--muted);">26 Casos Oficiales Comentados (Cubre los 4 Bloques) + Creador de Casos Propios.</p>
+            <p style="font-size:0.86rem; color:var(--muted);">30 Casos Oficiales Comentados (6 casos en Ind. #1, 5 en Ind. #2 y cobertura en los 4 Bloques) + Creador de Casos Propios.</p>
           </div>
           <div style="display:flex; gap:8px; flex-wrap:wrap; align-items:center;">
             <select id="pjs-filter-select" onchange="window.filterPjsBySelect(this.value)" style="background:#090d16; color:var(--text); border:1px solid var(--border); padding:8px 12px; border-radius:8px; font-size:0.85rem;"></select>

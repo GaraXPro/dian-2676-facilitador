@@ -61,13 +61,14 @@
 4. **Diseño 100% Responsivo (Celulares y Tablets):**
    - En pantallas móviles (`<= 768px`), el encabezado principal se desplaza naturalmente para no cubrir media pantalla, dejando únicamente la barra de pestañas (`nav-tabs`) fija arriba con deslizamiento táctil horizontal y autocentrado de pestaña activa.
    - Reestructuración de las filas de los 22 indicadores (`.indicator-item` + `.indicator-actions`), el visor lateral de estudio (con scroll automático al contenido al elegir un indicador en móvil), la hoja cuadriculada Cornell, el documento APA y las fórmulas de Excel para evitar cualquier desborde horizontal.
-5. **Arquitectura LMS Reutilizable (Estilo Udemy + Coursera + Cisco NetAcad) y Ritmo Flexible:**
-   - **Adiós a textos estáticos de fin de semana y horarios rígidos:** La plataforma ahora calcula dinámicamente la fecha real y ofrece 4 modos de energía diarios sin presión (`🌱 Ritmo Ligero: 1 micro-paso`, `⚡ Objetivo Coursera: 3 micro-pasos`, `🔥 Sesión Inspirada: 6 micro-pasos`, `☕ Día Libre / Repaso`).
-   - **Progreso Granular por 3 Micro-Pasos (66 pasos en total):** Cada uno de los 22 indicadores se divide en 3 micro-pasos checkables independientes: `1. 📖 Lectura Teórica`, `2. 📓 Página en Libreta Cuadriculada` y `3. ⚖️ Simulador PJS de la Lección` (con auto-marcado al resolver todos los casos del indicador). Pre-configurado con el avance real de Marcelino en el Indicador #1 (`Lectura ✅`, `Libreta ✅`, `Simulador PJS 📍 en curso`).
-   - **Reproductor de Aula Integrado:** Acordeones por módulos con barra de progreso `%`, buscador en el esquema del curso, modo Teatro (`📑 Ocultar/Ver Temario`), sub-pestañas de lección (incluyendo los casos PJS integrados dentro de cada lección) y botón estilo Coursera `✅ Completar este paso e ir al siguiente →`.
-6. **Modo de Lectura Descanso Visual (3 Tonalidades) y Concentración Inmersiva:**
-   - Selector instantáneo de tonalidad de papel tanto en el **Aula del Curso** como en el **Modo Lectura APA**:
-     - `📜 Sepia Cálido (Kindle / Antifatiga)` (activo por defecto para proteger la vista)
-     - `🌙 Papel Oscuro (Nocturno)`
-     - `📄 Hoja Word (Clásico)`
-   - Controles de tamaño de fuente (`A-`, `A`, `A+`) y botón `🧘 Modo Concentración Inmersivo` que oculta cabeceras y menús distractores dejando una barra flotante minimalista.
+5. **Arquitectura de Curso Secuencial Profesional (Estilo Cisco Networking Academy + Coursera + Udemy):**
+   - **Árbol Secuencial Conectado de 5 Pasos por Tema (`X.1` a `X.5` — 110 pasos en total):**
+     - `X.1 📖 Lectura Teórica y Trampas CNSC`
+     - `X.2 📓 Mapa en Libreta Cuadriculada (Método Cornell)`
+     - `X.3 🛠️ Práctica y Laboratorio del Tema`: Integra las Flashcards propias de cada indicador, más la Calculadora/Matriz TRD dentro de los Indicadores #10 y #11, y el Taller Práctico de Excel/Razonamiento dentro de los Indicadores #21 y #22.
+     - `X.4 🔗 Recursos Oficiales Verificados`: Cada enlace oficial tiene su propio check individual (`dian2676_checked_resources`) para marcar qué recurso ya se leyó hoy y cuál queda pendiente para después.
+     - `X.5 ⚖️ Cuestionario de Sección (Simulador Integrado)`: Incluye **30 Casos PJS comentados** (6 casos en el Indicador #1, 5 casos en el Indicador #2 y cobertura en los 4 bloques) + integración directa de los reactivos de **Autoinforme Comportamental e Integridad (30%)** dentro de los Indicadores #3–#9 y #13–#20.
+   - **Panel Lateral Estilo Cisco NetAcad:** Con dos pestañas superiores (`✓ Esquema de Curso` con árbol vertical desplegable `1.1` → `1.5` y `🔗 Recursos` con checks individuales) + botón azul oficial estilo Coursera **`[ ✓ Marcar como completo ]`** al final de cada sección.
+   - **Cabecera Superior Reorganizada + Botón `▶️ Reanudar Aprendizaje` + Persistencia Total (`F5` seguro):** Guarda automáticamente en `localStorage` la pestaña activa, el indicador activo, el sub-paso exacto (`dian2676_last_position`) y los recursos vistos para que al recargar con `F5` o cerrar la pestaña nunca se pierda el hilo.
+6. **Tonalidades Globales de Descanso Visual y Modo Concentración en TODA la Web:**
+   - Los 3 temas (`📜 Sepia Cálido`, `🌙 Papel Oscuro`, `📄 Hoja Word`), el escalado de fuente (`A-`, `A+`) y el `🧘 Modo Concentración` se aplican de forma **global a toda la plataforma** (Dashboard, Aula del Curso, Simuladores, Talleres y Visor APA).

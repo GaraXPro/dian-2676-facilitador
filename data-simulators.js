@@ -496,6 +496,82 @@ window.PJS_CASES = [
       distractorA: "Refleja individualismo extremo contrario a la competencia.",
       distractorC: "Suplantar firmas es una falta disciplinaria y penal grave."
     }
+  },
+  {
+    id: "pjs27",
+    indicatorId: "ind1",
+    blockId: "bloque1",
+    title: "Caso 27 — Control Cambiario y Competencia DIAN vs. Banco de la República (Decreto 1742 de 2020)",
+    context: "Un ciudadano radica en la ventanilla de correspondencia de la Dirección Seccional una consulta escrita en la que solicita información sobre sanciones cambiarias derivadas de la financiación en moneda extranjera de una importación de maquinaria, y adicionalmente pide que la DIAN autorice una inversión financiera de capital en el exterior que no guarda relación con operaciones de comercio exterior.",
+    stem: "De acuerdo con las competencias cambiarias de la DIAN definidas en el Decreto 1742 de 2020, la gestión procedente frente a este escrito es:",
+    options: {
+      A: "Rechazar en ventanilla la recepción del oficio completo, indicándole al ciudadano que absolutamente todas las operaciones en moneda extranjera son competencia exclusiva de la Junta Directiva del Banco de la República.",
+      B: "Radicar la comunicación oficial para que el área competente de la DIAN atienda lo relativo a la financiación en divisas de la importación de bienes, y se efectúe dentro de los cinco (5) días hábiles siguientes el traslado por falta de competencia del punto ajeno al comercio exterior.",
+      C: "Emitir desde la ventanilla de correspondencia una autorización temporal de inversión extranjera para garantizar la facilitación de las operaciones económicas."
+    },
+    correct: "B",
+    explanation: {
+      correctWhy: "Según el Decreto 1742 de 2020, la DIAN ejerce el control y vigilancia cambiaria únicamente sobre importación y exportación de bienes y servicios, gastos asociados y financiación en moneda extranjera de dichas operaciones. Lo que exceda esa órbita (inversiones de capital sin vínculo con comercio exterior) se traslada por falta de competencia dentro de los 5 días hábiles (Art. 21 Ley 1755 de 2015).",
+      distractorA: "Desconoce que la DIAN sí tiene competencia cambiaria en operaciones de comercio exterior y viola la prohibición de rechazar escritos en ventanilla.",
+      distractorC: "Incurre en usurpación de funciones y extralimitación del nivel Asistencial."
+    }
+  },
+  {
+    id: "pjs28",
+    indicatorId: "ind1",
+    blockId: "bloque1",
+    title: "Caso 28 — Niveles de la Estructura Orgánica: Dirección Seccional Delegada y Juegos de Suerte y Azar",
+    context: "En una Dirección Seccional Delegada de Impuestos y Aduanas, un empresario entrega una solicitud relacionada con la administración de derechos de explotación de una lotería departamental tradicional y pregunta además de qué nivel jerárquico depende la Seccional Delegada donde está radicando.",
+    stem: "Conforme a los artículos 2 y 4 del Decreto 1742 de 2020, la orientación técnica exacta que usted debe suministrarle es:",
+    options: {
+      A: "Explicarle que la Dirección Seccional Delegada integra el Nivel Delegado y depende de una Dirección Seccional del Nivel Local; y respecto a su escrito, radicarlo y gestionar su traslado en cinco (5) días hábiles a la entidad territorial/Coljuegos competente, dado que la DIAN solo administra derechos de explotación de juegos de suerte y azar del nivel nacional.",
+      B: "Informarle que las Direcciones Seccionales Delegadas hacen parte del Nivel Central en Bogotá y que la DIAN administra todas las loterías departamentales y municipales del país.",
+      C: "Destruir el documento en presencia del empresario porque en las Direcciones Seccionales Delegadas está prohibido recibir derechos de petición."
+    },
+    correct: "A",
+    explanation: {
+      correctWhy: "El Art. 4 del Decreto 1742 de 2020 establece los 3 niveles (Central, Local y Delegado, donde las Seccionales Delegadas dependen de una Seccional del Nivel Local). A su vez, el Art. 2 precisa que la DIAN solo administra derechos de explotación y gastos de administración sobre juegos de suerte y azar explotados por entidades públicas del nivel nacional, no loterías departamentales.",
+      distractorB: "Confunde el Nivel Delegado con el Nivel Central e incluye juegos departamentales que no pertenecen a la DIAN.",
+      distractorC: "Ninguna oficina de la DIAN puede destruir ni negarse a recibir peticiones escritas."
+    }
+  },
+  {
+    id: "pjs29",
+    indicatorId: "ind2",
+    blockId: "bloque1",
+    title: "Caso 29 — Peticiones entre Autoridades y Solicitudes de Congresistas (Ley 1755 de 2015 y Ley 5 de 1992)",
+    context: "Al realizar el reparto matutino en la Unidad de Correspondencia, usted identifica dos oficios urgentes recién radicados: el primero es un requerimiento de información tributaria estadística enviado por otra entidad pública del orden nacional; el segundo es una solicitud de informe formulada por un Senador de la República en ejercicio del control político.",
+    stem: "Para etiquetar correctamente la alerta de vencimiento en la matriz de seguimiento, los plazos legales máximos de respuesta para cada comunicación son:",
+    options: {
+      A: "Diez (10) días hábiles para la petición entre autoridades (Art. 30 Ley 1755 de 2015) y cinco (5) días calendario siguientes a la recepción para la solicitud del Congresista en ejercicio de control político (Ley 5 de 1992).",
+      B: "Treinta (30) días hábiles para ambas solicitudes por tratarse de entidades del Estado.",
+      C: "Quince (15) días calendario para la entidad pública y diez (10) días hábiles para el Senador."
+    },
+    correct: "A",
+    explanation: {
+      correctWhy: "El Art. 30 de la Ley 1755 de 2015 fija un término máximo de 10 días hábiles para peticiones de información entre autoridades; por su parte, el Art. 258 de la Ley 5 de 1992 establece 5 días calendario para responder informes solicitados por Congresistas.",
+      distractorB: "El término de 30 días hábiles aplica a consultas jurídicas o técnicas, no a peticiones entre autoridades ni de congresistas.",
+      distractorC: "Invierte los plazos y confunde días hábiles con días calendario."
+    }
+  },
+  {
+    id: "pjs30",
+    indicatorId: "ind2",
+    blockId: "bloque1",
+    title: "Caso 30 — Atención Prioritaria y Peticiones Irrespetuosas o Oscuras (Arts. 19 y 20, Ley 1755 de 2015)",
+    context: "En la ventanilla se reciben dos escritos: el primero es de un ciudadano que solicita medidas urgentes porque afirma encontrarse en peligro inminente para su vida e integridad; el segundo es un escrito confuso cuya finalidad no se comprende pero no contiene insultos ni amenazas.",
+    stem: "De acuerdo con los artículos 19 y 20 de la Ley 1755 de 2015, el trámite que procede frente a cada escrito es:",
+    options: {
+      A: "Rechazar de plano ambos escritos en ventanilla sin asignarles número de radicado.",
+      B: "Dar trámite prioritario e inmediato al primero adoptando las medidas de urgencia y remitiéndolo a la autoridad competente; y frente al escrito oscuro o confuso, radicarlo para que en los diez (10) días hábiles siguientes se devuelva al interesado pidiéndole que lo aclare o corrija (pues solo se rechazan las peticiones abiertamente irrespetuosas).",
+      C: "Archivar el primero con plazo de treinta (30) días hábiles y denunciar penalmente al autor del escrito confuso."
+    },
+    correct: "B",
+    explanation: {
+      correctWhy: "El Art. 20 de la Ley 1755 ordena atención prioritaria e inmediata cuando estén en riesgo derechos fundamentales o peligro inminente para la vida; y el Art. 19 distingue entre peticiones irrespetuosas (que sí se rechazan) y peticiones oscuras (que se devuelven dentro de los 10 días siguientes para que el ciudadano las aclare).",
+      distractorA: "Vulnera el deber de atención prioritaria y confunde petición oscura con petición irrespetuosa.",
+      distractorC: "Aplica términos ordinarios de consulta a una urgencia vital."
+    }
   }
 ];
 
@@ -562,14 +638,16 @@ window.ACHIEVEMENTS_DATA = [
 window.AUTOINFORME_ITEMS = [
   {
     id: "auto1",
+    indicatorIds: ["ind3", "ind4"],
     category: "Competencia: Orientación al Usuario (Nivel 2)",
     statement: "Cuando un ciudadano acude con una duda sobre un trámite, indago más allá de su consulta inicial para asegurarme de que cuenta con todos los requisitos y evitarle filas o reprocesos futuros.",
-    idealLevel: 4, // 4 = Totalmente de acuerdo, 1 = Totalmente en desacuerdo
+    idealLevel: 4,
     isControlTrap: false,
     explanation: "Conducta observable directa del Nivel 2 de Orientación al Usuario y al Ciudadano: anticipar necesidades reales y evitar reprocesos. Debes marcar «Totalmente de acuerdo»."
   },
   {
     id: "auto2",
+    indicatorIds: ["ind7", "ind13", "ind14"],
     category: "Competencia: Comportamiento Ético (Nivel 1) — Trampa de Excepción Benévola",
     statement: "Si un compañero de mi entera confianza tiene sobrecarga de trabajo al cierre del día, le facilito temporalmente mi usuario y contraseña del sistema para que la dependencia cumpla la meta a tiempo.",
     idealLevel: 1,
@@ -578,14 +656,16 @@ window.AUTOINFORME_ITEMS = [
   },
   {
     id: "auto3",
+    indicatorIds: ["ind5", "ind13", "ind15"],
     category: "Subescala de Control — Deseabilidad Social (Alerta de Distorsión)",
     statement: "En toda mi vida jamás he sentido el más mínimo cansancio, impaciencia o molestia ante una situación injusta o estresante.",
-    idealLevel: 2, // En desacuerdo (honestidad humana realista)
+    idealLevel: 2,
     isControlTrap: true,
     explanation: "⚠️ REACTIVO DE CONTROL DE DESEABILIDAD SOCIAL: Afirmaciones absolutas («En toda mi vida jamás...», «Nunca jamás he cometido un error humano») miden si el aspirante intenta fingir perfección irreal. Responder «Totalmente de acuerdo» dispara la alerta de distorsión/invalidez. Lo correcto es responder con honestidad realista («En desacuerdo»)."
   },
   {
     id: "auto4",
+    indicatorIds: ["ind7", "ind13"],
     category: "Valor de Integridad: Honestidad",
     statement: "Si advierto que cometí un error involuntario al foliar o radicar un documento, lo informo de inmediato a mi superior para corregirlo mediante el procedimiento formal en lugar de ocultarlo.",
     idealLevel: 4,
@@ -594,14 +674,16 @@ window.AUTOINFORME_ITEMS = [
   },
   {
     id: "auto5",
-    category: "Competencia: Orientación al Logro (Nivel 2) — Trampa de Saltarse Controles",
+    indicatorIds: ["ind5", "ind6", "ind19"],
+    category: "Competencia: Orientación al Logro / Compromiso — Trampa de Saltarse Controles",
     statement: "Para superar el promedio de atención diaria en mi ventanilla, omito la verificación de anexos formales en los derechos de petición cuando veo que la fila es muy larga.",
     idealLevel: 1,
     isControlTrap: false,
-    explanation: "En la DIAN, la Orientación al Logro exige cumplir metas respetando siempre los estándares de calidad y legalidad. Saltarse un control formal para ir más rápido es una falta operativa. Marca «Totalmente en desacuerdo»."
+    explanation: "En la DIAN, el Compromiso y la Orientación al Logro exigen cumplir metas respetando siempre los estándares de calidad y legalidad. Saltarse un control formal para ir más rápido es una falta operativa. Marca «Totalmente en desacuerdo»."
   },
   {
     id: "auto6",
+    indicatorIds: ["ind7", "ind14"],
     category: "Competencia: Comportamiento Ético (Nivel 4)",
     statement: "Si presencio que un funcionario altera la fecha de recepción de un trámite o solicita beneficios a un contribuyente, mantengo mi rectitud y reporto el hecho por los canales institucionales de denuncia.",
     idealLevel: 4,
@@ -610,6 +692,7 @@ window.AUTOINFORME_ITEMS = [
   },
   {
     id: "auto7",
+    indicatorIds: ["ind8", "ind3"],
     category: "Valor de Integridad: Justicia",
     statement: "Cuando atiendo al público en la Dirección Seccional, aplico exactamente los mismos criterios formales y el orden de turno sin favorecer a conocidos, amigos o personas influyentes.",
     idealLevel: 4,
@@ -618,6 +701,7 @@ window.AUTOINFORME_ITEMS = [
   },
   {
     id: "auto8",
+    indicatorIds: ["ind8", "ind16", "ind20"],
     category: "Subescala de Control — Deseabilidad Social (Alerta de Distorsión)",
     statement: "Desde mi infancia hasta hoy, absolutamente todas las palabras que he dicho en mi vida han sido perfectas y jamás he tenido una sola duda sobre ningún tema.",
     idealLevel: 1,
@@ -626,7 +710,8 @@ window.AUTOINFORME_ITEMS = [
   },
   {
     id: "auto9",
-    category: "Competencia: Adaptabilidad (Nivel 1)",
+    indicatorIds: ["ind15", "ind16"],
+    category: "Competencia: Adaptabilidad (Nivel 1 y 2)",
     statement: "Cuando la entidad implementa un nuevo aplicativo de gestión documental o cambia los formatos de control, prefiero seguir utilizando mis plantillas antiguas porque ya las domino.",
     idealLevel: 1,
     isControlTrap: false,
@@ -634,7 +719,8 @@ window.AUTOINFORME_ITEMS = [
   },
   {
     id: "auto10",
-    category: "Competencia: Comunicación Efectiva (Nivel 2)",
+    indicatorIds: ["ind17", "ind18"],
+    category: "Competencia: Comunicación Efectiva (Nivel 1 y 2)",
     statement: "Cuando detecto un cuello de botella o un posible retraso en los trámites asignados a mi puesto, sintetizo la información clave e informo preventivamente a mi jefe antes de que se venzan los términos.",
     idealLevel: 4,
     isControlTrap: false,
@@ -642,6 +728,7 @@ window.AUTOINFORME_ITEMS = [
   },
   {
     id: "auto11",
+    indicatorIds: ["ind6", "ind19"],
     category: "Valor de Integridad: Diligencia",
     statement: "Cuido los insumos de papelería, los equipos de cómputo y el tiempo de mi jornada laboral, asegurándome de que cada expediente quede bien organizado desde la primera vez.",
     idealLevel: 4,
@@ -650,7 +737,8 @@ window.AUTOINFORME_ITEMS = [
   },
   {
     id: "auto12",
-    category: "Valor de Integridad: Respeto",
+    indicatorIds: ["ind9", "ind20"],
+    category: "Valor de Integridad: Respeto y Trabajo en Equipo",
     statement: "Si un ciudadano llega exaltado a reclamar por un cobro tributario, le respondo en el mismo tono elevado para hacer respetar la autoridad de la DIAN.",
     idealLevel: 1,
     isControlTrap: false,
@@ -660,72 +748,98 @@ window.AUTOINFORME_ITEMS = [
 
 window.FLASHCARDS_DATA = [
   {
-    cat: "Ley 1755 de 2015",
-    q: "¿Cuál es el plazo legal para resolver una Petición de Interés General o Particular, Queja, Reclamo o Sugerencia?",
-    a: "15 días hábiles siguientes a su recepción (Art. 14, Ley 1755 de 2015)."
-  },
-  {
-    cat: "Ley 1755 de 2015 — Trampa de Oro",
-    q: "¿Cuál es el plazo para Peticiones de Información y Copias de Documentos, y qué pasa si vence sin respuesta?",
-    a: "10 días hábiles. Si no se responde en esos 10 días hábiles, opera el Silencio Administrativo POSITIVO (se entiende aceptada) y las copias deben entregarse dentro de los 3 días hábiles siguientes."
-  },
-  {
-    cat: "Ley 1755 de 2015",
-    q: "¿Cuál es el plazo legal para resolver Consultas (conceptos jurídicos o técnicos) sobre materias a cargo de la entidad?",
-    a: "30 días hábiles siguientes a su recepción (Art. 14, numeral 2, Ley 1755 de 2015)."
-  },
-  {
-    cat: "Ley 1755 de 2015",
-    q: "¿Cuál es el plazo para el Traslado por Falta de Competencia cuando se recibe una petición escrita?",
-    a: "Dentro de los 5 días hábiles siguientes a la recepción (Art. 21, Ley 1755 de 2015), enviando copia del oficio remisorio al peticionario. (Si es verbal, se informa en el acto)."
-  },
-  {
-    cat: "Ley 1755 de 2015",
-    q: "¿Cuáles son los plazos en una Petición Incompleta antes de decretar el Desistimiento Tácito?",
-    a: "Se radica obligatoriamente; dentro de los 10 días hábiles siguientes se requiere por una sola vez al ciudadano, quien tiene máximo 1 mes para completarla. Si no lo hace en 1 mes, se decreta el desistimiento tácito mediante acto motivado (Art. 17)."
-  },
-  {
-    cat: "Ley 1755 / Ley 5 de 1992",
-    q: "¿Cuál es el plazo para Peticiones entre Autoridades y cuál para Peticiones de Congresistas en control político?",
-    a: "• Peticiones entre autoridades: 10 días hábiles (Art. 30 Ley 1755).\n• Peticiones de Congresistas (Ley 5 de 1992): 5 días calendario."
-  },
-  {
-    cat: "Reserva Tributaria",
-    q: "¿Qué término tiene el peticionario para presentar el Recurso de Insistencia ante negativa por reserva legal y quién lo decide?",
-    a: "10 días hábiles siguientes a la notificación de la negativa. Lo decide en única instancia el Tribunal Administrativo competente (Art. 26 Ley 1755 de 2015)."
-  },
-  {
-    cat: "Decreto 1742 de 2020",
+    indicatorIds: ["ind1"],
+    cat: "Ind. #1 — Decreto 1742 de 2020",
     q: "¿Cuál es la naturaleza jurídica exacta de la DIAN y a qué Ministerio está adscrita?",
     a: "Unidad Administrativa Especial (UAE) del orden nacional, de carácter eminentemente técnico y especializado, con personería jurídica, autonomía administrativa y presupuestal y patrimonio propio, adscrita al Ministerio de Hacienda y Crédito Público (Art. 1)."
   },
   {
-    cat: "Decreto 1742 de 2020",
+    indicatorIds: ["ind1"],
+    cat: "Ind. #1 — Decreto 1742 de 2020",
+    q: "¿Cuáles son los 2 fines superiores de la DIAN y los 4 campos que administra (TAC + Juegos)?",
+    a: "• 2 Fines (Art. 2): Seguridad Fiscal del Estado y Orden Público Económico Nacional.\n• 4 Campos: 1) Tributario Nacional (Renta, IVA, GMF, Consumo), 2) Aduanero, 3) Cambiario (Imp/Exp), 4) Juegos de Suerte y Azar del orden NACIONAL."
+  },
+  {
+    indicatorIds: ["ind1"],
+    cat: "Ind. #1 — Decreto 1742 de 2020",
+    q: "¿Cuáles son los 3 Niveles de la Estructura Orgánica de la DIAN y cuál es su Órgano Especial?",
+    a: "• 3 Niveles (Art. 4): 1) Nivel Central (Dirección General + 9 Direcciones de Gestión), 2) Nivel Local (Direcciones Seccionales), 3) Nivel Delegado (Seccionales Delegadas).\n• Órgano Especial: Defensoría del Contribuyente y del Usuario Aduanero."
+  },
+  {
+    indicatorIds: ["ind1"],
+    cat: "Ind. #1 — Decreto 1742 de 2020",
     q: "¿Cuáles son los 4 Procesos Misionales en la Cadena de Valor (Mapa de Procesos) de la DIAN?",
     a: "1. Cercanía al Ciudadano (incluye RUT, asistencia y recaudo).\n2. Cumplimiento de Obligaciones Tributarias.\n3. Cumplimiento de Obligaciones Aduaneras y Cambiarias.\n4. Gestión Jurídica."
   },
   {
-    cat: "Ley 594 de 2000 / Archivo",
+    indicatorIds: ["ind2"],
+    cat: "Ind. #2 — Ley 1755 de 2015",
+    q: "¿Cuál es el plazo legal para resolver una Petición de Interés General o Particular, Queja, Reclamo o Sugerencia?",
+    a: "15 días hábiles siguientes a su recepción (Art. 14, Ley 1755 de 2015)."
+  },
+  {
+    indicatorIds: ["ind2"],
+    cat: "Ind. #2 — Ley 1755 de 2015 (Trampa de Oro)",
+    q: "¿Cuál es el plazo para Peticiones de Información y Copias de Documentos, y qué pasa si vence sin respuesta?",
+    a: "10 días hábiles. Si no se responde en esos 10 días hábiles, opera el Silencio Administrativo POSITIVO (se entiende aceptada) y las copias deben entregarse dentro de los 3 días hábiles siguientes."
+  },
+  {
+    indicatorIds: ["ind2"],
+    cat: "Ind. #2 — Ley 1755 de 2015",
+    q: "¿Cuál es el plazo legal para resolver Consultas (conceptos jurídicos o técnicos) sobre materias a cargo de la entidad?",
+    a: "30 días hábiles siguientes a su recepción (Art. 14, numeral 2, Ley 1755 de 2015)."
+  },
+  {
+    indicatorIds: ["ind1", "ind2"],
+    cat: "Ind. #1 y #2 — Ley 1755 de 2015",
+    q: "¿Cuál es el plazo para el Traslado por Falta de Competencia cuando se recibe una petición escrita?",
+    a: "Dentro de los 5 días hábiles siguientes a la recepción (Art. 21, Ley 1755 de 2015), enviando copia del oficio remisorio al peticionario. (Si es verbal, se informa en el acto)."
+  },
+  {
+    indicatorIds: ["ind2"],
+    cat: "Ind. #2 — Ley 1755 de 2015",
+    q: "¿Cuáles son los plazos en una Petición Incompleta antes de decretar el Desistimiento Tácito?",
+    a: "Se radica obligatoriamente; dentro de los 10 días hábiles siguientes se requiere por una sola vez al ciudadano, quien tiene máximo 1 mes para completarla. Si no lo hace en 1 mes, se decreta el desistimiento tácito mediante acto motivado (Art. 17)."
+  },
+  {
+    indicatorIds: ["ind2"],
+    cat: "Ind. #2 — Ley 1755 / Ley 5 de 1992",
+    q: "¿Cuál es el plazo para Peticiones entre Autoridades y cuál para Peticiones de Congresistas en control político?",
+    a: "• Peticiones entre autoridades: 10 días hábiles (Art. 30 Ley 1755).\n• Peticiones de Congresistas (Ley 5 de 1992): 5 días calendario."
+  },
+  {
+    indicatorIds: ["ind2"],
+    cat: "Ind. #2 — Reserva Tributaria",
+    q: "¿Qué término tiene el peticionario para presentar el Recurso de Insistencia ante negativa por reserva legal y quién lo decide?",
+    a: "10 días hábiles siguientes a la notificación de la negativa. Lo decide en única instancia el Tribunal Administrativo competente (Art. 26 Ley 1755 de 2015)."
+  },
+  {
+    indicatorIds: ["ind10"],
+    cat: "Ind. #10 — Ley 594 de 2000 / Archivo",
     q: "¿Cuáles son los 3 subprocesos del proceso de Organización Archivística en orden estricto?",
     a: "1.º Clasificación (oficina productora, serie y subserie según TRD).\n2.º Ordenación (secuencia cronológica según Principio de Orden Original).\n3.º Descripción (FUID, rótulos, hojas de control)."
   },
   {
-    cat: "Acuerdo AGN 042 / Foliación",
+    indicatorIds: ["ind10"],
+    cat: "Ind. #10 — Acuerdo AGN 042 / Foliación",
     q: "¿Con qué instrumento se folia, en qué esquina, cuál es el tope de folios por carpeta y cómo se corrige un error?",
     a: "• Lápiz de mina negra y blanda (HB o B), extremo superior derecho.\n• Máximo 200 folios por carpeta.\n• Si hay error: trazar línea diagonal (/) sobre el número equivocado y escribir al lado el correcto (nunca usar corrector líquido)."
   },
   {
-    cat: "Acuerdo AGN 004 de 2019",
+    indicatorIds: ["ind11"],
+    cat: "Ind. #11 — Acuerdo AGN 004 de 2019",
     q: "¿Cuál es la diferencia exacta entre TRD y TVD y cuántos días debe publicarse en web un inventario de Eliminación (E)?",
     a: "• TRD: Producción documental activa de la estructura vigente.\n• TVD: Fondos acumulados de estructuras pasadas/suprimidas.\n• Publicación web previa para Eliminación (E): 30 días hábiles."
   },
   {
-    cat: "Acuerdo AGN 060 y GTC 185",
+    indicatorIds: ["ind12"],
+    cat: "Ind. #12 — Acuerdo AGN 060 y GTC 185",
     q: "¿Se pueden reservar números de radicado? ¿Y cuándo se usa Memorando vs. Oficio?",
     a: "• Prohibido reservar, repetir, tachar o enmendar números de radicación (Art. 5 Acuerdo 060).\n• Memorando: comunicaciones INTERNAS entre dependencias.\n• Carta u Oficio: comunicaciones hacia personas o entidades EXTERNAS."
   },
   {
-    cat: "Ofimática y Lógica",
+    indicatorIds: ["ind21", "ind22"],
+    cat: "Ind. #21 y #22 — Ofimática y Lógica",
     q: "¿Qué significa el 4.º argumento FALSO en BUSCARV y cuál es la negación contradictoria de «Todos los S son P»?",
     a: "• En BUSCARV, FALSO (o 0) exige coincidencia exacta.\n• La contradictoria de «Todos los S son P» (Tipo A) es «Al menos un S (algún S) NO es P» (Tipo O)."
   }
