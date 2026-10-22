@@ -54,7 +54,7 @@
   let lowGpuMode = localStorage.getItem(STORAGE_KEYS.LOW_GPU_MODE) === "true";
   let unlockedAch = JSON.parse(localStorage.getItem(STORAGE_KEYS.UNLOCKED_ACH) || "[]");
 
-  let readerTheme = localStorage.getItem(STORAGE_KEYS.READER_THEME) || "sepia";
+  let readerTheme = localStorage.getItem(STORAGE_KEYS.READER_THEME) || "dark";
   let readerFontStep = parseInt(localStorage.getItem(STORAGE_KEYS.READER_FONT_STEP) || "0", 10);
   let sidebarCollapsed = localStorage.getItem(STORAGE_KEYS.SIDEBAR_COLLAPSED) === "true";
   let sidebarMode = "outline"; // "outline" | "resources"
