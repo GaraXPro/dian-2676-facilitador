@@ -65,7 +65,7 @@
   let dailyPace = JSON.parse(localStorage.getItem(STORAGE_KEYS.DAILY_PACE) || "null") || {
     modeId: "fluido",
     dateISO: todayISO,
-    stepsDoneToday: 2
+    stepsDoneToday: 0
   };
   if (dailyPace.dateISO !== todayISO) {
     dailyPace.dateISO = todayISO;
@@ -73,17 +73,9 @@
     localStorage.setItem(STORAGE_KEYS.DAILY_PACE, JSON.stringify(dailyPace));
   }
 
-  // Inicialización del modelo secuencial de 5 pasos (X.1 a X.5) respetando el avance real de Marcelino en el Indicador #1:
-  // Ya leyó la teoría (1.1 read: true) y ya copió la Página 1 en su libreta (1.2 notebook: true).
+  // Inicialización del modelo secuencial de 5 pasos (X.1 a X.5).
+  // Si es un usuario nuevo (o en ventana de incógnito), arranca 100% limpio en 0/110 pasos.
   if (!localStorage.getItem(STORAGE_KEYS.MICRO_INIT_V5)) {
-    const prevInd1 = microStepsState["ind1"] || {};
-    microStepsState["ind1"] = {
-      read: prevInd1.read !== undefined ? !!prevInd1.read : true,
-      notebook: prevInd1.notebook !== undefined ? !!prevInd1.notebook : true,
-      practice: !!prevInd1.practice,
-      resources: !!prevInd1.resources,
-      cases: !!prevInd1.cases
-    };
     window.INDICATORS_DATA?.forEach(ind => {
       if (progressState[ind.id]) {
         microStepsState[ind.id] = { read: true, notebook: true, practice: true, resources: true, cases: true };

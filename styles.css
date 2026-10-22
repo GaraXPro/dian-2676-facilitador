@@ -1954,10 +1954,15 @@ body[data-reader-theme="sepia"] select,
 body[data-reader-theme="sepia"] input[type="text"],
 body[data-reader-theme="sepia"] input[type="number"],
 body[data-reader-theme="sepia"] input[type="url"],
-body[data-reader-theme="sepia"] textarea.notes-area {
+body[data-reader-theme="sepia"] textarea.notes-area,
+body[data-reader-theme="sepia"] .toast-msg {
   background: #fdf8ee !important;
   color: #2c221e !important;
-  border-color: #c4b08f !important;
+  border-color: #15803d !important;
+}
+
+body[data-reader-theme="sepia"] .toast-msg strong {
+  color: #0369a1 !important;
 }
 
 body[data-reader-theme="sepia"] .nav-tab.active,
@@ -2079,10 +2084,15 @@ body[data-reader-theme="word"] select,
 body[data-reader-theme="word"] input[type="text"],
 body[data-reader-theme="word"] input[type="number"],
 body[data-reader-theme="word"] input[type="url"],
-body[data-reader-theme="word"] textarea.notes-area {
-  background: #f8fafc !important;
+body[data-reader-theme="word"] textarea.notes-area,
+body[data-reader-theme="word"] .toast-msg {
+  background: #ffffff !important;
   color: #0f172a !important;
-  border-color: #cbd5e1 !important;
+  border-color: #16a34a !important;
+}
+
+body[data-reader-theme="word"] .toast-msg strong {
+  color: #0284c7 !important;
 }
 
 body[data-reader-theme="word"] .nav-tab.active,
